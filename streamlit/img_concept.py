@@ -1,12 +1,10 @@
 import streamlit as st
 from snowflake.snowpark import Session
 from snowflake.core import Root
-import chatbot as cb
 import pandas as pd
 import requests
 from PIL import Image
 from landingai.predict import Predictor
-
 
 api_info = session.table("IMG_RECG.API_CREDENTIALS").to_pandas()
 api_key = api_info[api_info["NAME"]=="LANDINGAI"]["API_KEY"].values[0]

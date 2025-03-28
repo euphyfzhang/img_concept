@@ -1,0 +1,9 @@
+snowflake-ml-python
+snowflake-snowpark-python
+streamlit
+snowflake
+pandas
+requests
+Pillow
+landingai
+opencv-python-headless

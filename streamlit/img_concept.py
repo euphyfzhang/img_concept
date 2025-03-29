@@ -63,4 +63,4 @@ if __name__ == "__main__":
       st.write("returned results")
 
       for each in predictions:
-        st.write(each)
+        st.write(each["label_name"])

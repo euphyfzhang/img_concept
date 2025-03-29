@@ -11,7 +11,7 @@ session = Session.builder.configs(st.secrets["connections"]["snowflake"]).getOrC
 
 ## API Info
 api_info = session.table("IMG_RECG.API_CREDENTIALS").to_pandas()
-api_key = api_info[api_info["NAME"]=="LANDINGAI"]["API_KEY"].values[0]
+api_key_euph = api_info[api_info["NAME"]=="LANDINGAI"]["API_KEY"].values[0]
 endpoint_id = api_info[api_info["NAME"]=="LANDINGAI"]["ENDPOINT_ID"].values[0]
 
 ## Transaction Info
@@ -23,6 +23,9 @@ if __name__ == "__main__":
 
   ### Side Bar
   with st.sidebar:
+    # API KEY
+    api_key = st.text_input("API KEY", "Please input the API KEY.") #api_key_euph
+
     # Upload area
     uploaded_file = st.file_uploader("📂 Choose a file")
     predictions = None

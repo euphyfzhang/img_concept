@@ -21,8 +21,11 @@ if __name__ == "__main__":
 
   ### Side Bar
   with st.sidebar:
-    uploaded_file = st.file_uploader("Choose a file")
+    # Upload area
+    uploaded_file = st.file_uploader("📂 Choose a file")
     predicted_results = None
+
+    # When file is uploaded:
     if uploaded_file:
       # To read file as bytes:
       bytes_data = uploaded_file.getvalue()
@@ -35,7 +38,8 @@ if __name__ == "__main__":
       predictions = predictor.predict(imagefile)
 
       # Predict the result
-      predicted_results = st.json(predictions)
+      with st.expander("📰 Returned result:"):
+        predicted_results = st.json(predictions)
 
   ### Main Page Prep:
   maincol1, maincol2 = st.columns(2)
@@ -44,7 +48,7 @@ if __name__ == "__main__":
   st.header("🛒 POC demo - Shopping Conceptual Idea")
   st.caption("Created by Euphemia")
 
-  with st.expander:
+  with st.expander("🛍️ Shopping Transactions"):
     st.dataframe(tran_info)
 
   ### Main Left Column

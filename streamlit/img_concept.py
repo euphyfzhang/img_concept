@@ -45,7 +45,7 @@ if __name__ == "__main__":
 
   ### Main Top Area:
   st.header("🛒 POC demo - Shopping Conceptual Idea")
-  st.caption("Created by Euphemia") #🖌️
+  st.caption("🖌️ Created by Euphemia")
 
   with st.expander("🛍️ Shopping Transactions"):
     st.dataframe(tran_info)
@@ -56,6 +56,7 @@ if __name__ == "__main__":
   ### Main Left Column
   with maincol1:
     if uploaded_file:
+      st.subheader("🖼️ Uploaded Image")
       st.image(uploaded_file)
 
   ### Main Right Column
@@ -63,7 +64,7 @@ if __name__ == "__main__":
     if predictions:
       #for each in predictions:
         #st.write(each)
-      st.write("returned results")
+      st.subheader("🗃️ Show Results")
       count = 1
       list_predicted_items = []
 

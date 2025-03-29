@@ -35,7 +35,8 @@ if __name__ == "__main__":
 
       # Send to model for prediction,
       predictor = Predictor(endpoint_id, api_key=api_key)
-      predictions = predictor.predict(imagefile)
+      predictions = predictor.predict(imagefile) #ObjectDetectionPrediction Object
+      predictions = json.loads(predictions)
 
       # Predict the result
       with st.expander("📰 Returned result:"):
@@ -59,4 +60,4 @@ if __name__ == "__main__":
   ### Main Right Column
   with maincol2:
     if predictions:
-      st.write(predictions) #ObjectDetectionPrediction Object
+      st.write(predictions[0]) 

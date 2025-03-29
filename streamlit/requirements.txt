@@ -5,5 +5,5 @@ snowflake
 pandas
 requests
 Pillow
-landingai==0.3.49
+landingai~=0.3.0
 opencv-python-headless

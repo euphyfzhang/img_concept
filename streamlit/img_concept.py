@@ -60,8 +60,8 @@ if __name__ == "__main__":
 
   ### Main Left Column
   with maincol1:
+    st.subheader("🖼️ Uploaded Image")
     if uploaded_file:
-      st.subheader("🖼️ Uploaded Image")
       st.image(uploaded_file)
 
   ### Main Right Column

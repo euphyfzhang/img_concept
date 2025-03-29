@@ -74,4 +74,4 @@ if __name__ == "__main__":
           list_predicted_items.append(item)
           count += 1
 
-    st.dataframe(tran_info[re.search('goldfish', tran_info["ITEM"], re.IGNORECASE)])
+    st.dataframe(tran_info[tran_info["ITEM"]=="Goldfish cracker"])

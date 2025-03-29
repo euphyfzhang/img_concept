@@ -76,8 +76,10 @@ if __name__ == "__main__":
     count = 1
     list_predicted_items = []
 
-    if err_message:
+    if "UNAUTHORIZED" in err_message:
       st.write(err_message)
+    else:
+      pass
 
     if predictions:
       ## Loop thru all the predictions

@@ -5,6 +5,5 @@ snowflake
 pandas
 requests
 Pillow
-json
 landingai~=0.3.0
 opencv-python-headless

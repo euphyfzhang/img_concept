@@ -41,15 +41,15 @@ if __name__ == "__main__":
       with st.expander("📰 Returned result:"):
         predicted_results = st.json(predictions)
 
-  ### Main Page Prep:
-  maincol1, maincol2 = st.columns(2)
-
   ### Main Top Area:
   st.header("🛒 POC demo - Shopping Conceptual Idea")
   st.caption("Created by Euphemia")
 
   with st.expander("🛍️ Shopping Transactions"):
     st.dataframe(tran_info)
+
+  ### Main columns layout
+  maincol1, maincol2 = st.columns(2)
 
   ### Main Left Column
   with maincol1:
@@ -59,4 +59,4 @@ if __name__ == "__main__":
   ### Main Right Column
   with maincol2:
     if predicted_results:
-      st.write(predicted_results[0])
+      st.write(predicted_results)

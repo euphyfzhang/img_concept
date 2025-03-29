@@ -74,4 +74,4 @@ if __name__ == "__main__":
           list_predicted_items.append(item)
           count += 1
 
-    st.dataframe(tran_info["Goldfish cracker" in tran_info["ITEM"]])
+    st.dataframe(tran_info[ tran_info["ITEM"].str.contains("goldfish", case = False)])

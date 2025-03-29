@@ -83,19 +83,21 @@ if __name__ == "__main__":
           # Show each item:
           with st.expander(f"{count} : {item_name}"):
             df_item = tran_info[tran_info["ITEM"].str.contains(item_name, case = False)]
-            # Show dataset:
-            st.dataframe(df_item)
 
-          list_predicted_items.append(item_name)
-          count += 1
-        
-        if df_item.size:
-          #Latest purchase
-          latest_purchase = df_item[df_item["TRANSACTION_TIMESTAMP"]==df_item["TRANSACTION_TIMESTAMP"].max()]
+            if len(df_item):
 
-          datets = latest_purchase["TRANSACTION_TIMESTAMP"].values[0]
-          store = latest_purchase["MERCHANT_NAME"].values[0]
-          amount = latest_purchase["AMOUNT"].values[0]
+              # Show dataset:
+              st.dataframe(df_item)
 
-          st.write(f"The most recent purchase of {item_name} is at {store} at {datets} for {amount}.")
-          st.button("Would you like to purchase at the same store again?")
+              #Latest purchase
+              latest_purchase = df_item[df_item["TRANSACTION_TIMESTAMP"]==df_item["TRANSACTION_TIMESTAMP"].max()]
+
+              datets = latest_purchase["TRANSACTION_TIMESTAMP"].values[0]
+              store = latest_purchase["MERCHANT_NAME"].values[0]
+              amount = latest_purchase["AMOUNT"].values[0]
+
+              st.write(f"The most recent purchase of {item_name} is at {store} at {datets} for {amount}.")
+              st.button("Would you like to purchase at the same store again?")
+
+        list_predicted_items.append(item_name)
+        count += 1

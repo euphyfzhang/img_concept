@@ -24,14 +24,14 @@ if __name__ == "__main__":
   ### Side Bar
   with st.sidebar:
     # API KEY
-    api_key = st.text_input("API KEY", "Please input the API KEY.") #api_key_euph
+    api_key = st.text_input("API KEY") #api_key_euph
 
     # Upload area
     uploaded_file = st.file_uploader("📂 Choose a file")
     predictions = None
 
     # When file is uploaded:
-    if uploaded_file:
+    if uploaded_file and api_key:
       # To read file as bytes:
       bytes_data = uploaded_file.getvalue()
 

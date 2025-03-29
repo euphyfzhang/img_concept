@@ -56,56 +56,59 @@ if __name__ == "__main__":
   st.header("🛒 POC demo - Conceptual Idea")
   st.caption("🖌️ Created by Euphemia")
 
+  ### The 1st section in MAIN PAGE
   with st.expander("🛍️ Shopping Transactions"):
     st.dataframe(tran_info)
 
   ### Main columns layout
   maincol1, maincol2 = st.columns([1, 2])
 
-  ### Main Left Column
-  with maincol1:
-    st.subheader("🖼️ Uploaded Image")
-    if uploaded_file:
-      st.image(uploaded_file)
+  ### The 2nd section in MAIN PAGE
+  with st.container(height=400, border=None):
+    ### Main Left Column
+    with maincol1:
+      st.subheader("🖼️ Uploaded Image")
+      if uploaded_file:
+        st.image(uploaded_file)
 
-  ### Main Right Column
-  with maincol2:
-    st.subheader("🗃️ Show Results")
+    ### Main Right Column
+    with maincol2:
+      st.subheader("🗃️ Show Results")
 
-    ## Prep for the results
-    count = 1
-    list_predicted_items = []
+      ## Prep for the results
+      count = 1
+      list_predicted_items = []
 
-    if err_message and "UNAUTHORIZED" in err_message:
-      st.write("Please check if API KEY has been input correctly. Thanks.")
-    else:
-      pass
+      if err_message and "UNAUTHORIZED" in err_message:
+        st.write("Please check if API KEY has been input correctly. Thanks.")
+      else:
+        pass
 
-    if predictions:
-      ## Loop thru all the predictions
-      for each in predictions:
-        item_name = each.label_name
-        df_item = None
-        last_time_purchase = None
+      if predictions:
+        ## Loop thru all the predictions
+        for each in predictions:
+          item_name = each.label_name
+          df_item = None
+          last_time_purchase = None
 
-        if item_name not in list_predicted_items:
-          ## Show each item:
-          with st.expander(f"{count} : {item_name}"):
-            df_item = tran_info[tran_info["ITEM"].str.contains(item_name, case = False)]
-            
-            if len(df_item):
-              ## Show dataset:
-              st.dataframe(df_item)
-
-              ## Latest purchase
-              latest_purchase = df_item[df_item["TRANSACTION_TIMESTAMP"]==df_item["TRANSACTION_TIMESTAMP"].max()]
-
-              datets = latest_purchase["TRANSACTION_TIMESTAMP"].values[0]
-              store = latest_purchase["MERCHANT_NAME"].values[0]
-              amount = latest_purchase["AMOUNT"].values[0]
+          if item_name not in list_predicted_items:
+            ## Show each item:
+            with st.expander(f"{count} : {item_name}"):
+              df_item = tran_info[tran_info["ITEM"].str.contains(item_name, case = False)]
               
-              st.markdown(f"The most recent purchase of :blue-background[{item_name}] is at :blue[{store}] at :orange-badge[{datets}] for :red[${amount}].")
-              #st.button("Re-purchase?")
+              if len(df_item):
+                ## Show dataset:
+                st.dataframe(df_item)
 
-          list_predicted_items.append(item_name)
-          count += 1
+                ## Latest purchase
+                latest_purchase = df_item[df_item["TRANSACTION_TIMESTAMP"]==df_item["TRANSACTION_TIMESTAMP"].max()]
+
+                datets = latest_purchase["TRANSACTION_TIMESTAMP"].values[0]
+                store = latest_purchase["MERCHANT_NAME"].values[0]
+                amount = latest_purchase["AMOUNT"].values[0]
+                
+                st.markdown(f"The most recent purchase of :blue-background[{item_name}] is at :blue[{store}] at :orange-badge[{datets}] for :red[${amount}].")
+                #st.button("Re-purchase?")
+
+            list_predicted_items.append(item_name)
+            count += 1

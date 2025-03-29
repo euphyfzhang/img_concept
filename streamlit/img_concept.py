@@ -86,7 +86,7 @@ if __name__ == "__main__":
             
             if len(df_item):
               ## Show dataset:
-              # st.dataframe(df_item)
+              st.dataframe(df_item)
 
               ## Latest purchase
               latest_purchase = df_item[df_item["TRANSACTION_TIMESTAMP"]==df_item["TRANSACTION_TIMESTAMP"].max()]
@@ -95,8 +95,8 @@ if __name__ == "__main__":
               store = latest_purchase["MERCHANT_NAME"].values[0]
               amount = latest_purchase["AMOUNT"].values[0]
               
-              st.write(f"The most recent purchase of {item_name} is at {store} at {datets} for {amount}.")
-              st.button("Would you like to purchase at the same store again?")
+              st.markdown(f"The most recent purchase of :blue-background[{item_name}] is at :blue[{store}] at :orange-badge[{datets}] for :red[${amount}].")
+              #st.button("Re-purchase?")
 
           list_predicted_items.append(item_name)
           count += 1

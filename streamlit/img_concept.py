@@ -64,7 +64,7 @@ if __name__ == "__main__":
   maincol1, maincol2 = st.columns([1, 2])
 
   ### The 2nd section in MAIN PAGE
-  with st.container(height=400, border=None):
+  with st.container(height=400):
     ### Main Left Column
     with maincol1:
       st.subheader("🖼️ Uploaded Image")

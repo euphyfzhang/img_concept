@@ -43,9 +43,9 @@ if __name__ == "__main__":
   maincol1, maincol2 = st.columns(2)
 
   with maincol1:
-    if uploaded_file is not None:
+    if uploaded_file:
       st.image(uploaded_file)
 
   with maincol2:
-    if predited_results:
+    if predicted_results:
       st.write(predicted_results[0])

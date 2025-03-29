@@ -1,5 +1,6 @@
 import streamlit as st
 import pandas as pd
+import re
 from snowflake.snowpark import Session
 from snowflake.core import Root
 from PIL import Image
@@ -8,10 +9,12 @@ from landingai.predict import Predictor
 ### Connection to Snowflake and get Cortex Search Service from Root(session).
 session = Session.builder.configs(st.secrets["connections"]["snowflake"]).getOrCreate()
 
+## API Info
 api_info = session.table("IMG_RECG.API_CREDENTIALS").to_pandas()
 api_key = api_info[api_info["NAME"]=="LANDINGAI"]["API_KEY"].values[0]
 endpoint_id = api_info[api_info["NAME"]=="LANDINGAI"]["ENDPOINT_ID"].values[0]
 
+## Transaction Info
 tran_info = session.table("IMG_RECG.TRANSACTION").to_pandas()
 
 if __name__ == "__main__":
@@ -70,3 +73,6 @@ if __name__ == "__main__":
           st.write(f"{count} : {item}")
           list_predicted_items.append(item)
           count += 1
+    
+    
+    st.dataframe(tran_info[re.search('goldfish', tran_info["ITEM"], re.IGNORECASE)])

@@ -1,6 +1,6 @@
 import streamlit as st
 import pandas as pd
-import requests
+import requests, json
 from snowflake.snowpark import Session
 from snowflake.core import Root
 from PIL import Image

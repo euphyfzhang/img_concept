@@ -59,4 +59,4 @@ if __name__ == "__main__":
   ### Main Right Column
   with maincol2:
     if predictions:
-      st.write(predictions[0]) #ObjectDetectionPrediction Object
+      st.write(predictions) #ObjectDetectionPrediction Object

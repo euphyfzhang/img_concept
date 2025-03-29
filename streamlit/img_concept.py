@@ -1,6 +1,5 @@
 import streamlit as st
 import pandas as pd
-import requests, json
 from snowflake.snowpark import Session
 from snowflake.core import Root
 from PIL import Image
@@ -59,5 +58,6 @@ if __name__ == "__main__":
   ### Main Right Column
   with maincol2:
     if predictions:
-      for each in predictions:
-        st.write(each) 
+      #for each in predictions:
+        #st.write(each)
+      st.write("returned results")

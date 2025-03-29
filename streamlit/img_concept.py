@@ -21,6 +21,7 @@ tran_info = session.table("IMG_RECG.TRANSACTION").to_pandas()
 if __name__ == "__main__":
   ### Set page layout
   st.set_page_config(layout="wide")
+  err_message = None
 
   ### Side Bar
   with st.sidebar:
@@ -45,7 +46,7 @@ if __name__ == "__main__":
           predictor = Predictor(endpoint_id, api_key=api_key)
           predictions = predictor.predict(imagefile) #ObjectDetectionPrediction Object
         except Exception as e:
-          st.write("Sorry, predicted result cannot be retrieved.")
+          err_message = e
 
       # Predict the result
       with st.expander("📰 Returned result:"):
@@ -74,6 +75,9 @@ if __name__ == "__main__":
     ## Prep for the results
     count = 1
     list_predicted_items = []
+
+    if err_message:
+      st.write(err_message)
 
     if predictions:
       ## Loop thru all the predictions

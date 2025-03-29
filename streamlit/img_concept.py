@@ -45,7 +45,7 @@ if __name__ == "__main__":
 
   ### Main Top Area:
   st.header("🛒 POC demo - Shopping Conceptual Idea")
-  st.caption("Created by Euphemia")
+  st.caption("🖌️ Created by Euphemia")
 
   with st.expander("🛍️ Shopping Transactions"):
     st.dataframe(tran_info)
@@ -73,6 +73,5 @@ if __name__ == "__main__":
           st.write(f"{count} : {item}")
           list_predicted_items.append(item)
           count += 1
-    
-    
+
     st.dataframe(tran_info[re.search('goldfish', tran_info["ITEM"], re.IGNORECASE)])

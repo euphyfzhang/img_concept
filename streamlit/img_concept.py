@@ -25,6 +25,7 @@ if __name__ == "__main__":
   ### Side Bar
   with st.sidebar:
     uploaded_file = st.file_uploader("Choose a file")
+    predicted_results = None
     if uploaded_file is not None:
       # To read file as bytes:
       bytes_data = uploaded_file.getvalue()
@@ -34,7 +35,7 @@ if __name__ == "__main__":
       predictor = Predictor(endpoint_id, api_key=api_key)
       predictions = predictor.predict(imagefile)
 
-      st.json(predictions)
+      predicted_results = st.json(predictions)
 
   ### Main Page
   st.dataframe(tran_info)
@@ -42,7 +43,8 @@ if __name__ == "__main__":
   maincol1, maincol2 = st.columns(2)
 
   with maincol1:
-    st.image(uploaded_file)
+    if uploaded_file is not None:
+      st.image(uploaded_file)
 
   with maincol2:
-    st.write("chat with Aime.")
+    st.write(predicted_results[0])

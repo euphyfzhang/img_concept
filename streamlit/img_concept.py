@@ -70,8 +70,12 @@ if __name__ == "__main__":
       for each in predictions:
         item = each.label_name
         if item not in list_predicted_items:
-          st.write(f"{count} : {item}")
+          # Show each item:
+          with st.expander(f"{count} : {item}"):
+            # Show dataset:
+            st.dataframe(tran_info[tran_info["ITEM"].str.contains(item, case = False)])
+
           list_predicted_items.append(item)
           count += 1
 
-    st.dataframe(tran_info[ tran_info["ITEM"].str.contains("goldfish", case = False)])
+    

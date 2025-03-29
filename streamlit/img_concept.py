@@ -76,6 +76,8 @@ if __name__ == "__main__":
       # Loop thru all the predictions
       for each in predictions:
         item_name = each.label_name
+        df_item = None
+        last_time_purchase = None
 
         if item_name not in list_predicted_items:
           # Show each item:
@@ -86,5 +88,14 @@ if __name__ == "__main__":
 
           list_predicted_items.append(item_name)
           count += 1
+        
+        if df_item:
+          #Latest purchase
+          latest_purchase = df_item[df_item["TIMESTAMP"]==df_item["TIMESTAMP"].max()]
 
-    
+          datets = latest_purchase["TRANSACTION_TIMESTAMP"].values[0]
+          store = latest_purchase["MERCHANT_NAME"].values[0]
+          amount = latest_purchase["AMOUNT"].values[0]
+
+          st.write(f"The most recent purchase of {item_name} is at {store} at {datets} for {amount}.")
+          st.button("Would you like to purchase at the same store again?")

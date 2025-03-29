@@ -24,7 +24,7 @@ if __name__ == "__main__":
   ### Side Bar
   with st.sidebar:
     # API KEY
-    api_key = st.text_input("API KEY") #api_key_euph
+    api_key = api_key_euph #st.text_input("API KEY")
 
     # Upload area
     uploaded_file = st.file_uploader("📂 Choose a file")

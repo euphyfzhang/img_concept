@@ -68,36 +68,35 @@ if __name__ == "__main__":
   with maincol2:
     st.subheader("🗃️ Show Results")
 
-    # Prep for the results
+    ## Prep for the results
     count = 1
     list_predicted_items = []
 
     if predictions:
-      # Loop thru all the predictions
+      ## Loop thru all the predictions
       for each in predictions:
         item_name = each.label_name
         df_item = None
         last_time_purchase = None
 
         if item_name not in list_predicted_items:
-          # Show each item:
+          ## Show each item:
           with st.expander(f"{count} : {item_name}"):
             df_item = tran_info[tran_info["ITEM"].str.contains(item_name, case = False)]
-
+            
             if len(df_item):
+              ## Show dataset:
+              # st.dataframe(df_item)
 
-              # Show dataset:
-              st.dataframe(df_item)
-
-              #Latest purchase
+              ## Latest purchase
               latest_purchase = df_item[df_item["TRANSACTION_TIMESTAMP"]==df_item["TRANSACTION_TIMESTAMP"].max()]
 
               datets = latest_purchase["TRANSACTION_TIMESTAMP"].values[0]
               store = latest_purchase["MERCHANT_NAME"].values[0]
               amount = latest_purchase["AMOUNT"].values[0]
-
+              
               st.write(f"The most recent purchase of {item_name} is at {store} at {datets} for {amount}.")
               st.button("Would you like to purchase at the same store again?")
 
-        list_predicted_items.append(item_name)
-        count += 1
+          list_predicted_items.append(item_name)
+          count += 1

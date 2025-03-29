@@ -1,0 +1,22 @@
+INSERT OVERWRITE INTO IMG_RECG.TRANSACTION(TRANSACTION_TIMESTAMP, MERCHANT_NAME, ITEM, AMOUNT) 
+VALUES 
+('2024-03-15 09:23:45', 'Loblaws Store #1234', 'Granola bar', 3.99),
+('2024-03-16 11:45:12', 'Metro Store #9876', 'Oatmeal', 4.49),
+('2024-03-17 14:30:22', 'Costco Store #4567', 'Goldfish cracker', 8.99),
+('2024-03-18 16:18:37', 'Walmart Store #7890', 'Pez candy', 1.99),
+('2024-03-19 08:12:53', 'Loblaws Store #1234', 'Oatmeal', 4.29),
+('2024-03-20 10:05:41', 'Metro Store #9876', 'Granola bar', 3.79),
+('2024-03-21 12:47:19', 'Costco Store #4567', 'Pez candy', 5.99),
+('2024-03-22 15:33:28', 'Walmart Store #7890', 'Goldfish cracker', 3.49),
+('2024-03-23 07:58:14', 'Loblaws Store #1234', 'Goldfish cracker', 4.99),
+('2024-03-24 09:42:36', 'Metro Store #9876', 'Pez candy', 2.29),
+('2024-03-25 13:15:47', 'Costco Store #4567', 'Granola bar', 7.49),
+('2024-03-26 17:22:09', 'Walmart Store #7890', 'Oatmeal', 3.99),
+('2024-03-28 08:45:33', 'Loblaws Store #1234', 'Pez candy', 2.49),
+('2024-03-28 11:30:18', 'Metro Store #9876', 'Goldfish cracker', 3.99),
+('2024-03-28 14:12:55', 'Costco Store #4567', 'Oatmeal', 6.99),
+('2024-03-28 16:45:27', 'Walmart Store #7890', 'Granola bar', 3.29),
+('2024-03-29 10:15:42', 'Loblaws Store #1234', 'Granola bar', 3.99),
+('2024-03-29 12:30:11', 'Metro Store #9876', 'Oatmeal', 4.19),
+('2024-03-29 15:45:39', 'Costco Store #4567', 'Goldfish cracker', 9.49),
+('2024-03-29 18:20:05', 'Walmart Store #7890', 'Pez candy', 1.79);

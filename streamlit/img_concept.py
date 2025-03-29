@@ -38,8 +38,8 @@ if __name__ == "__main__":
 
   ### Main Page
   st.dataframe(tran_info)
-  
-  maincol1, maincol2 = st.column(2)
+
+  maincol1, maincol2 = st.columns(2)
 
   with maincol1:
     st.image(uploaded_file)

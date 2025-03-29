@@ -28,3 +28,5 @@ if __name__ == "__main__":
 
      predictor = Predictor(endpoint_id, api_key=api_key)
      predictions = predictor.predict(imagefile)
+
+     st.json(predictions)

@@ -1,8 +1,8 @@
 import streamlit as st
-from snowflake.snowpark import Session
-from snowflake.core import Root
 import pandas as pd
 import requests
+from snowflake.snowpark import Session
+from snowflake.core import Root
 from PIL import Image
 from landingai.predict import Predictor
 
@@ -19,9 +19,6 @@ if __name__ == "__main__":
   ### Set page layout
   st.set_page_config(layout="wide")
 
-  st.header("🛒 POC demo - Shopping Conceptual Idea")
-  st.caption("Created by Euphemia")
-
   ### Side Bar
   with st.sidebar:
     uploaded_file = st.file_uploader("Choose a file")
@@ -30,22 +27,32 @@ if __name__ == "__main__":
       # To read file as bytes:
       bytes_data = uploaded_file.getvalue()
 
+      # Upload the image:
       imagefile = Image.open(uploaded_file)
 
+      # Send to model for prediction,
       predictor = Predictor(endpoint_id, api_key=api_key)
       predictions = predictor.predict(imagefile)
 
+      # Predict the result
       predicted_results = st.json(predictions)
 
-  ### Main Page
-  st.dataframe(tran_info)
-
+  ### Main Page Prep:
   maincol1, maincol2 = st.columns(2)
 
+  ### Main Top Area:
+  st.header("🛒 POC demo - Shopping Conceptual Idea")
+  st.caption("Created by Euphemia")
+
+  with st.expander:
+    st.dataframe(tran_info)
+
+  ### Main Left Column
   with maincol1:
     if uploaded_file:
       st.image(uploaded_file)
 
+  ### Main Right Column
   with maincol2:
     if predicted_results:
       st.write(predicted_results[0])

@@ -24,17 +24,25 @@ if __name__ == "__main__":
 
   ### Side Bar
   with st.sidebar:
-    st.dataframe(tran_info)
+    uploaded_file = st.file_uploader("Choose a file")
+    if uploaded_file is not None:
+      # To read file as bytes:
+      bytes_data = uploaded_file.getvalue()
+
+      imagefile = Image.open(uploaded_file)
+
+      predictor = Predictor(endpoint_id, api_key=api_key)
+      predictions = predictor.predict(imagefile)
+
+      st.json(predictions)
 
   ### Main Page
-  uploaded_file = st.file_uploader("Choose a file")
-  if uploaded_file is not None:
-    # To read file as bytes:
-    bytes_data = uploaded_file.getvalue()
+  st.dataframe(tran_info)
+  
+  maincol1, maincol2 = st.column(2)
 
-    imagefile = Image.open(uploaded_file)
+  with maincol1:
+    st.image(uploaded_file)
 
-    predictor = Predictor(endpoint_id, api_key=api_key)
-    predictions = predictor.predict(imagefile)
-
-    st.json(predictions)
+  with maincol2:
+    st.write("chat with Aime.")

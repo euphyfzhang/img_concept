@@ -6,6 +6,9 @@ import requests
 from PIL import Image
 from landingai.predict import Predictor
 
+### Connection to Snowflake and get Cortex Search Service from Root(session).
+session = Session.builder.configs(st.secrets["connections"]["snowflake"]).getOrCreate()
+
 api_info = session.table("IMG_RECG.API_CREDENTIALS").to_pandas()
 api_key = api_info[api_info["NAME"]=="LANDINGAI"]["API_KEY"].values[0]
 endpoint_id = api_info[api_info["NAME"]=="LANDINGAI"]["ENDPOINT_ID"].values[0]

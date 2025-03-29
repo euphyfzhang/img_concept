@@ -26,7 +26,7 @@ if __name__ == "__main__":
   with st.sidebar:
     uploaded_file = st.file_uploader("Choose a file")
     predicted_results = None
-    if uploaded_file is not None:
+    if uploaded_file:
       # To read file as bytes:
       bytes_data = uploaded_file.getvalue()
 
@@ -47,4 +47,5 @@ if __name__ == "__main__":
       st.image(uploaded_file)
 
   with maincol2:
-    st.write(predicted_results[0])
+    if predited_results:
+      st.write(predicted_results[0])

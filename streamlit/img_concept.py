@@ -26,5 +26,5 @@ if __name__ == "__main__":
 
      imagefile = Image.open(uploaded_file)
 
-     pedictor = Predictor(endpoint_id, api_key=api_key)
+     predictor = Predictor(endpoint_id, api_key=api_key)
      predictions = predictor.predict(imagefile)

@@ -89,7 +89,7 @@ if __name__ == "__main__":
           list_predicted_items.append(item_name)
           count += 1
         
-        if df_item:
+        if df_item.size:
           #Latest purchase
           latest_purchase = df_item[df_item["TIMESTAMP"]==df_item["TIMESTAMP"].max()]
 

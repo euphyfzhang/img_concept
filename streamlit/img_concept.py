@@ -24,30 +24,31 @@ if __name__ == "__main__":
   ### Side Bar
   with st.sidebar:
     # API KEY
-    api_key = api_key_euph #st.text_input("API KEY")
+    api_key = st.text_input("API KEY")
 
     # Upload area
     uploaded_file = st.file_uploader("📂 Choose a file")
     predictions = None
 
     # When file is uploaded:
-    if uploaded_file and api_key:
+    if uploaded_file:
       # To read file as bytes:
       bytes_data = uploaded_file.getvalue()
 
       # Upload the image:
       imagefile = Image.open(uploaded_file)
 
+      if api_key:
       # Send to model for prediction,
-      predictor = Predictor(endpoint_id, api_key=api_key)
-      predictions = predictor.predict(imagefile) #ObjectDetectionPrediction Object
+        predictor = Predictor(endpoint_id, api_key=api_key)
+        predictions = predictor.predict(imagefile) #ObjectDetectionPrediction Object
 
       # Predict the result
       with st.expander("📰 Returned result:"):
         st.json(predictions)
 
   ### Main Top Area:
-  st.header("🛒 POC demo - Shopping Conceptual Idea")
+  st.header("🛒 POC demo - Conceptual Idea")
   st.caption("🖌️ Created by Euphemia")
 
   with st.expander("🛍️ Shopping Transactions"):

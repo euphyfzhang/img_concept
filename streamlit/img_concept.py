@@ -46,7 +46,7 @@ if __name__ == "__main__":
           predictor = Predictor(endpoint_id, api_key=api_key)
           predictions = predictor.predict(imagefile) #ObjectDetectionPrediction Object
         except Exception as e:
-          err_message = e
+          err_message = e.message
 
       # Predict the result
       with st.expander("📰 Returned result:"):

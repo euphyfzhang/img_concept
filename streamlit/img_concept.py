@@ -13,21 +13,28 @@ api_info = session.table("IMG_RECG.API_CREDENTIALS").to_pandas()
 api_key = api_info[api_info["NAME"]=="LANDINGAI"]["API_KEY"].values[0]
 endpoint_id = api_info[api_info["NAME"]=="LANDINGAI"]["ENDPOINT_ID"].values[0]
 
+tran_info = session.table("IMG_RECG.TRANSACTION").to_pandas()
+
 if __name__ == "__main__":
-   ### Set page layout
-   st.set_page_config(layout="wide")
+  ### Set page layout
+  st.set_page_config(layout="wide")
 
-   st.header("🛒 POC - Shopping Conceptual Idea")
-   st.caption("Imagined/Authored by Euphemia")
+  st.header("🛒 POC demo - Shopping Conceptual Idea")
+  st.caption("Created by Euphemia")
 
-   uploaded_file = st.file_uploader("Choose a file")
-   if uploaded_file is not None:
-     # To read file as bytes:
-     bytes_data = uploaded_file.getvalue()
+  ### Side Bar
+  with st.sidebar:
+    st.dataframe(tran_info)
 
-     imagefile = Image.open(uploaded_file)
+  ### Main Page
+  uploaded_file = st.file_uploader("Choose a file")
+  if uploaded_file is not None:
+    # To read file as bytes:
+    bytes_data = uploaded_file.getvalue()
 
-     predictor = Predictor(endpoint_id, api_key=api_key)
-     predictions = predictor.predict(imagefile)
+    imagefile = Image.open(uploaded_file)
 
-     st.json(predictions)
+    predictor = Predictor(endpoint_id, api_key=api_key)
+    predictions = predictor.predict(imagefile)
+
+    st.json(predictions)

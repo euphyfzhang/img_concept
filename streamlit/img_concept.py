@@ -62,6 +62,11 @@ if __name__ == "__main__":
         #st.write(each)
       st.write("returned results")
       count = 1
+      list_predicted_items = []
 
       for each in predictions:
-        st.write(f"{count} : {each.label_name}")
+        item = each.label_name
+        if item not in list_predicted_items:
+          st.write(f"{count} : {item}")
+          list_predicted_items.append(item)
+          count += 1

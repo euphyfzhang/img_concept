@@ -91,7 +91,7 @@ if __name__ == "__main__":
         
         if df_item.size:
           #Latest purchase
-          latest_purchase = df_item[df_item["TIMESTAMP"]==df_item["TIMESTAMP"].max()]
+          latest_purchase = df_item[df_item["TRANSACTION_TIMESTAMP"]==df_item["TRANSACTION_TIMESTAMP"].max()]
 
           datets = latest_purchase["TRANSACTION_TIMESTAMP"].values[0]
           store = latest_purchase["MERCHANT_NAME"].values[0]

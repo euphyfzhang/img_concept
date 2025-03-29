@@ -40,9 +40,12 @@ if __name__ == "__main__":
       imagefile = Image.open(uploaded_file)
 
       if api_key:
-      # Send to model for prediction,
-        predictor = Predictor(endpoint_id, api_key=api_key)
-        predictions = predictor.predict(imagefile) #ObjectDetectionPrediction Object
+        try:
+          # Send to model for prediction,
+          predictor = Predictor(endpoint_id, api_key=api_key)
+          predictions = predictor.predict(imagefile) #ObjectDetectionPrediction Object
+        except Exception as e:
+          st.write("Sorry, predicted result cannot be retrieved.")
 
       # Predict the result
       with st.expander("📰 Returned result:"):

@@ -13,6 +13,7 @@ session = Session.builder.configs(st.secrets["connections"]["snowflake"]).getOrC
 api_info = session.table("IMG_RECG.API_CREDENTIALS").to_pandas()
 api_key_euph = api_info[api_info["NAME"]=="LANDINGAI"]["API_KEY"].values[0]
 endpoint_id = api_info[api_info["NAME"]=="LANDINGAI"]["ENDPOINT_ID"].values[0]
+api_key = None
 
 ## Transaction Info
 tran_info = session.table("IMG_RECG.TRANSACTION").to_pandas()
@@ -31,7 +32,7 @@ if __name__ == "__main__":
     predictions = None
 
     # When file is uploaded:
-    if uploaded_file:
+    if uploaded_file and api_key:
       # To read file as bytes:
       bytes_data = uploaded_file.getvalue()
 
@@ -65,22 +66,25 @@ if __name__ == "__main__":
 
   ### Main Right Column
   with maincol2:
+    st.subheader("🗃️ Show Results")
+
+    # Prep for the results
+    count = 1
+    list_predicted_items = []
+
     if predictions:
-      #for each in predictions:
-        #st.write(each)
-      st.subheader("🗃️ Show Results")
-      count = 1
-      list_predicted_items = []
-
+      # Loop thru all the predictions
       for each in predictions:
-        item = each.label_name
-        if item not in list_predicted_items:
-          # Show each item:
-          with st.expander(f"{count} : {item}"):
-            # Show dataset:
-            st.dataframe(tran_info[tran_info["ITEM"].str.contains(item, case = False)])
+        item_name = each.label_name
 
-          list_predicted_items.append(item)
+        if item_name not in list_predicted_items:
+          # Show each item:
+          with st.expander(f"{count} : {item_name}"):
+            df_item = tran_info[tran_info["ITEM"].str.contains(item_name, case = False)]
+            # Show dataset:
+            st.dataframe(df_item)
+
+          list_predicted_items.append(item_name)
           count += 1
 
     

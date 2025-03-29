@@ -61,6 +61,7 @@ if __name__ == "__main__":
       #for each in predictions:
         #st.write(each)
       st.write("returned results")
+      count = 1
 
       for each in predictions:
-        st.write(each.label_name)
+        st.write(f"{count} : {each.label_name}")

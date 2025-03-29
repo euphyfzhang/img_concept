@@ -17,7 +17,8 @@ if __name__ == "__main__":
    ### Set page layout
    st.set_page_config(layout="wide")
 
-   st.write("Hello")
+   st.write("🛒 Shopping Experimental POC")
+   st.caption("Imagined/Authored by Euphemia")
 
    uploaded_file = st.file_uploader("Choose a file")
    if uploaded_file is not None:

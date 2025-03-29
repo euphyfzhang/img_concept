@@ -76,7 +76,7 @@ if __name__ == "__main__":
     count = 1
     list_predicted_items = []
 
-    if "UNAUTHORIZED" in err_message:
+    if err_message and "UNAUTHORIZED" in err_message:
       st.write("Please check if API KEY has been input correctly. Thanks.")
     else:
       pass

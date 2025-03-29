@@ -61,4 +61,6 @@ if __name__ == "__main__":
       #for each in predictions:
         #st.write(each)
       st.write("returned results")
-      st.write(str(predictions))
+
+      for each in prediction:
+        st.write(each)

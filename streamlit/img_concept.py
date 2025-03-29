@@ -23,7 +23,7 @@ if __name__ == "__main__":
   with st.sidebar:
     # Upload area
     uploaded_file = st.file_uploader("📂 Choose a file")
-    predicted_results = None
+    predictions = None
 
     # When file is uploaded:
     if uploaded_file:
@@ -39,7 +39,7 @@ if __name__ == "__main__":
 
       # Predict the result
       with st.expander("📰 Returned result:"):
-        predicted_results = st.json(predictions)
+        st.json(predictions)
 
   ### Main Top Area:
   st.header("🛒 POC demo - Shopping Conceptual Idea")
@@ -58,5 +58,5 @@ if __name__ == "__main__":
 
   ### Main Right Column
   with maincol2:
-    if predicted_results:
-      st.write(predicted_results)
+    if predictions:
+      st.write(predictions[0]["label_name"])

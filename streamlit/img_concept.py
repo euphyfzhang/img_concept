@@ -49,7 +49,7 @@ if __name__ == "__main__":
     st.dataframe(tran_info)
 
   ### Main columns layout
-  maincol1, maincol2 = st.columns(2)
+  maincol1, maincol2 = st.columns([1, 2])
 
   ### Main Left Column
   with maincol1:

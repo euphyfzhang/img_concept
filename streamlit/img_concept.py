@@ -59,9 +59,8 @@ if __name__ == "__main__":
         st.json(predictions)
 
   ### Main Top Area:
-  st.image(banner_image)
-  st.header("📸 SnapLedger 🛒")
-  st.caption("Created by Euphemia")
+  ### The banner
+  st.image(banner_image, width = 900)
 
   ### The 1st section in MAIN PAGE
   with st.expander("🛍️ Shopping Transactions"):

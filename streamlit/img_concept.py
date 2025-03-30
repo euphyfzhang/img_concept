@@ -80,7 +80,8 @@ if __name__ == "__main__":
       list_predicted_items = []
 
       if err_message and "UNAUTHORIZED" in err_message:
-        st.warning("Please check if API KEY has been input correctly. Thanks.", icon="⚠️")
+        st.warning("Please check whether the *API KEY* has been input correctly. Thanks.", icon="⚠️")
+        st.caption("Note : *API KEY* is located at the top of the sidebar.")
       else:
         pass
 

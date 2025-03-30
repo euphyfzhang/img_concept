@@ -60,7 +60,7 @@ if __name__ == "__main__":
 
   ### Main Top Area:
   ### The banner
-  st.image(banner_image, width = 900)
+  st.image(banner_image, width = 1100)
 
   ### The 1st section in MAIN PAGE
   with st.expander("🛍️ Shopping Transactions"):

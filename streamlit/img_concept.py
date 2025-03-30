@@ -15,6 +15,12 @@ api_key_euph = api_info[api_info["NAME"]=="LANDINGAI"]["API_KEY"].values[0]
 endpoint_id = api_info[api_info["NAME"]=="LANDINGAI"]["ENDPOINT_ID"].values[0]
 api_key = None
 
+## Website contents
+images_path = "@IMG_RECG.INSTAGE"
+website_imgs = session.table("IMG_RECG.WEBSITE_IMAGES").to_pandas()
+banner_loc = website_imgs[website_imgs["DESCRIPTION"]=="BANNER"]["IMAGE_NAME"].values[0]
+banner_image = session.file.get_stream(f"{images_path}/BANNER/{banner_loc}" , decompress=False).read()
+
 ## Transaction Info
 tran_info = session.table("IMG_RECG.TRANSACTION").to_pandas()
 
@@ -26,7 +32,7 @@ if __name__ == "__main__":
   ### Side Bar
   with st.sidebar:
     # API KEY
-    api_key = st.text_input("API KEY", value = "land_sk_6oldW5HSsjgXSwxyQf0vZfDwOR2uOIaGoleFfIk1TLSyIG19", type = "password") #bt
+    api_key = st.text_input("API KEY", type = "password") #bt
 
     # Upload area
     uploaded_file = st.file_uploader("📂 Choose a file")
@@ -53,8 +59,9 @@ if __name__ == "__main__":
         st.json(predictions)
 
   ### Main Top Area:
-  st.header("🛒 POC demo - Conceptual Idea")
-  st.caption("🖌️ Created by Euphemia")
+  st.image(banner_image)
+  st.header("📸 SnapLedger 🛒")
+  st.caption("Created by Euphemia")
 
   ### The 1st section in MAIN PAGE
   with st.expander("🛍️ Shopping Transactions"):

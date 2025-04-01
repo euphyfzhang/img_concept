@@ -1,31 +1,96 @@
 name: Transaction
 tables:
   - name: TRANSACTION
-    description: Daily transaction that contains the date of purchase, store name, item, price of the purchased item. 
+    description: Daily transaction that contains the date of purchase, store name, item, price of the purchased item.
     base_table:
       database: RESUME_AI_DB
       schema: IMG_RECG
       table: TRANSACTION
     primary_key:
       columns:
-        - TRANSACTION_TIMESTAMP
+        - _ID
     time_dimensions:
       - name: TRANSACTION_TIMESTAMP
         expr: TRANSACTION_TIMESTAMP
         description: transaction timestamp, date of purchase, date time of purchase, time of purchase
         unique: true
         data_type: Timestamp_ntz
-    measures:
+        synonyms:
+          - transaction timestamp
+          - date of purchase
+          - date time of purchase
+          - time of purchase
+    dimensions:
+      - name: PRODUCT_ID
+        expr: PRODUCT_ID
+        data_type: number
+        synonyms:
+          - product
+          - item
+          - stuff
+          - object
+        cortex_search_service:
+          database: RESUME_AI_DB
+          schema: IMG_RECG
+          service: CS_PRODUCT
+      - name: MERCHANT_ID
+        expr: MERCHANT_ID
+        data_type: number
+        synonyms:
+          - merchant
+          - store
+          - retail
+      - expr: _ID
+        name: _ID
+        data_type: NUMBER(38, 0)
+        synonyms:
+          - ID of the transaction
+        sample_values:
+          - '1'
+          - '2'
+          - '3'
+      - expr: AMOUNT
+        name: AMOUNT
+        data_type: NUMBER(38, 0)
+        synonyms:
+          - PRICE
+          - VALUE
+          - AMOUNT
+        sample_values:
+          - '3.99'
+          - '4.49'
+          - '8.99'
+      - expr: ITEM
+        name: ITEM
+        data_type: VARCHAR(16777216)
+        synonyms:
+          - ITEM
+          - OBJECT
+          - PURCHASE
+        sample_values:
+          - Granola bar
+          - Oatmeal
+          - Goldfish cracker
+    facts:
       - name: daily_purchase
         expr: purchase
         description: total purchase of the day
-        synonyms: ["total amount of the day", "purchase of the day", "expense of the day", "cost of the day", "spend of the day"]
+        synonyms:
+          - total amount of the day
+          - purchase of the day
+          - expense of the day
+          - cost of the day
+          - spend of the day
         default_aggregation: sum
         data_type: number
       - name: daily_quantity
         expr: count(1)
         description: total times of purchase
-        synonyms: ["total times of the day", "quantity of purchase of the day", "number of purchase of the day", "number of spendings of the day"]
+        synonyms:
+          - total times of the day
+          - quantity of purchase of the day
+          - number of purchase of the day
+          - number of spendings of the day
         default_aggregation: sum
         data_type: number
       - name: average_purchase
@@ -35,15 +100,10 @@ tables:
         expr: daily_purchase/daily_quantity
         data_type: number
         default_aggregation: avg
-    dimensions:
-      - name: PRODUCT_ID
-        expr: PRODUCT_ID
-        data_type: number
-      - name: MERCHANT_ID
-        expr: MERCHANT_ID
-        data_type: number
-
-  - name: product
+    synonyms:
+      - TRANSACTIONS
+      - PURCHASES
+  - name: PRODUCT
     description: Product dimension table with unique product identifiers and attributes.
     base_table:
       database: RESUME_AI_DB
@@ -51,11 +111,13 @@ tables:
       table: DIM_PRODUCT
     primary_key:
       columns:
-        - product_id
+        - _ID
     dimensions:
-      - name: product_id
-        expr: product_id
+      - name: _ID
+        expr: _ID
         data_type: number
+        synonyms:
+          - Product ID
       - name: product_line
         expr: product_line
         description: Product line associated with transaction
@@ -64,7 +126,10 @@ tables:
           - Goldfish cracker
           - Granola bar
           - Pez candy
-
+    synonyms:
+      - PRODUCT
+      - ITEM
+      - OBJECT
   - name: Merchant
     description: Merchant dimension table with unique merchant identifiers and merchant name.
     base_table:
@@ -73,36 +138,26 @@ tables:
       table: DIM_MERCHANT
     primary_key:
       columns:
-        - _id
+        - _ID
     dimensions:
-      - name: _id
-        expr: merchant_id
+      - name: _ID
+        expr: _ID
         description: the id assigned to the merchant.
         data_type: number
-      - name: merchant_name
-        expr: merchant_name
+        synonyms:
+          - ID of the merchant
+      - name: MERCHANT_NAM
+        expr: MERCHANT_NAME
         description: the name of the merchant
         data_type: varchar
         sample_values:
           - Loblaws Store
           - Metro Store
           - Costco Store
-
-  - name: Product
-    base_table:
-      database: RESUME_AI_DB
-      schema: IMG_RECG
-      table: DIM_PRODUCT
-    primary_key:
-      columns:
-        - _id
-    dimensions:
-      - name: product_line
-        expr: product_line
-        cortex_search_service_name: product_line_search_service
-        data_type: varchar
-
-
+        synonyms:
+          - MERCHANT
+          - STORE
+          - RETAIL
 relationships:
   - name: transaction_to_product
     left_table: transaction
@@ -112,7 +167,6 @@ relationships:
         right_column: _id
     join_type: left_outer
     relationship_type: many_to_one
-
   - name: transaction_to_merchant
     left_table: transaction
     right_table: merchant
@@ -121,26 +175,10 @@ relationships:
         right_column: _id
     join_type: left_outer
     relationship_type: many_to_one
-
-
 verified_queries:
-  - name: "daily total expenses"
-    question: "What is the total expenses per day?"
-    sql: "
-            SELECT
-              TO_DATE(TRANSACTION_TIMESTAMP) AS DATE,
-              SUM(AMOUNT) AS TOTAL_AMOUNT
-            FROM
-              __TRANSACTION
-            GROUP BY TO_DATE(TRANSACTION_TIMESTAMP)
-            ORDER BY
-              TO_DATE(TRANSACTION_TIMESTAMP) DESC;
-          "
-
-  - name: "most recent purchase of the specifc item"
-    question: "When is the most recent date of the purchase of Pez Candies?"
-    sql: "SELECT ITEM, MAX(TRANSACTION_TIMESTAMP) AS MOST_RECENT_TIMESTAMP
-        FROM __TRANSACTION
-        WHERE ITEM = 'Pez candy'
-        GROUP BY ITEM;
-      "
+  - name: daily total expenses
+    question: What is the total expenses per day?
+    sql: ' SELECT TO_DATE(TRANSACTION_TIMESTAMP) AS DATE, SUM(AMOUNT) AS TOTAL_AMOUNT FROM __TRANSACTION GROUP BY TO_DATE(TRANSACTION_TIMESTAMP) ORDER BY TO_DATE(TRANSACTION_TIMESTAMP) DESC; '
+  - name: most recent purchase of the specifc item
+    question: When is the most recent date of the purchase of Pez Candies?
+    sql: 'SELECT ITEM, MAX(TRANSACTION_TIMESTAMP) AS MOST_RECENT_TIMESTAMP FROM __TRANSACTION WHERE ITEM = ''Pez candy'' GROUP BY ITEM; '

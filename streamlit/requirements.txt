@@ -7,3 +7,4 @@ requests
 Pillow
 landingai~=0.3.0
 opencv-python-headless
+sseclient

@@ -208,7 +208,7 @@ def display_conversation():
                 display_message(content, idx)
 
 
-def display_message(content, message_index, request_id):
+def display_message(content, message_index, request_id=""):
     """
     Display a single message content.
 

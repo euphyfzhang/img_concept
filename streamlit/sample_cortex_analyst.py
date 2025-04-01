@@ -109,7 +109,7 @@ def process_user_input(prompt: str):
     # Show progress indicator inside analyst chat message while waiting for response
     with st.chat_message("analyst"):
         with st.spinner("Waiting for Analyst's response..."):
-            time.sleep(1)
+
             response, error_msg = get_analyst_response(st.session_state.messages)
             if error_msg is None:
                 analyst_message = {

@@ -11,6 +11,14 @@ CORTEX_SEARCH_DATABASE = "RESUME_AI_DB"
 CORTEX_SEARCH_SCHEMA = "IMG_RECG"
 CORTEX_SEARCH_SERVICE = "CS_ANALYST"
 
+# Each path points to a YAML file defining a semantic model
+AVAILABLE_SEMANTIC_MODELS_PATHS = [
+    f"{CORTEX_SEARCH_DATABASE}.{CORTEX_SEARCH_SCHEMA}.INSTAGE/SEMANTIC_FILE/semantic_analyst_file.yaml"
+]
+API_ENDPOINT = "/api/v2/cortex/analyst/message"
+FEEDBACK_API_ENDPOINT = "/api/v2/cortex/analyst/feedback"
+API_TIMEOUT = 50000  # in milliseconds
+
 ### Connection to Snowflake and get Cortex Search Service from Root(session).
 session = Session.builder.configs(st.secrets["connections"]["snowflake"]).getOrCreate()
 

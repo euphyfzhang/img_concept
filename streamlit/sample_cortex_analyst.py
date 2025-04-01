@@ -101,6 +101,7 @@ def process_user_input(prompt: str):
     new_user_message = {
         "role": "user",
         "content": [{"type": "text", "text": prompt}],
+        "stream" : True
     }
     st.session_state.messages.append(new_user_message)
     with st.chat_message("user"):

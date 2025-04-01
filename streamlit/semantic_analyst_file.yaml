@@ -1,6 +1,6 @@
 name: Transaction
 tables:
-  - name: daily_transaction
+  - name: TRANSACTION
     description: Daily transaction that contains the date of purchase, store name, item, price of the purchased item. 
     base_table:
       database: RESUME_AI_DB
@@ -8,12 +8,10 @@ tables:
       table: TRANSACTION
     primary_key:
       columns:
-        - TRANSACTION_TIMESTAMP
-        - pMERCHANT_NAME
-        - ITEM
+        - _ID
     time_dimensions:
       - name: TRANSACTION_TIMESTAMP
-        expr: Timestamp
+        expr: TRANSACTION_TIMESTAMP
         description: transaction timestamp, date of purchase, date time of purchase, time of purchase
         unique: true
         data_type: Timestamp_ntz
@@ -60,7 +58,7 @@ tables:
         data_type: number
       - name: product_line
         expr: product_line
-        description: Product line associated with revenue
+        description: Product line associated with transaction
         data_type: varchar
         sample_values:
           - Goldfish cracker
@@ -115,7 +113,7 @@ relationships:
     join_type: left_outer
     relationship_type: many_to_one
 
-  - name: revenue_to_merchant
+  - name: transaction_to_merchant
     left_table: transaction
     right_table: merchant
     relationship_columns:
@@ -126,28 +124,23 @@ relationships:
 
 
 verified_queries:
- # For eval sample nlimtiaco_sc_3__0
   - name: "daily total expenses"
-    question: "daily total expenses"
-    verified_at: 202504011425
-    verified_by: euphemia
+    question: "What is the total expenses per day?"
     sql: "
             SELECT
               TO_DATE(TRANSACTION_TIMESTAMP) AS DATE,
-              SUM(amount) AS  AMOUNT
+              SUM(AMOUNT) AS TOTAL_AMOUNT
             FROM
-              IMG_RECG.TRANSACTION
+              __TRANSACTION
             GROUP BY TO_DATE(TRANSACTION_TIMESTAMP)
             ORDER BY
               TO_DATE(TRANSACTION_TIMESTAMP) DESC;
           "
- # For eval sample nlimtiaco_sc_6__0
+
   - name: "most recent purchase of the specifc item"
     question: "When is the most recent date of the purchase of Pez Candies?"
     sql: "SELECT ITEM, MAX(TRANSACTION_TIMESTAMP) AS MOST_RECENT_TIMESTAMP
-        FROM IMG_RECG.TRANSACTION
+        FROM __TRANSACTION
         WHERE ITEM = 'Pez candy'
         GROUP BY ITEM;
       "
-    verified_at: 202504011426
-    verified_by: euphemia

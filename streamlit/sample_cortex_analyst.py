@@ -115,13 +115,13 @@ def process_user_input(prompt: str):
                 analyst_message = {
                     "role": "analyst",
                     "content": response["message"]["content"],
-                    "request_id": response["request_id"],
+                    "request_id": {response.headers.get('X-Snowflake-Request-Id')}  #response["request_id"]
                 }
             else:
                 analyst_message = {
                     "role": "analyst",
                     "content": [{"type": "text", "text": error_msg}],
-                    "request_id": response["request_id"],
+                    "request_id": {response.headers.get('X-Snowflake-Request-Id')}
                 }
                 st.session_state["fire_API_error_notify"] = True
 
@@ -383,15 +383,17 @@ def submit_feedback(request_id, positive, feedback_message):
         "positive": positive,
         "feedback_message": feedback_message,
     }
-    resp = _snowflake.send_snow_api_request(
-        "POST",  # method
-        FEEDBACK_API_ENDPOINT,  # path
-        {},  # headers
-        {},  # params
-        request_body,  # body
-        None,  # request_guid
-        API_TIMEOUT,  # timeout in milliseconds
+
+    resp = requests.post(
+        url=f"https://{st.session_state.CONN.host}/api/v2/cortex/analyst/feedback",
+        json=request_body,
+        headers={
+            "Authorization": f'Snowflake Token="{st.session_state.CONN.rest.token}"',
+            "Content-Type": "application/json",
+        },
+        stream=True,
     )
+
     if resp["status"] == 200:
         return None
 

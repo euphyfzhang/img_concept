@@ -9,6 +9,8 @@ tables:
     primary_key:
       columns:
         - _ID
+        - PRODUCT_ID
+        - MERCHANT_ID
     time_dimensions:
       - name: TRANSACTION_TIMESTAMP
         expr: TRANSACTION_TIMESTAMP

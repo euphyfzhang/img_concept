@@ -174,6 +174,7 @@ def show_conversation_history() -> None:
 if __name__ == "__main__":
     st.title("Sample Cortex Analyst")
     st.markdown(f"Semantic Model: `{FILE}`")
+    st.markdown(st.session_state.CONN.rest.token)
 
     if "messages" not in st.session_state:
         st.session_state.messages = []

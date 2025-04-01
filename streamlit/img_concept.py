@@ -6,13 +6,23 @@ from snowflake.core import Root
 from PIL import Image
 from landingai.predict import Predictor
 
+# service parameters
+CORTEX_SEARCH_DATABASE = "RESUME_AI_DB"
+CORTEX_SEARCH_SCHEMA = "IMG_RECG"
+CORTEX_SEARCH_SERVICE = "CS_ANALYST"
+
 ### Connection to Snowflake and get Cortex Search Service from Root(session).
 session = Session.builder.configs(st.secrets["connections"]["snowflake"]).getOrCreate()
 
+## Chatbot related objects
+root = Root(session)
+svc = root.databases[CORTEX_SEARCH_DATABASE].schemas[CORTEX_SEARCH_SCHEMA].cortex_search_services[CORTEX_SEARCH_SERVICE]
+
 ## API Info
 api_info = session.table("IMG_RECG.API_CREDENTIALS").to_pandas()
-api_key_euph = api_info[api_info["NAME"]=="LANDINGAI"]["API_KEY"].values[0]
-endpoint_id = api_info[api_info["NAME"]=="LANDINGAI"]["ENDPOINT_ID"].values[0]
+landingai_api = api_info[api_info["NAME"]=="LANDINGAI"]
+api_key_euph = landingai_api["API_KEY"].values[0]
+endpoint_id = landingai_api["ENDPOINT_ID"].values[0]
 api_key = None
 
 ## Website contents

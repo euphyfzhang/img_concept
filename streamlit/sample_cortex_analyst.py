@@ -18,7 +18,7 @@ FILE = "SEMANTIC_FILE/semantic_analyst_file.yaml"
 
 if "CONN" not in st.session_state or st.session_state.CONN is None:
     session = Session.builder.configs(st.secrets["connections"]["snowflake"]).getOrCreate()
-    st.session_state.CONN = session.connection()
+    st.session_state.CONN = session.connection
 
 def get_conversation_history() -> list[dict[str, Any]]:
     messages = []

@@ -15,6 +15,7 @@ DATABASE = "RESUME_AI_DB"
 SCHEMA = "IMG_RECG"
 STAGE = "INSTAGE"
 FILE = "SEMANTIC_FILE/semantic_analyst_file.yaml"
+SEMANTIC_FILE = f"{DATABASE}.{SCHEMA}.{STAGE}/{FILE}"
 AVAILABLE_SEMANTIC_MODELS_PATHS = f"{DATABASE}.{SCHEMA}.{STAGE}/{FILE}"
 
 session = Session.builder.configs(st.secrets["connections"]["snowflake"]).getOrCreate()

@@ -8,9 +8,7 @@ tables:
       table: TRANSACTION
     primary_key:
       columns:
-        - _ID
-        - PRODUCT_ID
-        - MERCHANT_ID
+        - TRANSACTION_TIMESTAMP
     time_dimensions:
       - name: TRANSACTION_TIMESTAMP
         expr: TRANSACTION_TIMESTAMP
@@ -38,11 +36,11 @@ tables:
         data_type: number
         default_aggregation: avg
     dimensions:
-      - name: product_id
-        expr: product_id
+      - name: PRODUCT_ID
+        expr: PRODUCT_ID
         data_type: number
-      - name: merchant_id
-        expr: merchant_id
+      - name: MERCHANT_ID
+        expr: MERCHANT_ID
         data_type: number
 
   - name: product

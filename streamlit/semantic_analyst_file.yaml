@@ -24,27 +24,33 @@ tables:
         synonyms: ["total amount of the day", "purchase of the day", "expense of the day", "cost of the day", "spend of the day"]
         default_aggregation: sum
         data_type: number
+      - name: daily_quantity
+        expr: count(1)
+        description: total times of purchase
+        synonyms: ["total times of the day", "quantity of purchase of the day", "number of purchase of the day", "number of spendings of the day"]
+        default_aggregation: sum
+        data_type: number
       - name: average_purchase
         synonyms:
           - average
         description: average spending across the given period
-        expr: sum(amount)/period
+        expr: daily_purchase/daily_quantity
         data_type: number
         default_aggregation: avg
     dimensions:
       - name: product_id
         expr: product_id
         data_type: number
-      - name: region_id
-        expr: region_id
+      - name: merchant_id
+        expr: merchant_id
         data_type: number
 
   - name: product
     description: Product dimension table with unique product identifiers and attributes.
     base_table:
-      database: cortex_analyst_demo
-      schema: revenue_timeseries
-      table: product_dim
+      database: RESUME_AI_DB
+      schema: IMG_RECG
+      table: DIM_PRODUCT
     primary_key:
       columns:
         - product_id
@@ -57,42 +63,41 @@ tables:
         description: Product line associated with revenue
         data_type: varchar
         sample_values:
-          - Electronics
-          - Clothing
-          - Home Appliances
-          - Toys
-          - Books
+          - Goldfish cracker
+          - Granola bar
+          - Pez candy
 
-  - name: region
-    description: Region dimension table with unique region identifiers and geographic attributes.
+  - name: Merchant
+    description: Merchant dimension table with unique merchant identifiers and merchant name.
     base_table:
-      database: cortex_analyst_demo
-      schema: revenue_timeseries
-      table: region_dim
+      database: RESUME_AI_DB
+      schema: IMG_RECG
+      table: DIM_MERCHANT
     primary_key:
       columns:
-        - region_id
+        - _id
     dimensions:
-      - name: region_id
-        expr: region_id
+      - name: _id
+        expr: merchant_id
+        description: the id assigned to the merchant.
         data_type: number
-      - name: sales_region
-        expr: sales_region
-        description: Region associated with revenue
+      - name: merchant_name
+        expr: merchant_name
+        description: the name of the merchant
         data_type: varchar
         sample_values:
-          - North America
-          - Europe
-          - Asia
-          - South America
-          - Africa
+          - Loblaws Store
+          - Metro Store
+          - Costco Store
 
-  - name: product_dimension
+  - name: Product
     base_table:
-      database: cortex_analyst_demo
-      schema: revenue_timeseries
-      table: product_dim
-
+      database: RESUME_AI_DB
+      schema: IMG_RECG
+      table: DIM_PRODUCT
+    primary_key:
+      columns:
+        - _id
     dimensions:
       - name: product_line
         expr: product_line
@@ -101,65 +106,48 @@ tables:
 
 
 relationships:
-  - name: revenue_to_product
-    left_table: daily_revenue
+  - name: transaction_to_product
+    left_table: transaction
     right_table: product
     relationship_columns:
       - left_column: product_id
-        right_column: product_id
+        right_column: _id
     join_type: left_outer
     relationship_type: many_to_one
 
-  - name: revenue_to_region
-    left_table: daily_revenue
-    right_table: region
+  - name: revenue_to_merchant
+    left_table: transaction
+    right_table: merchant
     relationship_columns:
-      - left_column: region_id
-        right_column: region_id
+      - left_column: merchant_id
+        right_column: _id
     join_type: left_outer
     relationship_type: many_to_one
 
-  
 
 verified_queries:
  # For eval sample nlimtiaco_sc_3__0
-  - name: "daily cumulative expenses in 2023 dec"
-    question: "daily cumulative expenses in 2023 dec"
-    verified_at: 1714752498
-    verified_by: renee
+  - name: "daily total expenses"
+    question: "daily total expenses"
+    verified_at: 202504011425
+    verified_by: euphemia
     sql: "
             SELECT
-              date,
-              SUM(daily_cogs) OVER (
-                ORDER BY
-                  date ROWS BETWEEN UNBOUNDED PRECEDING
-                  AND CURRENT ROW
-              ) AS cumulative_cogs
+              TO_DATE(TRANSACTION_TIMESTAMP) AS DATE,
+              SUM(amount) AS  AMOUNT
             FROM
-              daily_revenue
-            WHERE
-              date BETWEEN '2023-12-01'
-              AND '2023-12-31'
+              IMG_RECG.TRANSACTION
+            GROUP BY TO_DATE(TRANSACTION_TIMESTAMP)
             ORDER BY
-              date DESC;
+              TO_DATE(TRANSACTION_TIMESTAMP) DESC;
           "
  # For eval sample nlimtiaco_sc_6__0
-  - name: "lowest revenue each month"
-    question: "For each month, what was the lowest daily revenue and on what date did that lowest revenue occur?"
-    sql: "WITH monthly_min_revenue AS (
-        SELECT
-          DATE_TRUNC('MONTH', date) AS month,
-          MIN(daily_revenue) AS min_revenue
-        FROM daily_revenue
-          GROUP BY
-            DATE_TRUNC('MONTH', date)
-        )
-        SELECT
-          mmr.month,
-          mmr.min_revenue,
-          dr.date AS min_revenue_date
-        FROM monthly_min_revenue AS mmr JOIN daily_revenue AS dr
-          ON mmr.month = DATE_TRUNC('MONTH', dr.date) AND mmr.min_revenue = dr.daily_revenue
-        ORDER BY mmr.month DESC NULLS LAST"
-    verified_at: 1715187400
-    verified_by: renee
+  - name: "most recent purchase of the specifc item"
+    question: "When is the most recent date of the purchase of Pez Candies?"
+    sql: "SELECT ITEM, MAX(TRANSACTION_TIMESTAMP) AS MOST_RECENT_TIMESTAMP
+        FROM IMG_RECG.TRANSACTION
+        WHERE ITEM = 'Pez candy'
+        GROUP BY ITEM;
+      "
+    verified_at: 202504011426
+    verified_by: euphemia

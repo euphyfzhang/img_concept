@@ -141,7 +141,7 @@ def display_warnings():
         st.warning(warning["message"], icon="⚠️")
 
 
-def get_analyst_response(messages: List[Dict]) -> Tuple[Dict, Optional[str]]:
+def get_analyst_response(messages):
     """
     Send chat history to the Cortex Analyst API and return the response.
 
@@ -180,17 +180,17 @@ def get_analyst_response(messages: List[Dict]) -> Tuple[Dict, Optional[str]]:
     else:
         # Craft readable error message
         error_msg = f"""
-🚨 An Analyst API error has occurred 🚨
+                        🚨 An Analyst API error has occurred 🚨
 
-* response code: `{resp['status']}`
-* request-id: `{parsed_content['request_id']}`
-* error code: `{parsed_content['error_code']}`
+                        * response code: `{resp['status']}`
+                        * request-id: `{parsed_content['request_id']}`
+                        * error code: `{parsed_content['error_code']}`
 
-Message:
-```
-{parsed_content['message']}
-```
-        """
+                        Message:
+                        ```
+                        {parsed_content['message']}
+                        ```
+                    """
         return parsed_content, error_msg
 
 

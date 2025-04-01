@@ -208,11 +208,7 @@ def display_conversation():
                 display_message(content, idx)
 
 
-def display_message(
-    content: List[Dict[str, Union[str, Dict]]],
-    message_index: int,
-    request_id: Union[str, None] = None,
-):
+def display_message(content, message_index, request_id):
     """
     Display a single message content.
 
@@ -241,7 +237,7 @@ def display_message(
 
 
 @st.cache_data(show_spinner=False)
-def get_query_exec_result(query: str) -> Tuple[Optional[pd.DataFrame], Optional[str]]:
+def get_query_exec_result(query):
     """
     Execute the SQL query and convert the results to a pandas DataFrame.
 
@@ -259,7 +255,7 @@ def get_query_exec_result(query: str) -> Tuple[Optional[pd.DataFrame], Optional[
         return None, str(e)
 
 
-def display_sql_confidence(confidence: dict):
+def display_sql_confidence(confidence):
     if confidence is None:
         return
     verified_query_used = confidence["verified_query_used"]
@@ -283,9 +279,7 @@ def display_sql_confidence(confidence: dict):
             st.code(verified_query_used["sql"], language="sql", wrap_lines=True)
 
 
-def display_sql_query(
-    sql: str, message_index: int, confidence: dict, request_id: Union[str, None] = None
-):
+def display_sql_query(sql, message_index, confidence, request_id):
     """
     Executes the SQL query and displays the results in form of data frame and charts.
 
@@ -321,7 +315,7 @@ def display_sql_query(
         display_feedback_section(request_id)
 
 
-def display_charts_tab(df: pd.DataFrame, message_index: int) -> None:
+def display_charts_tab(df, message_index):
     """
     Display the charts tab.
 
@@ -354,7 +348,7 @@ def display_charts_tab(df: pd.DataFrame, message_index: int) -> None:
         st.write("At least 2 columns are required")
 
 
-def display_feedback_section(request_id: str):
+def display_feedback_section(request_id):
     with st.popover("📝 Query Feedback"):
         if request_id not in st.session_state.form_submitted:
             with st.form(f"feedback_form_{request_id}", clear_on_submit=True):
@@ -383,9 +377,7 @@ def display_feedback_section(request_id: str):
             st.error(st.session_state.form_submitted[request_id]["error"])
 
 
-def submit_feedback(
-    request_id: str, positive: bool, feedback_message: str
-) -> Optional[str]:
+def submit_feedback(request_id, positive, feedback_message):
     request_body = {
         "request_id": request_id,
         "positive": positive,

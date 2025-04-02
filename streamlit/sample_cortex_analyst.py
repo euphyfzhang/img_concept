@@ -142,7 +142,7 @@ def process_message(prompt: str) -> None:
         #parsed_content = parsed_list 
 
         for each in parsed_list:
-            st.write(f"here is the response content : {each}")
+            st.write(f"{each["text_delta"]}")
 
         st.divider()
 

@@ -172,7 +172,7 @@ def get_analyst_response(messages):
         stream=True,
     )
     st.write(st.session_state.CONN.host)
-    st.write(f"here : {resp}")
+    st.write(f"here : {resp.text}")
 
     # Content is a string with serialized JSON object
     parsed_content = json.loads(resp)

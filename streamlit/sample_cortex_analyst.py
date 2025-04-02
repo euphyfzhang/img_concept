@@ -171,11 +171,11 @@ def get_analyst_response(messages):
         },
         stream=True,
     )
-    st.write(st.session_state.CONN.host)
-    st.write(f"here : {resp.text}")
+    #st.write(st.session_state.CONN.host)
+    #st.write(f"here : {resp.text}")
 
     # Content is a string with serialized JSON object
-    parsed_content = json.loads(resp)
+    parsed_content = json.loads(resp.text)
 
     # Check if the response is successful
     if resp.status_code < 400:

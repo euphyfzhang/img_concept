@@ -256,7 +256,7 @@ def display_message(content, message_index, request_id=""):
         if item["type"] == "text":
             st.markdown(item["text"])
 
-        if item["suggestions"]:
+        if "suggestions" in item and item["suggestions"]:
             # Display suggestions as buttons
             for suggestion_index, suggestion in enumerate(item["suggestions"]):
                 if st.button(
@@ -264,7 +264,7 @@ def display_message(content, message_index, request_id=""):
                 ):
                     st.session_state.active_suggestion = suggestion
 
-        if item["sql"]:
+        if "sql" in item and item["sql"]:
             # Display the SQL query and results
             display_sql_query(
                 item["statement"], message_index, item["confidence"], request_id

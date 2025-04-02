@@ -31,10 +31,6 @@ banner_image = session.file.get_stream(f"{images_path}/BANNER/{banner_loc}" , de
 
 tran_info = session.table("IMG_RECG.TRANSACTION").to_pandas()
 
-api_key = None
-uploaded_file = None
-predictions = None
-
 
 def main():
     # Initialize session state
@@ -80,19 +76,15 @@ def show_header_and_sidebar():
             on_change=reset_session_state,
         )
         
-        st.divider()
-        # API KEY
-        api_key = st.text_input("API KEY", type = "password")
-
-        with st.expander("📰 Returned result:"):
-            if predictions:
-                st.json(predictions)
-
+        
 
 def handle_user_inputs():
     """Handle user inputs from the chat interface."""
 
     uploaded_file = st.file_uploader("📂 Choose a file")
+    # API KEY
+    api_key = st.text_input("API KEY", type = "password")
+    
     predictions = None
     err_message = None
 

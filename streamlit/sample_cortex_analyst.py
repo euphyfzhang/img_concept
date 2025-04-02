@@ -164,16 +164,16 @@ def parsed_response_message(content):
         elif "request_id" in each:
             request_id = each["request_id"]
 
-    rebuilt_response = [{ "type" : "text"
+    rebuilt_response = { "type" : "text"
                         , "text" : "".join(text_delta)
                         , "suggestions" : suggestions_delta
                         , "request_id": request_id
                         , "messages" : messages
                         , "error_code" : error_code
                         , "request_id" : request_id
-                        }]
+                        }
     
-    st.header(rebuilt_response)
+    #st.header(rebuilt_response)
 
     return rebuilt_response
 
@@ -188,15 +188,13 @@ def get_analyst_response(messages):
     Returns:
         Optional[Dict]: The response from the Cortex Analyst API.
     """
-    st.write(st.session_state.messages)
+    st.write(f"session_state.message: {st.session_state.messages}")
     # Prepare the request body with the user's prompt
     request_body = {
         "messages": st.session_state.messages,
         "semantic_model_file": f"@{SEMANTIC_FILE}",
         "stream": True,
     }
-
-    st.write(f"request {request_body}")
 
     # Send a POST request to the Cortex Analyst API endpoint
     # Adjusted to use positional arguments as per the API's requirement

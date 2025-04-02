@@ -110,7 +110,9 @@ def process_user_input(prompt: str):
         "content": [{"type": "text", "text": prompt}],
         "stream" : True
     }
+
     st.session_state.messages.append(new_user_message)
+
     with st.chat_message("user"):
         user_msg_index = len(st.session_state.messages) - 1
         display_message(new_user_message["content"])
@@ -120,7 +122,7 @@ def process_user_input(prompt: str):
     with st.chat_message("analyst"):
         with st.spinner("Waiting for Analyst's response..."):
 
-            written_content, error_msg = get_analyst_response(st.session_state.messages)
+            written_content, error_msg = get_analyst_response(new_user_message["content"])
 
             if error_msg is None:
                 analyst_message = {
@@ -251,7 +253,6 @@ def display_message(content, request_id=""):
         # Display suggestions as buttons
         for suggestion in suggestions:
             st.button(suggestion)
-
 
 @st.cache_data(show_spinner=False)
 def get_query_exec_result(query):

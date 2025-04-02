@@ -158,6 +158,10 @@ def process_user_input(prompt: str):
         with st.spinner("Waiting for Analyst's response..."):
 
             response, error_msg = get_analyst_response(st.session_state.messages)
+            holddata = json.loads(response)
+
+            st.json(holddata)
+
             events = sseclient.SSEClient(response).events()
             written_content = st.write_stream(stream(events))
 
@@ -223,7 +227,7 @@ def get_analyst_response(messages):
     # Check if the response is successful
     if resp.status_code < 400:
         # Return the content of the response as a JSON object
-        return json.loads(resp.content), None
+        return resp.content, None
     else:
         # Craft readable error message
         error_msg = f"""
@@ -233,7 +237,7 @@ def get_analyst_response(messages):
                         {resp.text}
                         ```
                     """
-        return resp.staus_code, error_msg
+        return resp.status_code, error_msg
 
 
 def display_conversation():

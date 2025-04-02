@@ -109,12 +109,12 @@ def process_user_input(prompt):
 
             response, error_msg = get_analyst_response(st.session_state.messages)
             st.write(response)
-            st.write(type(response))
+
             if error_msg is None:
                 analyst_message = {
                     "role": "analyst",
                     "content": response,
-                    "request_id": response["request_id"],
+                    "request_id": response[0]["request_id"],
                 }
             else:
                 analyst_message = {

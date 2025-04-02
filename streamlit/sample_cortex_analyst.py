@@ -207,7 +207,7 @@ def get_analyst_response(messages):
     )
 
     # Content is a string with serialized JSON object
-    parsed_content = parsed_response_message(content)
+    parsed_content = parsed_response_message(resp.content)
 
     # Check if the response is successful
     if resp.status_code < 400:

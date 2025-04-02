@@ -295,11 +295,11 @@ def display_message(content, request_id=""):
 
     if text:
         st.markdown(text)
-    
-    if suggestions:
+
+    #if suggestions:
         # Display suggestions as buttons
-        for suggestion in suggestions:
-            st.button(suggestion)
+        #for suggestion in suggestions:
+           # st.button(suggestion)
 
 
 @st.cache_data(show_spinner=False)

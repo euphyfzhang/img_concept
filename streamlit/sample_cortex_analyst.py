@@ -136,7 +136,11 @@ def process_message(prompt: str) -> None:
 
         st.divider()
 
-        st.write(f"here is the response content : {response.content}")
+        resp= response.content.decode("utf-8")
+        resp_content = re.sub(r"event: [\s\w\n.:]*", "", resp)
+        parsed_content = json.loads(resp_content)
+
+        st.write(f"here is the response content : {parsed_content}")
 
         st.divider()
 

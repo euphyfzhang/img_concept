@@ -34,6 +34,8 @@ tran_info = session.table("IMG_RECG.TRANSACTION").to_pandas()
 api_key = None
 uploaded_file = None
 
+predictions = None
+
 
 def main():
     # Initialize session state
@@ -81,42 +83,46 @@ def show_header_and_sidebar():
         
         st.divider()
         # API KEY
-        api_key = st.text_input("API KEY", type = "password") #bt
+        api_key = st.text_input("API KEY", type = "password")
 
-        # Upload area
-        uploaded_file = st.file_uploader("📂 Choose a file")
-        predictions = None
-
-        if uploaded_file:
-            st.image(uploaded_file)
-
-        # When file is uploaded:
-        if uploaded_file and api_key:
-            # To read file as bytes:
-            bytes_data = uploaded_file.getvalue()
-
-            # Upload the image:
-            imagefile = Image.open(uploaded_file)
-
-            if api_key:
-                try:
-                    # Send to model for prediction,
-                    predictor = Predictor(endpoint_id, api_key=api_key)
-                    predictions = predictor.predict(imagefile) #ObjectDetectionPrediction Object
-                except Exception as e:
-                    err_message = e.message
-
-            # Predict the result
-            with st.expander("📰 Returned result:"):
+        with st.expander("📰 Returned result:"):
+            if predictions:
                 st.json(predictions)
-        
-        
 
 
 def handle_user_inputs():
     """Handle user inputs from the chat interface."""
+
+    uploaded_file = st.file_uploader("📂 Choose a file")
+
+    if uploaded_file:
+        st.image(uploaded_file)
+    
+    if api_key:
+        bytes_data = uploaded_file.getvalue()
+
+         # Upload the image:
+        imagefile = Image.open(uploaded_file)
+        try:
+            # Send to model for prediction,
+            predictor = Predictor(endpoint_id, api_key=api_key)
+            predictions = predictor.predict(imagefile) #ObjectDetectionPrediction Object
+        except Exception as e:
+            err_message = e.message
+    
+    list_predicted_items = []
+
+    if predictions:
+        ## Loop thru all the predictions
+        for each in predictions:
+          item_name = each.label_name
+          list_predited_items.append(item_name)
+
     # Handle chat input
-    user_input = st.chat_input("What is your question?")
+    question = "What are you looking up?"
+    if list_predited_items:
+        question = "Looking up :" + " and ".join(list_predicted_items) + "?"
+    user_input = st.chat_input(question)
     if user_input:
         process_user_input(user_input)
     # Handle suggested question click

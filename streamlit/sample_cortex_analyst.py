@@ -26,8 +26,6 @@ def main():
     if "messages" not in st.session_state:
         reset_session_state()
     show_header_and_sidebar()
-    if len(st.session_state.messages) == 0:
-        process_user_input("What questions can I ask?")
     display_conversation()
     handle_user_inputs()
     handle_error_notifications()

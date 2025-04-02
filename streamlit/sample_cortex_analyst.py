@@ -298,8 +298,8 @@ def display_message(content, request_id=""):
     
     if suggestions:
         # Display suggestions as buttons
-        for index, suggestion in enumerate(suggestions):
-            st.button(suggestion, key=f"suggestion_{index}")
+        for suggestion in suggestions:
+            st.button(suggestion)
 
 
 @st.cache_data(show_spinner=False)

@@ -219,7 +219,7 @@ def get_analyst_response(messages):
 
     # Send a POST request to the Cortex Analyst API endpoint
     # Adjusted to use positional arguments as per the API's requirement
-    resp = requests.post(
+    response = requests.post(
         url=f"https://{st.session_state.CONN.host}/api/v2/cortex/analyst/message",
         json=request_body,
         headers={
@@ -230,9 +230,9 @@ def get_analyst_response(messages):
     )
 
     # Check if the response is successful
-    if resp.status_code < 400:
+    if response.status_code < 400:
         # Return the content of the response as a JSON object
-        return resp.content, None
+        return response, None
     else:
         # Craft readable error message
         error_msg = f"""

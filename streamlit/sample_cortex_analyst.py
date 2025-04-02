@@ -152,6 +152,7 @@ def parsed_response_message(content):
     error_code = None
     request_id = None
     sql = None
+    confidence = None
     other = None
 
     for each in parsed_list:
@@ -168,7 +169,8 @@ def parsed_response_message(content):
         elif "request_id" in each:
             request_id = each["request_id"]
         elif "type" in each and "sql" in each["type"]:
-            sql = each#["sql"]["statement_delta"]
+            sql = each["statement_delta"]
+            confidence = each["confidence"]
         #else:
             #sql = each
 
@@ -180,6 +182,7 @@ def parsed_response_message(content):
                         , "error_code" : error_code
                         , "request_id" : request_id
                         , "sql" : sql
+                        , "confidence" : confidence
                         }]
     
     #st.header(rebuilt_response)

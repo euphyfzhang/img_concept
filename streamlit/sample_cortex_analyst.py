@@ -133,13 +133,15 @@ def process_message(prompt: str) -> None:
         st.markdown(
             f"```request_id: {response.headers.get('X-Snowflake-Request-Id')}```"
         )
-
-        st.divider()
-
+        
         resp= response.content.decode("utf-8")
         resp_content = re.sub(r"event: [\s\w\n.:]*", "", resp)
         parsed_list = [json.loads(x) for x in resp_content.split("\n") if x != ""]
-        #parsed_content = parsed_list 
+        #parsed_content = parsed_list
+
+        st.divider()
+
+        st.write(parsed_list)
 
         for each in parsed_list:
             if "text_delta" in each.keys():

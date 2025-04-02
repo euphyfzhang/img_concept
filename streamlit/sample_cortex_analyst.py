@@ -84,11 +84,12 @@ def handle_error_notifications():
         st.session_state["fire_API_error_notify"] = False
 
 def parsed_response_message(response):
-    content = []
 
     response_string = response.decode("utf-8")
     cleaned_reponse = re.sub(r"event: [\s\w\n.:]*", "", response_string)
     parsed_list = [json.loads(x) for x in cleaned_reponse.split("\n") if x != ""]
+
+    st.write(parsed_list)
 
     text_delta = []
     suggestions_delta = []
@@ -105,7 +106,7 @@ def parsed_response_message(response):
     rebuilt_response = [{"text" : ''.join(text_delta)
                         , "suggestions" : suggestions_delta
                         }]
-    st.write(rebuilt_response)
+
     return rebuilt_response, request_id
 
 

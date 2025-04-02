@@ -133,7 +133,12 @@ def process_message(prompt: str) -> None:
         st.markdown(
             f"```request_id: {response.headers.get('X-Snowflake-Request-Id')}```"
         )
+
+        st.divider()
+
         st.write(f"here is the response content : {response.content}")
+
+        st.divider()
 
         while st.session_state.status.lower() != "done":
             with st.spinner(st.session_state.status):

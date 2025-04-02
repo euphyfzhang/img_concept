@@ -270,7 +270,7 @@ def display_message(content, message_index, request_id=""):
 
     for item in content:
         if "type" in item and item["type"] == "text":
-            st.markdown(item["text"])
+            st.markdown(item)
         elif "type" in item and  item["type"] == "suggestions":
             # Display suggestions as buttons
             for suggestion_index, suggestion in enumerate(item["suggestions"]):

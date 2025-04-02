@@ -217,7 +217,7 @@ def get_analyst_response(messages):
         stream=True,
     )
 
-    st.write(resp)
+    st.write(resp.text)
 
     written_content = st.write_stream(stream(resp))
 

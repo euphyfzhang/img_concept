@@ -356,8 +356,8 @@ def display_sql_query(sql, message_index, confidence, request_id):
 
                 with chart_tab:
                     display_charts_tab(df, message_index)
-    if request_id:
-        display_feedback_section(request_id)
+    #if request_id:
+        #display_feedback_section(request_id)
 
 
 def display_charts_tab(df, message_index):
@@ -422,40 +422,40 @@ def display_feedback_section(request_id):
             st.error(st.session_state.form_submitted[request_id]["error"])
 
 
-#def submit_feedback(request_id, positive, feedback_message):
-#    request_body = {
-#        "request_id": request_id,
-#        "positive": positive,
-#        "feedback_message": feedback_message,
-#    }
-#    resp = _snowflake.send_snow_api_request(
-#        "POST",  # method
-#        FEEDBACK_API_ENDPOINT,  # path
-#        {},  # headers
-#        {},  # params
-#        request_body,  # body
-#        None,  # request_guid
-#        API_TIMEOUT,  # timeout in milliseconds
-#    )
+def submit_feedback(request_id, positive, feedback_message):
+    request_body = {
+        "request_id": request_id,
+        "positive": positive,
+        "feedback_message": feedback_message,
+    }
+    resp = _snowflake.send_snow_api_request(
+        "POST",  # method
+        FEEDBACK_API_ENDPOINT,  # path
+        {},  # headers
+        {},  # params
+        request_body,  # body
+        None,  # request_guid
+        API_TIMEOUT,  # timeout in milliseconds
+    )
 
-#    if resp["status"] == 200:
-#        return None
+    if resp["status"] == 200:
+        return None
 
-#    parsed_content = json.loads(resp["content"])
+    parsed_content = json.loads(resp["content"])
     # Craft readable error message
-#    err_msg = f"""
-#        #🚨 An Analyst API error has occurred 🚨
-#        
-#        #* response code: `{resp['status']}`
-#        #* request-id: `{parsed_content['request_id']}`
-#        #* error code: `{parsed_content['error_code']}`
+    err_msg = f"""
+        #🚨 An Analyst API error has occurred 🚨
         
-#        #Message:
-#        ```
-#        {parsed_content['message']}
-#        ```
-#        """
-#    return err_msg
+        * response code: `{resp['status']}`
+        * request-id: `{parsed_content['request_id']}`
+        * error code: `{parsed_content['error_code']}`
+        
+        #Message:
+        ```
+        {parsed_content['message']}
+        ```
+        """
+    return err_msg
 
 if __name__ == "__main__":
     main()

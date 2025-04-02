@@ -185,6 +185,8 @@ def get_analyst_response(messages):
         stream=True,
     )
 
+    write(response.content)
+
     # Check if the response is successful
     if response.status_code < 400:
         # Return the content of the response as a JSON object

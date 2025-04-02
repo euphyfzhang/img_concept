@@ -183,9 +183,8 @@ def get_analyst_response(messages):
     # Check if the response is successful
     if response.status_code < 400:
         # Return the content of the response as a JSON object
-        content, request_id = parsed_response_message(response.content)
-        st.header(content)
-        return content, request_id
+        content, suggestions, request_id = parsed_response_message(response.content)
+        return content, suggestions, request_id
 
 
 def display_conversation():

@@ -130,6 +130,8 @@ def process_user_input(prompt: str):
                     "content": written_content,
                     "request_id": {written_content[0]["request_id"]}
                 }
+
+                st.header(written_content)
             else:
                 analyst_message = {
                     "role": "analyst",
@@ -184,8 +186,6 @@ def get_analyst_response(messages):
         },
         stream=True,
     )
-    
-    st.write(f"response need debug {response.content}")
 
     # Check if the response is successful
     if response.status_code < 400:

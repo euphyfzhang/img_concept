@@ -116,7 +116,7 @@ def process_user_input(prompt: str):
                 analyst_message = {
                     "role": "analyst",
                     "content": response["message"]["content"],
-                    "request_id": {response.headers.get('X-Snowflake-Request-Id')}  #response["request_id"]
+                    "request_id": {response["request_id"]}  #response["request_id"]
                 }
             else:
                 analyst_message = {

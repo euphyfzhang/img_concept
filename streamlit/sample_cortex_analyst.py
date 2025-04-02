@@ -226,6 +226,7 @@ def display_message(content, request_id=""):
 
     for item in content:
         if "type" in item and item["type"] == "text":
+            st.write(item)
             if "text_delta" in item:
                 text_delta.append(item["text_delta"])
             if "text" in item:

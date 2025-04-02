@@ -278,7 +278,8 @@ def display_message(content, message_index, request_id=""):
             else:
                 text = item["text"]
             
-        elif "type" in item and  item["type"] == "suggestions":
+        elif "type" in item and item["type"] == "suggestions":
+            st.write(item)
             suggestions.append(item["suggestion_delta"])
         elif "type" in item and item["type"] == "sql":
             # Display the SQL query and results

@@ -158,8 +158,9 @@ def process_user_input(prompt: str):
         with st.spinner("Waiting for Analyst's response..."):
 
             response, error_msg = get_analyst_response(st.session_state.messages)
-            st.write(response)
+            #st.write(response)
             events = sseclient.SSEClient(response).events()
+            st.write(events)
             written_content = st.write_stream(stream(events))
 
             if error_msg is None:

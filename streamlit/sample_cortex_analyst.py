@@ -134,7 +134,7 @@ def process_message(prompt: str) -> None:
         st.markdown(
             f"```request_id: {response.headers.get('X-Snowflake-Request-Id')}```"
         )
-        st.write(response)
+        st.write(response.content)
         events = sseclient.SSEClient(response).events()  # type: ignore
         while st.session_state.status.lower() != "done":
             with st.spinner(st.session_state.status):

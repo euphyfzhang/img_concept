@@ -152,25 +152,25 @@ def parsed_response_message(content):
     error_code = None
     request_id = None
     sql_statement = None
+    confidence = None
     other = None
 
     for each in parsed_list:
         if "text_delta" in each:
             text_delta.append(each["text_delta"])
-        elif "suggestions_delta" in each:
+        if "suggestions_delta" in each:
             suggestions_delta.append(each["suggestions_delta"])
-        elif "status" in each:
+        if "status" in each:
             request_id = each["request_id"]
-        elif "message" in each:
+        if "message" in each:
             messages.append(each["message"])
-        elif "error_code" in each:
+        if "error_code" in each:
             error_code = each["error_code"]
-        elif "request_id" in each:
+        if "request_id" in each:
             request_id = each["request_id"]
-        elif "sql" in each:
+        if "sql" in each:
             sql = each["sql"]["statement_delta"]
-        else:
-            other = each
+            confidence = each["sql"]["confidence"]
 
     rebuilt_response = [{ "type" : "text"
                         , "text" : "".join(text_delta)
@@ -180,6 +180,7 @@ def parsed_response_message(content):
                         , "error_code" : error_code
                         , "request_id" : request_id
                         , "sql" : sql_statement
+                        , "confidence" : confidence
                         , "other" : other
                         }]
     

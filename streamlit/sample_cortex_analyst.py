@@ -153,7 +153,7 @@ def parsed_response_message(content):
     request_id = None
     sql_statement = None
     confidence = None
-    other = None
+    other = []
 
     for each in parsed_list:
         if "text_delta" in each:
@@ -171,6 +171,8 @@ def parsed_response_message(content):
         if "sql" in each:
             sql = each["sql"]["statement_delta"]
             confidence = each["sql"]["confidence"]
+        
+        other.append(each)
 
     rebuilt_response = [{ "type" : "text"
                         , "text" : "".join(text_delta)

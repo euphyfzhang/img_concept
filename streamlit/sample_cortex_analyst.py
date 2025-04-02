@@ -133,7 +133,7 @@ def process_message(prompt: str) -> None:
         st.markdown(
             f"```request_id: {response.headers.get('X-Snowflake-Request-Id')}```"
         )
-        
+
         resp= response.content.decode("utf-8")
         resp_content = re.sub(r"event: [\s\w\n.:]*", "", resp)
         parsed_list = [json.loads(x) for x in resp_content.split("\n") if x != ""]
@@ -141,11 +141,25 @@ def process_message(prompt: str) -> None:
 
         st.divider()
 
-        st.write(parsed_list)
+        text = []
+        suggestions = []
+        statuses = []
 
         for each in parsed_list:
             if "text_delta" in each.keys():
-                st.write(f"{each["text_delta"]}")
+                text.append(each["text_delta"])
+            if "suggestion_delta" in each.keys():
+                suggestions.append(each)
+            if "status_message" in each.keys():
+                statuses.append(each)
+
+        resp_content = ''.join(text)
+        st.write(resp_content)
+
+        st.divider()
+        st.write("sug", suggestions)
+
+        st.write("status", statuses)
 
         st.divider()
 

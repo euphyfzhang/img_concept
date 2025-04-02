@@ -218,6 +218,8 @@ def get_analyst_response(messages):
     )
 
     events = sseclient.SSEClient(resp).events()  # type: ignore
+
+    st.write(events)
     written_content = st.write_stream(stream(events))
 
     # Content is a string with serialized JSON object

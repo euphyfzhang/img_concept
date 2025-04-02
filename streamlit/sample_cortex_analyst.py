@@ -186,7 +186,7 @@ def process_user_input(prompt: str):
             if error_msg is None:
                 analyst_message = {
                     "role": "analyst",
-                    "content": written_content,
+                    "content": [{"type": "text", "text": written_content}],
                     "request_id": {statuses[0]["request_id"]}
                 }
             else:

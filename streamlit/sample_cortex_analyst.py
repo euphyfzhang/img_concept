@@ -136,18 +136,18 @@ def process_user_input(prompt: str):
     with st.chat_message("analyst"):
         with st.spinner("Waiting for Analyst's response..."):
 
-            written_content, suggestions, request_id = get_analyst_response(st.session_state.messages)
+            content, suggestions, request_id = get_analyst_response(st.session_state.messages)
 
             analyst_message = {
                 "role": "analyst",
-                "content": written_content,
+                "content": content,
                 "request_id": {request_id}
             }
 
             display_message(analyst_message["content"], suggestions)
 
             st.session_state.messages.append(analyst_message)
-            st.rerun()
+            #st.rerun()
 
 
 def get_analyst_response(messages):

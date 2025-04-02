@@ -96,7 +96,7 @@ def handle_user_inputs():
     uploaded_file = st.file_uploader("📂 Choose a file")
 
     if uploaded_file:
-        st.image(uploaded_file)
+        st.image(uploaded_file, width=300)
     
     if api_key:
         bytes_data = uploaded_file.getvalue()
@@ -120,7 +120,7 @@ def handle_user_inputs():
 
     # Handle chat input
     question = "What are you looking up?"
-    if list_predited_items:
+    if list_predicted_items:
         question = "Looking up :" + " and ".join(list_predicted_items) + "?"
     user_input = st.chat_input(question)
     if user_input:

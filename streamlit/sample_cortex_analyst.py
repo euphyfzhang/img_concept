@@ -166,9 +166,7 @@ def process_user_input(prompt: str):
     with st.chat_message("analyst"):
         with st.spinner("Waiting for Analyst's response..."):
 
-            response, error_msg = get_analyst_response(st.session_state.messages)
-
-            written_content = parsed_response_message(response)
+            written_content, error_msg = get_analyst_response(st.session_state.messages)
 
             if error_msg is None:
                 analyst_message = {

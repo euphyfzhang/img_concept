@@ -250,6 +250,8 @@ def display_message(content, message_index, request_id=""):
         message_index (int): The index of the message.
     """
 
+    st.header(content)
+
     for item in content:
         if item["type"] == "text":
             st.markdown(item["text"])

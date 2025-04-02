@@ -89,8 +89,6 @@ def parsed_response_message(response):
     cleaned_reponse = re.sub(r"event: [\s\w\n.:]*", "", response_string)
     parsed_list = [json.loads(x) for x in cleaned_reponse.split("\n") if x != ""]
 
-    st.write(parsed_list)
-
     text_delta = []
     suggestions_delta = []
     request_id = None
@@ -158,8 +156,6 @@ def process_user_input(prompt: str):
 
 def get_analyst_response(messages):
 
-    st.write(f"request need debug {messages}")
-
     # Prepare the request body with the user's prompt
     request_body = {
         "messages": messages,
@@ -178,7 +174,6 @@ def get_analyst_response(messages):
         },
         stream=True,
     )
-    st.write(response.status_code)
 
     # Check if the response is successful
     if response.status_code < 400:

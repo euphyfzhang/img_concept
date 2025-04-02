@@ -33,8 +33,7 @@ tran_info = session.table("IMG_RECG.TRANSACTION").to_pandas()
 
 api_key = None
 uploaded_file = None
-
-predictions = None
+predictions = []
 
 
 def main():

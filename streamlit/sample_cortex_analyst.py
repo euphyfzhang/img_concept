@@ -139,7 +139,7 @@ def process_user_input(prompt: str):
 
             written_content, request_id = get_analyst_response(st.session_state.messages)
 
-            st.header(written_content)
+            
 
             if True:
                 analyst_message = {
@@ -180,6 +180,7 @@ def get_analyst_response(messages):
     if response.status_code < 400:
         # Return the content of the response as a JSON object
         content, request_id = parsed_response_message(response.content)
+        st.header(content)
         return content, request_id
     else:
         # Craft readable error message

@@ -173,7 +173,7 @@ def parsed_response_message(content):
                         , "request_id" : request_id
                         }
     
-    #st.header(rebuilt_response)
+    st.header(rebuilt_response)
 
     return rebuilt_response
 

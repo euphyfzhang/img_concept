@@ -169,8 +169,7 @@ def parsed_response_message(content):
         if "request_id" in each:
             request_id = each["request_id"]
         if "type" in each and "sql" in each["type"]:
-            sql = each["sql"]["statement_delta"]
-            confidence = each["sql"]["confidence"]
+            sql = each
         
         other.append(each)
 

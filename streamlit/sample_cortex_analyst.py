@@ -108,7 +108,6 @@ def process_user_input(prompt):
         with st.spinner("Waiting for Analyst's response..."):
 
             response, error_msg = get_analyst_response(st.session_state.messages)
-            st.header(response)
             if error_msg is None:
                 analyst_message = {
                     "role": "analyst",
@@ -249,6 +248,8 @@ def display_message(content, message_index, request_id=""):
 
     if request_id:
         content = content[0]
+
+    st.header(content)
 
     for item in content:
         if item["type"] == "text":

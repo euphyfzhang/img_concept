@@ -138,7 +138,7 @@ def process_user_input(prompt: str):
     with st.chat_message("analyst"):
         with st.spinner("Waiting for Analyst's response..."):
 
-            written_content, error_msg = get_analyst_response(st.session_state.messages)
+            written_content, request_id = get_analyst_response(st.session_state.messages)
 
             st.header(written_content)
 
@@ -146,7 +146,7 @@ def process_user_input(prompt: str):
                 analyst_message = {
                     "role": "analyst",
                     "content": written_content,
-                    "request_id": {written_content["request_id"]}
+                    "request_id": {request_id}
                 }
 
                 st.header(written_content)
@@ -154,7 +154,7 @@ def process_user_input(prompt: str):
                 analyst_message = {
                     "role": "analyst",
                     "content": [{"type": "text", "text": error_msg}],
-                    "request_id": {written_content["request_id"]}
+                    "request_id": {request_id}
                 }
                 st.session_state["fire_API_error_notify"] = True
 

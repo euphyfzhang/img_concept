@@ -140,15 +140,12 @@ def process_user_input(prompt: str):
 
             written_content, request_id = get_analyst_response(st.session_state.messages)
 
-            
-
-            if True:
-                analyst_message = {
-                    "role": "analyst",
-                    "content": written_content,
-                    "request_id": {request_id}
-                }
-                st.write(written_content)
+            analyst_message = {
+                "role": "analyst",
+                "content": written_content,
+                "request_id": {request_id}
+            }
+            st.write(written_content)
 
             st.session_state.messages.append(analyst_message)
             st.rerun()
@@ -176,6 +173,7 @@ def get_analyst_response(messages):
         },
         stream=True,
     )
+    st.write(response.status_code)
 
     # Check if the response is successful
     if response.status_code < 400:
@@ -183,16 +181,6 @@ def get_analyst_response(messages):
         content, request_id = parsed_response_message(response.content)
         st.header(content)
         return content, request_id
-    else:
-        # Craft readable error message
-        error_msg = f"""
-                        🚨 An Analyst API error has occurred 🚨
-                        Message:
-                        ```
-                        {response.text}
-                        ```
-                    """
-        return error_msg, response.status_code
 
 
 def display_conversation():

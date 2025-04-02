@@ -146,6 +146,7 @@ def process_user_input(prompt: str):
                     "content": written_content,
                     "request_id": {request_id}
                 }
+                st.write(written_content)
             else:
                 analyst_message = {
                     "role": "analyst",

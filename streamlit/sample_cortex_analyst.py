@@ -268,16 +268,14 @@ def display_message(content, message_index, request_id=""):
 
     """
 
+    text = []
+    suggestions = []
+
     for item in content:
         if "type" in item and item["type"] == "text":
-            st.markdown(item)
+            text.append(item["text_delta"])
         elif "type" in item and  item["type"] == "suggestions":
-            # Display suggestions as buttons
-            for suggestion_index, suggestion in enumerate(item["suggestions"]):
-                if st.button(
-                    suggestion, key=f"suggestion_{message_index}_{suggestion_index}"
-                ):
-                    st.session_state.active_suggestion = suggestion
+            suggestions.append(item["suggestion_delta"])
         elif "type" in item and item["type"] == "sql":
             # Display the SQL query and results
             display_sql_query(
@@ -286,6 +284,17 @@ def display_message(content, message_index, request_id=""):
         else:
             # Handle other content types if necessary
             pass
+    
+    if text:
+        st.markdown(text)
+    
+    if suggestions:
+        # Display suggestions as buttons
+        for index, suggestion in enumerate(suggestions):
+            if st.button(
+                suggestion, key=f"suggestion_{index}"
+            ):
+                st.session_state.active_suggestion = suggestion
 
 
 @st.cache_data(show_spinner=False)

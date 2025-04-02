@@ -33,7 +33,7 @@ tran_info = session.table("IMG_RECG.TRANSACTION").to_pandas()
 
 api_key = None
 uploaded_file = None
-predictions = []
+predictions = None
 
 
 def main():
@@ -93,6 +93,7 @@ def handle_user_inputs():
     """Handle user inputs from the chat interface."""
 
     uploaded_file = st.file_uploader("📂 Choose a file")
+    predictions = None
 
     if uploaded_file:
         st.image(uploaded_file, width=300)

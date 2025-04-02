@@ -10,6 +10,9 @@ import requests
 from snowflake.snowpark import Session
 import streamlit as st
 
+from PIL import Image
+from landingai.predict import Predictor
+
 DATABASE = "RESUME_AI_DB"
 SCHEMA = "IMG_RECG"
 STAGE = "INSTAGE"
@@ -27,6 +30,9 @@ banner_loc = website_imgs[website_imgs["DESCRIPTION"]=="BANNER"]["IMAGE_NAME"].v
 banner_image = session.file.get_stream(f"{images_path}/BANNER/{banner_loc}" , decompress=False).read()
 
 tran_info = session.table("IMG_RECG.TRANSACTION").to_pandas()
+
+api_key = None
+uploaded_file = None
 
 
 def main():
@@ -79,6 +85,32 @@ def show_header_and_sidebar():
 
         # Upload area
         uploaded_file = st.file_uploader("📂 Choose a file")
+        predictions = None
+
+        if uploaded_file:
+            st.image(uploaded_file)
+
+        # When file is uploaded:
+        if uploaded_file and api_key:
+            # To read file as bytes:
+            bytes_data = uploaded_file.getvalue()
+
+            # Upload the image:
+            imagefile = Image.open(uploaded_file)
+
+            if api_key:
+                try:
+                    # Send to model for prediction,
+                    predictor = Predictor(endpoint_id, api_key=api_key)
+                    predictions = predictor.predict(imagefile) #ObjectDetectionPrediction Object
+                except Exception as e:
+                    err_message = e.message
+
+            # Predict the result
+            with st.expander("📰 Returned result:"):
+                st.json(predictions)
+        
+        
 
 
 def handle_user_inputs():

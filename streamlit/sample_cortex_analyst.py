@@ -185,7 +185,7 @@ def get_analyst_response(messages):
         stream=True,
     )
 
-    write(response.content)
+    st.write(response.content)
 
     # Check if the response is successful
     if response.status_code < 400:

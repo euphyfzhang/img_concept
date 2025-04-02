@@ -186,14 +186,15 @@ def display_conversation():
     for message in st.session_state.messages:
         role = message["role"]
         content = message["content"]
+
         with st.chat_message(role):
             if role == "analyst":
-                display_message(content, suggestions)
+                display_message(content, message["suggestions"])
             elif role == "user":
                 display_message(content)
 
 
-def display_message(content, suggestions = [], request_id=""):
+def display_message(content, suggestions=[], request_id=""):
     """
     Display a single message content.
 

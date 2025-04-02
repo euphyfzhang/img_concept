@@ -164,7 +164,7 @@ def get_analyst_response(messages):
     Returns:
         Optional[Dict]: The response from the Cortex Analyst API.
     """
-    st.write(messages)
+    st.write(f"request need debug {messages}")
 
     # Prepare the request body with the user's prompt
     request_body = {
@@ -184,8 +184,8 @@ def get_analyst_response(messages):
         },
         stream=True,
     )
-
-    st.write(response.content)
+    
+    st.write(f"response need debug {response.content}")
 
     # Check if the response is successful
     if response.status_code < 400:

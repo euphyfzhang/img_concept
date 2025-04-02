@@ -271,16 +271,16 @@ def display_message(content, message_index, request_id=""):
     st.write("HERE", content)
 
     for item in content:
-        if "type" in content.keys() and item["type"] == "text":
+        if "type" in item and item["type"] == "text":
             st.markdown(item["text"])
-        elif "type" in content.keys() and  item["type"] == "suggestions":
+        elif "type" in item and  item["type"] == "suggestions":
             # Display suggestions as buttons
             for suggestion_index, suggestion in enumerate(item["suggestions"]):
                 if st.button(
                     suggestion, key=f"suggestion_{message_index}_{suggestion_index}"
                 ):
                     st.session_state.active_suggestion = suggestion
-        elif "type" in content.keys() and item["type"] == "sql":
+        elif "type" in item and item["type"] == "sql":
             # Display the SQL query and results
             display_sql_query(
                 item["statement"], message_index, item["confidence"], request_id

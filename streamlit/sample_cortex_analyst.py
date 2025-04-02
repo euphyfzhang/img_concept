@@ -140,6 +140,8 @@ def process_user_input(prompt: str):
 
             written_content, request_id = get_analyst_response(st.session_state.messages)
 
+            st.header(written_content)
+
             if True:
                 analyst_message = {
                     "role": "analyst",
@@ -147,40 +149,13 @@ def process_user_input(prompt: str):
                     "request_id": {request_id}
                 }
                 st.write(written_content)
-            else:
-                analyst_message = {
-                    "role": "analyst",
-                    "content": [{"type": "text", "text": error_msg}],
-                    "request_id": {request_id}
-                }
-                st.session_state["fire_API_error_notify"] = True
-
-            #if "warnings" in response:
-                #st.session_state.warnings = response["warnings"]
 
             st.session_state.messages.append(analyst_message)
             st.rerun()
 
 
-def display_warnings():
-    """
-    Display warnings to the user.
-    """
-    warnings = st.session_state.warnings
-    for warning in warnings:
-        st.warning(warning["message"], icon="⚠️")
-
-
 def get_analyst_response(messages):
-    """
-    Send chat history to the Cortex Analyst API and return the response.
 
-    Args:
-        messages (List[Dict]): The conversation history.
-
-    Returns:
-        Optional[Dict]: The response from the Cortex Analyst API.
-    """
     st.write(f"request need debug {messages}")
 
     # Prepare the request body with the user's prompt

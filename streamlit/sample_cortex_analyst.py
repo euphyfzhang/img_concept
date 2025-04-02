@@ -153,7 +153,7 @@ def parsed_response_message(content):
     request_id = None
     sql = None
 
-    st.header(parsed_list)
+    #st.header(parsed_list)
 
     for each in parsed_list:
         if "text_delta" in each:
@@ -181,7 +181,7 @@ def parsed_response_message(content):
                         , "sql" : sql
                         }]
     
-    #st.header(rebuilt_response)
+    st.header(rebuilt_response)
 
     return rebuilt_response
 

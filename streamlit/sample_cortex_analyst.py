@@ -103,11 +103,11 @@ def parsed_response_message(response):
         elif "status" in each:
             request_id = each["request_id"]
 
-    rebuilt_response = [{"text" : ''.join(text_delta)
-                        , "suggestions" : suggestions_delta
+    rebuilt_response = [{ "type" : "text"
+                        , "text" : "".join(text_delta)
                         }]
 
-    return rebuilt_response, request_id
+    return rebuilt_response, suggestions_delta, request_id
 
 
 def process_user_input(prompt: str):
@@ -138,15 +138,19 @@ def process_user_input(prompt: str):
     with st.chat_message("analyst"):
         with st.spinner("Waiting for Analyst's response..."):
 
-            written_content, request_id = get_analyst_response(st.session_state.messages)
+            written_content, suggestions, request_id = get_analyst_response(st.session_state.messages)
 
             analyst_message = {
                 "role": "analyst",
                 "content": written_content,
                 "request_id": {request_id}
             }
-            
+
             display_message(analyst_message["content"])
+
+            if suggestions:
+                for sug in suggestions:
+                    st.button(sug)
 
             st.session_state.messages.append(analyst_message)
             st.rerun()

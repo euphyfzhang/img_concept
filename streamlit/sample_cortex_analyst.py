@@ -138,7 +138,8 @@ def process_message(prompt: str) -> None:
 
         resp= response.content.decode("utf-8")
         resp_content = re.sub(r"event: [\s\w\n.:]*", "", resp)
-        parsed_content = [ json.loads(x) for x in resp_content.split("\n") if x != "" ] #json.loads(resp_content)
+        parsed_list = [ json.loads(x) for x in resp_content.split("\n") if x != "" ]
+        parsed_content = [y["text_delta"] for y in parsed_list]
 
         st.write(f"here is the response content : {parsed_content}")
 

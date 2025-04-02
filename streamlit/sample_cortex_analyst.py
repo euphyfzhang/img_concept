@@ -51,10 +51,7 @@ def show_header_and_sidebar():
     """Display the header and sidebar of the app."""
     st.set_page_config(layout="wide")
     # Set the title and introductory text of the app
-    st.image(banner_image, width = 1400)
-    st.markdown(
-        "Ask the analyst! "
-    )
+    st.image(banner_image, width = 1400, caption = "by Euphemia")
 
     # Sidebar with a reset button
     with st.sidebar:

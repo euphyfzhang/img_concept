@@ -93,14 +93,19 @@ def parsed_response_message(response):
 
     text_delta = []
     suggestions_delta = []
+    request_id = None
 
     for each in parsed_list:
         if "text_delta" in each:
             text_delta.append(each["text_delta"])
         elif "suggestions_delta" in each:
             suggestions_delta.append(each["suggestions_delta"])
+        elif "status" in each:
+            request_id = each["request_id"]
 
-    rebuilt_response = [{"text" : ''.join(text_delta), "suggestions" :suggestions_delta}]
+    rebuilt_response = [{"text" : ''.join(text_delta)
+                        , "suggestions" : suggestions_delta
+                        , "request_id" : request_id}]
 
     return rebuilt_response
 
@@ -141,7 +146,7 @@ def process_user_input(prompt: str):
                 analyst_message = {
                     "role": "analyst",
                     "content": written_content,
-                    "request_id": {written_content[0]["request_id"]}
+                    "request_id": {written_content["request_id"]}
                 }
 
                 st.header(written_content)
@@ -149,7 +154,7 @@ def process_user_input(prompt: str):
                 analyst_message = {
                     "role": "analyst",
                     "content": [{"type": "text", "text": error_msg}],
-                    "request_id": {written_content[0]["request_id"]}
+                    "request_id": {written_content["request_id"]}
                 }
                 st.session_state["fire_API_error_notify"] = True
 

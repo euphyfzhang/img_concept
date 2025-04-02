@@ -217,6 +217,8 @@ def get_analyst_response(messages):
         stream=True,
     )
 
+    st.write(resp)
+
     written_content = st.write_stream(stream(resp))
 
     # Content is a string with serialized JSON object

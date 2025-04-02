@@ -160,7 +160,7 @@ def process_user_input(prompt: str):
             response, error_msg = get_analyst_response(st.session_state.messages)
             events = sseclient.SSEClient(response).events()
             written_content = st.write_stream(stream(events))
-            
+
             if error_msg is None:
                 analyst_message = {
                     "role": "analyst",
@@ -223,7 +223,7 @@ def get_analyst_response(messages):
     # Check if the response is successful
     if resp.status_code < 400:
         # Return the content of the response as a JSON object
-        return resp, None
+        return resp.content, None
     else:
         # Craft readable error message
         error_msg = f"""

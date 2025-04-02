@@ -268,13 +268,16 @@ def display_message(content, message_index, request_id=""):
 
     """
 
-    text = []
+    text_delta = []
     suggestions = []
 
     for item in content:
         if "type" in item and item["type"] == "text":
-            st.write(f'hello {item}')
-            text.append(item["text_delta"])
+            if "text_delta" in item:
+                text.append(item["text_delta"])
+            else:
+                text = item["text"]
+            
         elif "type" in item and  item["type"] == "suggestions":
             suggestions.append(item["suggestion_delta"])
         elif "type" in item and item["type"] == "sql":
@@ -286,6 +289,9 @@ def display_message(content, message_index, request_id=""):
             # Handle other content types if necessary
             pass
     
+    if text_delta:
+        text = ''.join(text_delta)
+
     if text:
         st.markdown(text)
     

@@ -133,6 +133,8 @@ def stream(events):
 def parsed_response_message(response):
     content = []
 
+    st.header(response)
+
     #response_string = response.decode("utf-8")
     #cleaned_reponse = re.sub(r"event: [\s\w\n.:]*", "", response_string)
     parsed_list = [json.loads(x) for x in cleaned_reponse.split("\n") if x != ""]

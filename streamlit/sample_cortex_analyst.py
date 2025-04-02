@@ -200,7 +200,7 @@ def get_analyst_response(messages):
     Returns:
         Optional[Dict]: The response from the Cortex Analyst API.
     """
-    st.write(f"session_state.message: {st.session_state.messages}")
+    #st.write(f"session_state.message: {st.session_state.messages}")
     # Prepare the request body with the user's prompt
     request_body = {
         "messages": st.session_state.messages,

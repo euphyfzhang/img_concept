@@ -135,7 +135,7 @@ def parsed_response_message(response):
     suggestions = []
     statuses = []
 
-    response_string = response.content.decode("utf-8")
+    response_string = response.decode("utf-8")
     cleaned_reponse = re.sub(r"event: [\s\w\n.:]*", "", response_string)
     parsed_list = [json.loads(x) for x in cleaned_reponse.split("\n") if x != ""]
 

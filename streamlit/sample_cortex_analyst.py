@@ -230,7 +230,7 @@ def display_message(content, request_id=""):
                 text_delta.append(item["text"])
             
         elif "type" in item and item["type"] == "suggestions":
-            suggestions.append(item["suggestions_delta"])
+            suggestions.append(item["suggestions_delta"]["suggestion_delta"])
 
         elif "type" in item and item["type"] == "sql":
             # Display the SQL query and results

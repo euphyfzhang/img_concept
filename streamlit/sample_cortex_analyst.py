@@ -277,7 +277,7 @@ def display_message(content, message_index, request_id=""):
         if "sql" in item and item["sql"]:
             # Display the SQL query and results
             display_sql_query(
-                item["statement"], message_index, item["confidence"], request_id
+                item["sql"], message_index, item["confidence"], request_id
             )
 
 

@@ -406,13 +406,13 @@ def display_feedback_section(request_id):
                     and st.session_state.form_submitted[request_id]
                 )
 
-                feedback_message = st.text_input("Optional feedback message")
-                submitted = st.form_submit_button("Submit", disabled=submit_disabled)
-                if submitted:
-                    err_msg = submit_feedback(request_id, positive, feedback_message)
-                    st.session_state.form_submitted[request_id] = {"error": err_msg}
-                    st.session_state.popover_open = False
-                    st.rerun()
+                #feedback_message = st.text_input("Optional feedback message")
+                #submitted = st.form_submit_button("Submit", disabled=submit_disabled)
+                #if submitted:
+                    #err_msg = submit_feedback(request_id, positive, feedback_message)
+                    #st.session_state.form_submitted[request_id] = {"error": err_msg}
+                    #st.session_state.popover_open = False
+                    #st.rerun()
         elif (
             request_id in st.session_state.form_submitted
             and st.session_state.form_submitted[request_id]["error"] is None
@@ -422,40 +422,40 @@ def display_feedback_section(request_id):
             st.error(st.session_state.form_submitted[request_id]["error"])
 
 
-def submit_feedback(request_id, positive, feedback_message):
-    request_body = {
-        "request_id": request_id,
-        "positive": positive,
-        "feedback_message": feedback_message,
-    }
-    resp = _snowflake.send_snow_api_request(
-        "POST",  # method
-        FEEDBACK_API_ENDPOINT,  # path
-        {},  # headers
-        {},  # params
-        request_body,  # body
-        None,  # request_guid
-        API_TIMEOUT,  # timeout in milliseconds
-    )
-    if resp["status"] == 200:
-        return None
+#def submit_feedback(request_id, positive, feedback_message):
+#    request_body = {
+#        "request_id": request_id,
+#        "positive": positive,
+#        "feedback_message": feedback_message,
+#    }
+#    resp = _snowflake.send_snow_api_request(
+#        "POST",  # method
+#        FEEDBACK_API_ENDPOINT,  # path
+#        {},  # headers
+#        {},  # params
+#        request_body,  # body
+#        None,  # request_guid
+#        API_TIMEOUT,  # timeout in milliseconds
+#    )
 
-    parsed_content = json.loads(resp["content"])
+#    if resp["status"] == 200:
+#        return None
+
+#    parsed_content = json.loads(resp["content"])
     # Craft readable error message
-    err_msg = f"""
-        🚨 An Analyst API error has occurred 🚨
+#    err_msg = f"""
+#        #🚨 An Analyst API error has occurred 🚨
+#        
+#        #* response code: `{resp['status']}`
+#        #* request-id: `{parsed_content['request_id']}`
+#        #* error code: `{parsed_content['error_code']}`
         
-        * response code: `{resp['status']}`
-        * request-id: `{parsed_content['request_id']}`
-        * error code: `{parsed_content['error_code']}`
-        
-        Message:
-        ```
-        {parsed_content['message']}
-        ```
-        """
-    return err_msg
-
+#        #Message:
+#        ```
+#        {parsed_content['message']}
+#        ```
+#        """
+#    return err_msg
 
 if __name__ == "__main__":
     main()

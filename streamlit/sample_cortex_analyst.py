@@ -111,8 +111,8 @@ def process_user_input(prompt):
             if error_msg is None:
                 analyst_message = {
                     "role": "analyst",
-                    "content": response[0]["text"],
-                    "request_id": response[0]["request_id"],
+                    "content": response["text"],
+                    "request_id": response["request_id"],
                 }
             else:
                 analyst_message = {
@@ -245,11 +245,6 @@ def display_message(content, message_index, request_id=""):
         content (List[Dict[str, str]]): The message content.
         message_index (int): The index of the message.
     """
-
-    if request_id:
-        content = content[0]
-
-    st.header(content)
 
     for item in content:
         if item["type"] == "text":

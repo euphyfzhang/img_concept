@@ -20,6 +20,13 @@ AVAILABLE_SEMANTIC_MODELS_PATHS = f"{DATABASE}.{SCHEMA}.{STAGE}/{FILE}"
 session = Session.builder.configs(st.secrets["connections"]["snowflake"]).getOrCreate()
 st.session_state.CONN = session.connection
 
+## Website contents
+images_path = "@IMG_RECG.INSTAGE"
+website_imgs = session.table("IMG_RECG.WEBSITE_IMAGES").to_pandas()
+banner_loc = website_imgs[website_imgs["DESCRIPTION"]=="BANNER"]["IMAGE_NAME"].values[0]
+banner_image = session.file.get_stream(f"{images_path}/BANNER/{banner_loc}" , decompress=False).read()
+
+
 def main():
     # Initialize session state
     if "messages" not in st.session_state:
@@ -42,8 +49,9 @@ def reset_session_state():
 
 def show_header_and_sidebar():
     """Display the header and sidebar of the app."""
+    st.set_page_config(layout="wide")
     # Set the title and introductory text of the app
-    st.title("Cortex Analyst")
+    st.image(banner_image, width = 1400)
     st.markdown(
         "Ask the analyst! "
     )

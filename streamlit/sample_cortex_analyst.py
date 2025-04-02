@@ -223,7 +223,7 @@ def get_analyst_response(messages):
     # Check if the response is successful
     if resp.status_code < 400:
         # Return the content of the response as a JSON object
-        return resp.content, None
+        return resp.json, None
     else:
         # Craft readable error message
         error_msg = f"""

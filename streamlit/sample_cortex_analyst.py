@@ -314,12 +314,12 @@ def display_sql_confidence(confidence):
                     "There is no query from the Verified Query Repository used to generate this SQL answer"
                 )
                 return
-            st.text(f"Name: {verified_query_used['name']}")
+            #st.text(f"Name: {verified_query_used['name']}")
             st.text(f"Question: {verified_query_used['question']}")
-            st.text(f"Verified by: {verified_query_used['verified_by']}")
-            st.text(
-                f"Verified at: {datetime.fromtimestamp(verified_query_used['verified_at'])}"
-            )
+            #st.text(f"Verified by: {verified_query_used['verified_by']}")
+            #st.text(
+            #    f"Verified at: {datetime.fromtimestamp(verified_query_used['verified_at'])}"
+            #)
             st.text("SQL query:")
             st.code(verified_query_used["sql"], language="sql", wrap_lines=True)
 

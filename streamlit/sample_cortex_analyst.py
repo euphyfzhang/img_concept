@@ -242,6 +242,8 @@ def display_message(content, request_id=""):
         else:
             # Handle other content types if necessary
             pass
+
+    st.write(text_delta)
     
     if text_delta:
         text = ''.join(text_delta)

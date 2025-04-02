@@ -66,6 +66,11 @@ def show_header_and_sidebar():
 
     # Sidebar with a reset button
     with st.sidebar:
+        # Center this button
+        _, btn_container, _ = st.columns([2, 6, 2])
+        if btn_container.button("Clear Chat History", use_container_width=True):
+            reset_session_state()
+
         st.selectbox(
             "Selected semantic model:",
             AVAILABLE_SEMANTIC_MODELS_PATHS,
@@ -73,11 +78,6 @@ def show_header_and_sidebar():
             key="selected_semantic_model_path",
             on_change=reset_session_state,
         )
-        st.divider()
-        # Center this button
-        _, btn_container, _ = st.columns([2, 6, 2])
-        if btn_container.button("Clear Chat History", use_container_width=True):
-            reset_session_state()
         
         st.divider()
         # API KEY

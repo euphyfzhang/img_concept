@@ -217,7 +217,7 @@ def get_analyst_response(messages):
         stream=True,
     )
 
-    events = sseclient.SSEClient(response).events()  # type: ignore
+    events = sseclient.SSEClient(resp).events()  # type: ignore
     written_content = st.write_stream(stream(events))
 
     # Content is a string with serialized JSON object

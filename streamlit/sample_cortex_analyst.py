@@ -94,6 +94,7 @@ def handle_user_inputs():
 
     uploaded_file = st.file_uploader("📂 Choose a file")
     predictions = None
+    err_message = None
 
     if uploaded_file:
         st.image(uploaded_file, width=300)
@@ -111,6 +112,9 @@ def handle_user_inputs():
             err_message = e.message
     
     list_predicted_items = []
+
+    if err_message:
+        st.warning(err_message, icon = "💥")
 
     if predictions:
         ## Loop thru all the predictions

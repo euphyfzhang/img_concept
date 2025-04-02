@@ -84,52 +84,6 @@ def handle_error_notifications():
         st.toast("An API error has occured!", icon="🚨")
         st.session_state["fire_API_error_notify"] = False
 
-def stream(events):
-    prev_index = -1
-    prev_type = ""
-    prev_suggestion_index = -1
-    while True:
-        event = next(events, None)
-        if not event:
-            return
-        data = json.loads(event.data)
-        new_content_block = event.event != "message.content.delta" or data["index"] != prev_index
-
-        if prev_type == "sql" and new_content_block:
-            # Close sql markdown once sql section finishes.
-            yield "\n```\n\n"
-        match event.event:
-            case "message.content.delta":
-                match data["type"]:
-                    case "sql":
-                        if new_content_block:
-                            # Add sql markdown when we enter a new sql block.
-                            yield "```sql\n"
-                        yield data["statement_delta"]
-                    case "text":
-                        yield data["text_delta"]
-                    case "suggestions":
-                        if new_content_block:
-                            # Add a suggestions header when we enter a new suggestions block.
-                            yield "\nHere are some example questions you could ask:\n\n"
-                            yield "\n- "
-                        elif (
-                            prev_suggestion_index != data["suggestions_delta"]["index"]
-                        ):
-                            yield "\n- "
-                        yield data["suggestions_delta"]["suggestion_delta"]
-                        prev_suggestion_index = data["suggestions_delta"]["index"]
-                prev_index = data["index"]
-                prev_type = data["type"]
-            case "status":
-                st.session_state.status = data["status_message"]
-                # We return here to allow the spinner to update with the latest status, but this method will be
-                #  called again for the next iteration
-                return
-            case "error":
-                st.session_state.error = data
-                return
-
 def parsed_response_message(response):
     content = []
 
@@ -253,10 +207,7 @@ def display_conversation():
         role = message["role"]
         content = message["content"]
         with st.chat_message(role):
-            if role == "analyst":
-                display_message(content, message["request_id"])
-            else:
-                display_message(content)
+            display_message(content)
 
 
 def display_message(content, request_id=""):
@@ -269,7 +220,7 @@ def display_message(content, request_id=""):
 
     """
 
-    text = None
+    text = content.text
     text_delta = []
     suggestions = []
 
@@ -277,8 +228,6 @@ def display_message(content, request_id=""):
         if "type" in item and item["type"] == "text":
             if "text_delta" in item:
                 text_delta.append(item["text_delta"])
-            else:
-                text = item["text"]
             
         elif "type" in item and item["type"] == "suggestions":
             suggestions.append(item["suggestions_delta"])

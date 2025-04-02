@@ -26,6 +26,8 @@ website_imgs = session.table("IMG_RECG.WEBSITE_IMAGES").to_pandas()
 banner_loc = website_imgs[website_imgs["DESCRIPTION"]=="BANNER"]["IMAGE_NAME"].values[0]
 banner_image = session.file.get_stream(f"{images_path}/BANNER/{banner_loc}" , decompress=False).read()
 
+tran_info = session.table("IMG_RECG.TRANSACTION").to_pandas()
+
 
 def main():
     # Initialize session state
@@ -52,6 +54,9 @@ def show_header_and_sidebar():
     st.set_page_config(layout="wide")
     # Set the title and introductory text of the app
     st.image(banner_image, width = 1400, caption = "by Euphemia")
+
+    with st.expander("🛍️ Shopping Transactions"):
+        st.dataframe(tran_info)
 
     # Sidebar with a reset button
     with st.sidebar:

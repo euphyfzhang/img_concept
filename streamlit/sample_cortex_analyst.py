@@ -164,7 +164,7 @@ def parsed_response_message(content):
     return rebuilt_response
 
 
-def get_analyst_response(messages: List[Dict]) -> Tuple[Dict, Optional[str]]:
+def get_analyst_response(messages):
     """
     Send chat history to the Cortex Analyst API and return the response.
 
@@ -231,10 +231,7 @@ def display_conversation():
                 display_message(content, idx)
 
 
-def display_message(
-    content: List[Dict[str, Union[str, Dict]]],
-    message_index: int,
-    request_id: Union[str, None] = None,
+def display_message(content, message_index, request_id,
 ):
     """
     Display a single message content.
@@ -282,7 +279,7 @@ def get_query_exec_result(query: str) -> Tuple[Optional[pd.DataFrame], Optional[
         return None, str(e)
 
 
-def display_sql_confidence(confidence: dict):
+def display_sql_confidence(confidence):
     if confidence is None:
         return
     verified_query_used = confidence["verified_query_used"]

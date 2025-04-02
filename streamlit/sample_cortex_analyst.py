@@ -258,8 +258,8 @@ def display_message(content, message_index, request_id=""):
         content (List[Dict[str, str]]): The message content.
         message_index (int): The index of the message.
     """
-
-    st.header(content)
+    #For debug purpose
+    #st.header(content)
 
     for item in content:
         if item["type"] == "text":

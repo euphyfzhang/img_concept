@@ -23,6 +23,12 @@ AVAILABLE_SEMANTIC_MODELS_PATHS = f"{DATABASE}.{SCHEMA}.{STAGE}/{FILE}"
 session = Session.builder.configs(st.secrets["connections"]["snowflake"]).getOrCreate()
 st.session_state.CONN = session.connection
 
+## API Info
+api_info = session.table("IMG_RECG.API_CREDENTIALS").to_pandas()
+landingai_api = api_info[api_info["NAME"]=="LANDINGAI"]
+api_key_euph = landingai_api["API_KEY"].values[0]
+endpoint_id = landingai_api["ENDPOINT_ID"].values[0]
+
 ## Website contents
 images_path = "@IMG_RECG.INSTAGE"
 website_imgs = session.table("IMG_RECG.WEBSITE_IMAGES").to_pandas()

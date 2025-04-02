@@ -197,8 +197,8 @@ def process_user_input(prompt: str):
                 }
                 st.session_state["fire_API_error_notify"] = True
 
-            if "warnings" in response:
-                st.session_state.warnings = response["warnings"]
+            #if "warnings" in response:
+                #st.session_state.warnings = response["warnings"]
 
             st.session_state.messages.append(analyst_message)
             st.rerun()

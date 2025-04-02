@@ -29,7 +29,6 @@ def main():
     display_conversation()
     handle_user_inputs()
     handle_error_notifications()
-    display_warnings()
 
 
 def reset_session_state():

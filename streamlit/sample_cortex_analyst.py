@@ -97,7 +97,7 @@ def handle_user_inputs():
     if uploaded_file:
         st.image(uploaded_file, width=300)
     
-    if api_key:
+    if uploaded_file and api_key:
         bytes_data = uploaded_file.getvalue()
 
          # Upload the image:

@@ -233,17 +233,17 @@ def get_analyst_response(messages):
     if response.status_code < 400:
         # Return the content of the response as a JSON object
         st.header(response)
-        return response, None
+        return response.content, None
     else:
         # Craft readable error message
         error_msg = f"""
                         🚨 An Analyst API error has occurred 🚨
                         Message:
                         ```
-                        {resp.text}
+                        {response.text}
                         ```
                     """
-        return resp.status_code, error_msg
+        return response.status_code, error_msg
 
 
 def display_conversation():

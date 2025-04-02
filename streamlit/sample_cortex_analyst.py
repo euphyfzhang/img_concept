@@ -131,25 +131,13 @@ def stream(events):
                 return
 
 def parsed_response_message(response):
-    text = []
-    suggestions = []
-    statuses = []
+    content = []
 
     response_string = response.decode("utf-8")
     cleaned_reponse = re.sub(r"event: [\s\w\n.:]*", "", response_string)
     parsed_list = [json.loads(x) for x in cleaned_reponse.split("\n") if x != ""]
 
-    for each in parsed_list:
-        if "text_delta" in each.keys():
-            text.append(each["text_delta"])
-        if "suggestion_delta" in each.keys():
-            suggestions.append(each)
-        if "status_message" in each.keys():
-            statuses.append(each)
-
-    content = ''.join(text)
-
-    return content, suggestions, statuses
+    return parsed_list
 
 
 def process_user_input(prompt: str):
@@ -180,13 +168,12 @@ def process_user_input(prompt: str):
 
             response, error_msg = get_analyst_response(st.session_state.messages)
 
-            written_content, suggestions, statuses = parsed_response_message(response)
-            st.markdown(written_content)
+            written_content = parsed_response_message(response)
 
             if error_msg is None:
                 analyst_message = {
                     "role": "analyst",
-                    "content": [{"type": "text", "text": written_content}],
+                    "content": written_content,
                     "request_id": {statuses[0]["request_id"]}
                 }
             else:

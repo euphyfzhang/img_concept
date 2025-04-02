@@ -164,7 +164,7 @@ def get_analyst_response(messages):
     Returns:
         Optional[Dict]: The response from the Cortex Analyst API.
     """
-    msg_str = ''.join(messages)
+    st.write(messages)
 
     # Prepare the request body with the user's prompt
     request_body = {

@@ -273,6 +273,7 @@ def display_message(content, message_index, request_id=""):
 
     for item in content:
         if "type" in item and item["type"] == "text":
+            st.write(f'hello {item}')
             text.append(item["text_delta"])
         elif "type" in item and  item["type"] == "suggestions":
             suggestions.append(item["suggestion_delta"])

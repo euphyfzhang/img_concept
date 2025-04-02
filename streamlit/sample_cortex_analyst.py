@@ -121,7 +121,6 @@ def process_user_input(prompt):
         with st.spinner("Waiting for Analyst's response..."):
 
             response, error_msg = get_analyst_response(st.session_state.messages)
-            st.header(response)
             if error_msg is None:
                 analyst_message = {
                     "role": "analyst",
@@ -186,6 +185,8 @@ def parsed_response_message(content):
                         , "error_code" : error_code
                         , "request_id" : request_id
                         }]
+    
+    st.header(rebuilt_response)
 
     return rebuilt_response
 

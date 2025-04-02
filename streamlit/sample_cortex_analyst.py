@@ -220,7 +220,7 @@ def display_message(content, request_id=""):
 
     """
 
-    text = content.text
+    text = None
     text_delta = []
     suggestions = []
 
@@ -228,6 +228,8 @@ def display_message(content, request_id=""):
         if "type" in item and item["type"] == "text":
             if "text_delta" in item:
                 text_delta.append(item["text_delta"])
+            if "text" in item:
+                text_delta.append(item["text"])
             
         elif "type" in item and item["type"] == "suggestions":
             suggestions.append(item["suggestions_delta"])

@@ -299,10 +299,7 @@ def display_message(content, request_id=""):
     if suggestions:
         # Display suggestions as buttons
         for index, suggestion in enumerate(suggestions):
-            if st.button(
-                suggestion, key=f"suggestion_{index}"
-            ):
-                st.session_state.active_suggestion = suggestion
+            st.button(suggestion, key=f"suggestion_{index}")
 
 
 @st.cache_data(show_spinner=False)

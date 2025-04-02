@@ -105,9 +105,9 @@ def parsed_response_message(response):
 
     rebuilt_response = [{"text" : ''.join(text_delta)
                         , "suggestions" : suggestions_delta
-                        , "request_id" : request_id}]
+                        }]
 
-    return rebuilt_response
+    return rebuilt_response, request_id
 
 
 def process_user_input(prompt: str):
@@ -208,8 +208,8 @@ def get_analyst_response(messages):
     # Check if the response is successful
     if response.status_code < 400:
         # Return the content of the response as a JSON object
-        content = parsed_response_message(response.content)
-        return content, None
+        content, request_id = parsed_response_message(response.content)
+        return content, request_id
     else:
         # Craft readable error message
         error_msg = f"""
@@ -219,7 +219,7 @@ def get_analyst_response(messages):
                         {response.text}
                         ```
                     """
-        return response.status_code, error_msg
+        return error_msg, response.status_code
 
 
 def display_conversation():

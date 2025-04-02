@@ -138,7 +138,7 @@ def process_message(prompt: str) -> None:
 
         resp= response.content.decode("utf-8")
         resp_content = re.sub(r"event: [\s\w\n.:]*", "", resp)
-        parsed_content =list(map(resp_content.split("\n"), lambda x : x != ""))  #json.loads(resp_content)
+        parsed_content =list(map(lambda x : x != "", resp_content.split("\n")))  #json.loads(resp_content)
 
         st.write(f"here is the response content : {parsed_content}")
 

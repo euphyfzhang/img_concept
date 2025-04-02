@@ -91,7 +91,18 @@ def parsed_response_message(response):
     cleaned_reponse = re.sub(r"event: [\s\w\n.:]*", "", response_string)
     parsed_list = [json.loads(x) for x in cleaned_reponse.split("\n") if x != ""]
 
-    return parsed_list
+    text_delta = []
+    suggestions_delta = []
+
+    for each in parsed_list:
+        if "text_delta" in each:
+            text_delta.append(each["text_delta"])
+        elif "suggestions_delta" in each:
+            suggestions_delta.append(each["suggestions_delta"])
+
+    rebuilt_response = [{"text" : ''.join(text_delta), "suggestions" :suggestions_delta}]
+
+    return rebuilt_response
 
 
 def process_user_input(prompt: str):
@@ -123,6 +134,8 @@ def process_user_input(prompt: str):
         with st.spinner("Waiting for Analyst's response..."):
 
             written_content, error_msg = get_analyst_response(st.session_state.messages)
+
+            st.header(written_content)
 
             if error_msg is None:
                 analyst_message = {

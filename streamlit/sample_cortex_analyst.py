@@ -164,16 +164,16 @@ def parsed_response_message(content):
         elif "request_id" in each:
             request_id = each["request_id"]
 
-    rebuilt_response = { "type" : "text"
+    rebuilt_response = [{ "type" : "text"
                         , "text" : "".join(text_delta)
                         , "suggestions" : suggestions_delta
                         , "request_id": request_id
                         , "messages" : messages
                         , "error_code" : error_code
                         , "request_id" : request_id
-                        }
+                        }]
     
-    st.header(rebuilt_response)
+    #st.header(rebuilt_response)
 
     return rebuilt_response
 

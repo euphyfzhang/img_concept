@@ -170,6 +170,8 @@ def process_user_input(prompt: str):
 
             written_content = parsed_response_message(response)
 
+            st.write(written_content)
+
             if error_msg is None:
                 analyst_message = {
                     "role": "analyst",

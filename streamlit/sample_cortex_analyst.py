@@ -108,7 +108,7 @@ def process_user_input(prompt):
         with st.spinner("Waiting for Analyst's response..."):
 
             response, error_msg = get_analyst_response(st.session_state.messages)
-            st.write(response)
+            #st.write(response)
 
             if error_msg is None:
                 analyst_message = {
@@ -151,6 +151,8 @@ def parsed_response_message(content):
     request_id = None
     error_code = None
     request_id = None
+
+    #st.header(parsed_list)
 
     for each in parsed_list:
         if "text_delta" in each:
@@ -251,21 +253,20 @@ def display_message(content, message_index, request_id=""):
     for item in content:
         if item["type"] == "text":
             st.markdown(item["text"])
-        elif item["type"] == "suggestions":
+
+        if item["type"] == "suggestions":
             # Display suggestions as buttons
             for suggestion_index, suggestion in enumerate(item["suggestions"]):
                 if st.button(
                     suggestion, key=f"suggestion_{message_index}_{suggestion_index}"
                 ):
                     st.session_state.active_suggestion = suggestion
-        elif item["type"] == "sql":
+
+        if item["type"] == "sql":
             # Display the SQL query and results
             display_sql_query(
                 item["statement"], message_index, item["confidence"], request_id
             )
-        else:
-            # Handle other content types if necessary
-            pass
 
 
 @st.cache_data(show_spinner=False)

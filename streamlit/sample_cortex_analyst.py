@@ -246,7 +246,7 @@ def display_message(content, message_index, request_id=""):
         content (List[Dict[str, str]]): The message content.
         message_index (int): The index of the message.
     """
-    for item in content:
+    for item in content[0]:
         if item["type"] == "text":
             st.markdown(item["text"])
         elif item["type"] == "suggestions":

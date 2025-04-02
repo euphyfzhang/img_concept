@@ -159,7 +159,7 @@ def process_user_input(prompt: str):
     st.session_state.messages.append(new_user_message)
     with st.chat_message("user"):
         user_msg_index = len(st.session_state.messages) - 1
-        display_message(new_user_message["content"], user_msg_index)
+        display_message(new_user_message["content"])
 
     # Show progress indicator inside analyst chat message while waiting for response
 
@@ -253,12 +253,12 @@ def display_conversation():
         content = message["content"]
         with st.chat_message(role):
             if role == "analyst":
-                display_message(content, idx, message["request_id"])
+                display_message(content, message["request_id"])
             else:
-                display_message(content, idx)
+                display_message(content)
 
 
-def display_message(content, message_index, request_id=""):
+def display_message(content, request_id=""):
     """
     Display a single message content.
 
@@ -280,6 +280,7 @@ def display_message(content, message_index, request_id=""):
             
         elif "type" in item and item["type"] == "suggestions":
             suggestions.append(item["suggestions_delta"])
+
         elif "type" in item and item["type"] == "sql":
             # Display the SQL query and results
             display_sql_query(

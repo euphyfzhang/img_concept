@@ -172,13 +172,13 @@ def get_analyst_response(messages):
         stream=True,
     )
     st.write(st.session_state.CONN.host)
-    st.write(f"here : {resp.text}")
+    st.write(f"here : {resp}")
 
     # Content is a string with serialized JSON object
-    parsed_content = json.loads(resp["content"])
+    parsed_content = json.loads(resp)
 
     # Check if the response is successful
-    if resp["status"] < 400:
+    if resp.status_code < 400:
         # Return the content of the response as a JSON object
         return parsed_content, None
     else:
@@ -186,7 +186,7 @@ def get_analyst_response(messages):
         error_msg = f"""
                         🚨 An Analyst API error has occurred 🚨
 
-                        * response code: `{resp['status']}`
+                        * response code: `{resp.status_code}`
                         * request-id: `{parsed_content['request_id']}`
                         * error code: `{parsed_content['error_code']}`
 
@@ -398,15 +398,15 @@ def submit_feedback(request_id, positive, feedback_message):
         stream=True,
     )
 
-    if resp["status"] == 200:
+    if resp.status_code == 200:
         return None
 
-    parsed_content = json.loads(resp["content"])
+    parsed_content = json.loads(resp)
     # Craft readable error message
     err_msg = f"""
         🚨 An Analyst API error has occurred 🚨
         
-        * response code: `{resp['status']}`
+        * response code: `{resp.status_code}`
         * request-id: `{parsed_content['request_id']}`
         * error code: `{parsed_content['error_code']}`
         

@@ -25,52 +25,93 @@ tables:
         expr: PRODUCT_ID
         data_type: number
         synonyms:
-          - product
-          - item
-          - stuff
-          - object
+          - product_code
+          - item_id
+          - product_number
+          - item_number
+          - sku
+          - product_key
         cortex_search_service:
           database: RESUME_AI_DB
           schema: IMG_RECG
           service: CS_PRODUCT
-      - name: MERCHANT_ID
-        expr: MERCHANT_ID
-        data_type: number
-        synonyms:
-          - merchant
-          - store
-          - retail
-      - expr: _ID
-        name: _ID
-        data_type: NUMBER(38, 0)
-        synonyms:
-          - ID of the transaction
+        description: Unique identifier for the product being transacted.
         sample_values:
           - '1'
           - '2'
           - '3'
-      - expr: AMOUNT
-        name: AMOUNT
-        data_type: NUMBER(38, 0)
+      - name: MERCHANT_ID
+        expr: MERCHANT_ID
+        data_type: number
         synonyms:
-          - PRICE
-          - VALUE
-          - AMOUNT
+          - seller_id
+          - vendor_id
+          - retailer_id
+          - supplier_id
+          - store_id
+          - trader_id
+        description: Unique identifier for the merchant involved in the transaction.
         sample_values:
-          - '3.99'
-          - '4.49'
-          - '8.99'
+          - '1'
+          - '2'
+          - '3'
+      - expr: _ID
+        name: _ID
+        data_type: NUMBER(38, 0)
+        description: Unique identifier for a transaction.
+        synonyms:
+          - id
+          - record id
+          - transaction id
+        sample_values:
+          - '1'
+          - '2'
+          - '3'
       - expr: ITEM
         name: ITEM
         data_type: VARCHAR(16777216)
         synonyms:
-          - ITEM
-          - OBJECT
-          - PURCHASE
+          - product
+          - goods
+          - merchandise
+          - commodity
+          - article
+          - object
+          - purchase
+          - sale_item
+          - transaction_item
         sample_values:
           - Granola bar
           - Oatmeal
           - Goldfish cracker
+        description: The ITEM column stores the name or description of the product or good that was involved in a transaction.
+      - expr: MERCHANT_NAME
+        name: MERCHANT_NAME
+        synonyms:
+          - seller
+          - vendor
+          - retailer
+          - trader
+          - supplier
+          - store
+          - shop
+          - dealer
+        description: The entity that processed the transaction, such as a store, online retailer, or service provider.
+        data_type: VARCHAR(16777216)
+      - expr: AMOUNT
+        name: AMOUNT
+        description: The amount of the transaction, typically a monetary value representing the total cost or payment made.
+        synonyms:
+          - cost
+          - price
+          - total
+          - quantity
+          - value
+          - sum
+          - charge
+          - payment
+          - fee
+        data_type: NUMBER(38, 0)
     facts:
       - name: daily_purchase
         expr: purchase
@@ -146,7 +187,7 @@ tables:
         data_type: number
         synonyms:
           - ID of the merchant
-      - name: MERCHANT_NAM
+      - name: MERCHANT_NAME
         expr: MERCHANT_NAME
         description: the name of the merchant
         data_type: varchar

@@ -158,7 +158,9 @@ def parsed_response_message(content):
 
     text_delta = []
     suggestions_delta = []
+    messages = []
     request_id = None
+    error_code = None
 
     for each in parsed_list:
         if "text_delta" in each:
@@ -167,11 +169,17 @@ def parsed_response_message(content):
             suggestions_delta.append(each["suggestions_delta"])
         elif "status" in each:
             request_id = each["request_id"]
+        elif "message" in each:
+            messages.append(each["message"])
+        elif "error_code" in each:
+            error_code = each["error_code"]
 
     rebuilt_response = [{ "type" : "text"
                         , "text" : "".join(text_delta)
                         , "suggestions" : suggestions_delta
                         , "request_id": request_id
+                        , "messages" : messages
+                        , "error_code" : error_code
                         }]
 
     return rebuilt_response
@@ -218,7 +226,7 @@ def get_analyst_response(messages):
         error_msg = f"""
                         🚨 An Analyst API error has occurred 🚨
 
-                        * response code: `{resp['status']}`
+                        * response code: `{resp.status_code]}`
                         * request-id: `{parsed_content['request_id']}`
                         * error code: `{parsed_content['error_code']}`
 

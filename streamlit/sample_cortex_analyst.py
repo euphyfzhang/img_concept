@@ -113,7 +113,7 @@ def process_user_input(prompt):
             if error_msg is None:
                 analyst_message = {
                     "role": "analyst",
-                    "content": response["text"],
+                    "content": response,
                     "request_id": response["request_id"],
                 }
             else:

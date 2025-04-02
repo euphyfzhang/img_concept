@@ -153,22 +153,25 @@ def process_user_input(prompt: str):
         display_message(new_user_message["content"], user_msg_index)
 
     # Show progress indicator inside analyst chat message while waiting for response
+
     with st.chat_message("analyst"):
         with st.spinner("Waiting for Analyst's response..."):
 
             response, error_msg = get_analyst_response(st.session_state.messages)
-            st.write(response)
+            events = sseclient.SSEClient(response).events()
+            written_content = st.write_stream(stream(events))
+            
             if error_msg is None:
                 analyst_message = {
                     "role": "analyst",
-                    "content": response["message"]["content"],
-                    "request_id": {response["request_id"]}  #response["request_id"]
+                    "content": written_content,
+                    "request_id": {response["request_id"]}
                 }
             else:
                 analyst_message = {
                     "role": "analyst",
                     "content": [{"type": "text", "text": error_msg}],
-                    "request_id": {response.headers.get('X-Snowflake-Request-Id')}
+                    "request_id": {response["request_id"]}
                 }
                 st.session_state["fire_API_error_notify"] = True
 
@@ -217,32 +220,20 @@ def get_analyst_response(messages):
         stream=True,
     )
 
-    st.write(resp.text)
-
-    written_content = st.write_stream(stream(resp))
-
-    # Content is a string with serialized JSON object
-    parsed_content = json.loads(written_content)
-
     # Check if the response is successful
     if resp.status_code < 400:
         # Return the content of the response as a JSON object
-        return parsed_content, None
+        return resp, None
     else:
         # Craft readable error message
         error_msg = f"""
                         🚨 An Analyst API error has occurred 🚨
-
-                        * response code: `{resp.status_code}`
-                        * request-id: `{parsed_content['request_id']}`
-                        * error code: `{parsed_content['error_code']}`
-
                         Message:
                         ```
-                        {parsed_content['message']}
+                        {resp.text}
                         ```
                     """
-        return parsed_content, error_msg
+        return resp.staus_code, error_msg
 
 
 def display_conversation():

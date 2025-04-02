@@ -151,7 +151,8 @@ def parsed_response_message(content):
     request_id = None
     error_code = None
     request_id = None
-    sql = None
+    sql_statement = None
+    other = None
 
     for each in parsed_list:
         if "text_delta" in each:
@@ -166,8 +167,10 @@ def parsed_response_message(content):
             error_code = each["error_code"]
         elif "request_id" in each:
             request_id = each["request_id"]
+        elif "sql" in each:
+            sql = each["sql"]["statement_delta"]
         else:
-            sql = each
+            other = each
 
     rebuilt_response = [{ "type" : "text"
                         , "text" : "".join(text_delta)
@@ -176,7 +179,8 @@ def parsed_response_message(content):
                         , "messages" : messages
                         , "error_code" : error_code
                         , "request_id" : request_id
-                        , "sql" : sql
+                        , "sql" : sql_statement
+                        , "other" : other
                         }]
     
     #st.header(rebuilt_response)

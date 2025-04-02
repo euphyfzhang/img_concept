@@ -144,11 +144,7 @@ def process_user_input(prompt: str):
                 "request_id": {request_id}
             }
 
-            display_message(analyst_message["content"])
-
-            if suggestions:
-                for sug in suggestions:
-                    st.write(f":red[{sug}]")
+            display_message(analyst_message["content"], suggestions)
 
             st.session_state.messages.append(analyst_message)
             st.rerun()
@@ -193,7 +189,7 @@ def display_conversation():
             display_message(content)
 
 
-def display_message(content, request_id=""):
+def display_message(content, suggestions = [], request_id=""):
     """
     Display a single message content.
 
@@ -212,9 +208,6 @@ def display_message(content, request_id=""):
                 text_delta.append(item["text_delta"])
             if "text" in item:
                 text_delta.append(item["text"])
-            
-        elif "type" in item and item["type"] == "suggestions":
-            suggestions.append(item["suggestions_delta"]["suggestion_delta"])
 
         elif "type" in item and item["type"] == "sql":
             # Display the SQL query and results

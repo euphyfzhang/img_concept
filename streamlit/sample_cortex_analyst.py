@@ -250,7 +250,7 @@ def display_message(content, request_id=""):
     if suggestions:
         # Display suggestions as buttons
         for suggestion in suggestions:
-            st.button(suggestion)
+            st.write(suggestion)
 
 
 @st.cache_data(show_spinner=False)

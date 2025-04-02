@@ -45,7 +45,7 @@ def show_header_and_sidebar():
     # Set the title and introductory text of the app
     st.title("Cortex Analyst")
     st.markdown(
-        "Welcome to Cortex Analyst! Type your questions below to interact with your data. "
+        "Ask the analyst! "
     )
 
     # Sidebar with a reset button
@@ -157,9 +157,11 @@ def parsed_response_message(content):
 
     rebuilt_response = [{ "type" : "text"
                         , "text" : "".join(text_delta)
+                        , "suggestions" : suggestions_delta
+                        , "request_id": request_id
                         }]
 
-    return rebuilt_response, suggestions_delta, request_id
+    return rebuilt_response
 
 
 def get_analyst_response(messages: List[Dict]) -> Tuple[Dict, Optional[str]]:

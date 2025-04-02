@@ -181,12 +181,9 @@ def get_analyst_response(messages):
         stream=True,
     )
 
-    st.header(response)
-
     # Check if the response is successful
     if response.status_code < 400:
         # Return the content of the response as a JSON object
-        
         content = parsed_response_message(response.content)
         return content, None
     else:
@@ -222,6 +219,7 @@ def display_message(content, request_id=""):
 
     """
 
+    st.write(content)
     text = None
     text_delta = []
     suggestions = []

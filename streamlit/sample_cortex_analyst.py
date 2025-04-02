@@ -8,7 +8,6 @@ import pandas
 import pandas as pd
 import requests
 from snowflake.snowpark import Session
-import sseclient
 import streamlit as st
 
 DATABASE = "RESUME_AI_DB"
@@ -83,9 +82,64 @@ def handle_error_notifications():
         st.toast("An API error has occured!", icon="🚨")
         st.session_state["fire_API_error_notify"] = False
 
-def parsed_response_message(response):
 
-    response_string = response.decode("utf-8")
+def process_user_input(prompt: str):
+    """
+    Process user input and update the conversation history.
+
+    Args:
+        prompt (str): The user's input.
+    """
+    # Clear previous warnings at the start of a new request
+    st.session_state.warnings = []
+
+    # Create a new message, append to history and display imidiately
+    new_user_message = {
+        "role": "user",
+        "content": [{"type": "text", "text": prompt}],
+    }
+    st.session_state.messages.append(new_user_message)
+    with st.chat_message("user"):
+        user_msg_index = len(st.session_state.messages) - 1
+        display_message(new_user_message["content"], user_msg_index)
+
+    # Show progress indicator inside analyst chat message while waiting for response
+    with st.chat_message("analyst"):
+        with st.spinner("Waiting for Analyst's response..."):
+            time.sleep(1)
+            response, error_msg = get_analyst_response(st.session_state.messages)
+            if error_msg is None:
+                analyst_message = {
+                    "role": "analyst",
+                    "content": response["message"]["content"],
+                    "request_id": response["request_id"],
+                }
+            else:
+                analyst_message = {
+                    "role": "analyst",
+                    "content": [{"type": "text", "text": error_msg}],
+                    "request_id": response["request_id"],
+                }
+                st.session_state["fire_API_error_notify"] = True
+
+            if "warnings" in response:
+                st.session_state.warnings = response["warnings"]
+
+            st.session_state.messages.append(analyst_message)
+            st.rerun()
+
+
+def display_warnings():
+    """
+    Display warnings to the user.
+    """
+    warnings = st.session_state.warnings
+    for warning in warnings:
+        st.warning(warning["message"], icon="⚠️")
+
+def parsed_response_message(content):
+
+    response_string = content.decode("utf-8")
     cleaned_reponse = re.sub(r"event: [\s\w\n.:]*", "", response_string)
     parsed_list = [json.loads(x) for x in cleaned_reponse.split("\n") if x != ""]
 
@@ -108,61 +162,26 @@ def parsed_response_message(response):
     return rebuilt_response, suggestions_delta, request_id
 
 
-def process_user_input(prompt: str):
+def get_analyst_response(messages: List[Dict]) -> Tuple[Dict, Optional[str]]:
     """
-    Process user input and update the conversation history.
+    Send chat history to the Cortex Analyst API and return the response.
 
     Args:
-        prompt (str): The user's input.
+        messages (List[Dict]): The conversation history.
+
+    Returns:
+        Optional[Dict]: The response from the Cortex Analyst API.
     """
-    # Clear previous warnings at the start of a new request
-    st.session_state.warnings = []
-
-    # Create a new message, append to history and display imidiately
-    new_user_message = {
-        "role": "user",
-        "content": [{"type": "text", "text": prompt}],
-        "stream" : True
-    }
-
-    st.session_state.messages.append(new_user_message)
-    
-    with st.chat_message("user"):
-        user_msg_index = len(st.session_state.messages) - 1
-        display_message(new_user_message["content"])
-
-    # Show progress indicator inside analyst chat message while waiting for response
-
-    with st.chat_message("analyst"):
-        with st.spinner("Waiting for Analyst's response..."):
-
-            content, suggestions, request_id = get_analyst_response(st.session_state.messages)
-
-            analyst_message = {
-                "role": "analyst",
-                "content": content,
-                "suggestions" : suggestions,
-                "request_id": {request_id}
-            }
-
-            display_message(analyst_message["content"], analyst_message["suggestions"])
-
-            st.session_state.messages.append(analyst_message)
-            #st.rerun()
-
-
-def get_analyst_response(messages):
-
     # Prepare the request body with the user's prompt
     request_body = {
-        "messages": messages,
+        "messages": get_conversation_history(),
         "semantic_model_file": f"@{SEMANTIC_FILE}",
         "stream": True,
     }
 
     # Send a POST request to the Cortex Analyst API endpoint
     # Adjusted to use positional arguments as per the API's requirement
-    response = requests.post(
+    resp = requests.post(
         url=f"https://{st.session_state.CONN.host}/api/v2/cortex/analyst/message",
         json=request_body,
         headers={
@@ -172,49 +191,67 @@ def get_analyst_response(messages):
         stream=True,
     )
 
+    # Content is a string with serialized JSON object
+    parsed_content = parsed_response_message(content)
+
     # Check if the response is successful
-    if response.status_code < 400:
+    if resp.status_code < 400:
         # Return the content of the response as a JSON object
-        content, suggestions, request_id = parsed_response_message(response.content)
-        return content, suggestions, request_id
+        return parsed_content, None
+    else:
+        # Craft readable error message
+        error_msg = f"""
+                        🚨 An Analyst API error has occurred 🚨
+
+                        * response code: `{resp['status']}`
+                        * request-id: `{parsed_content['request_id']}`
+                        * error code: `{parsed_content['error_code']}`
+
+                        Message:
+                        ```
+                        {parsed_content['message']}
+                        ```
+        """
+        return parsed_content, error_msg
 
 
 def display_conversation():
     """
     Display the conversation history between the user and the assistant.
     """
-    for message in st.session_state.messages:
+    for idx, message in enumerate(st.session_state.messages):
         role = message["role"]
         content = message["content"]
-
         with st.chat_message(role):
             if role == "analyst":
-                display_message(content, message["suggestions"])
-            elif role == "user":
-                display_message(content)
+                display_message(content, idx, message["request_id"])
+            else:
+                display_message(content, idx)
 
 
-def display_message(content, suggestions=[], request_id=""):
+def display_message(
+    content: List[Dict[str, Union[str, Dict]]],
+    message_index: int,
+    request_id: Union[str, None] = None,
+):
     """
     Display a single message content.
 
     Args:
         content (List[Dict[str, str]]): The message content.
         message_index (int): The index of the message.
-
     """
-    text = None
-    text_delta = []
-    suggestions = []
-
     for item in content:
-        if "type" in item and item["type"] == "text":
-            if "text_delta" in item:
-                text_delta.append(item["text_delta"])
-            if "text" in item:
-                text_delta.append(item["text"])
-
-        elif "type" in item and item["type"] == "sql":
+        if item["type"] == "text":
+            st.markdown(item["text"])
+        elif item["type"] == "suggestions":
+            # Display suggestions as buttons
+            for suggestion_index, suggestion in enumerate(item["suggestions"]):
+                if st.button(
+                    suggestion, key=f"suggestion_{message_index}_{suggestion_index}"
+                ):
+                    st.session_state.active_suggestion = suggestion
+        elif item["type"] == "sql":
             # Display the SQL query and results
             display_sql_query(
                 item["statement"], message_index, item["confidence"], request_id
@@ -223,19 +260,9 @@ def display_message(content, suggestions=[], request_id=""):
             # Handle other content types if necessary
             pass
 
-    if text_delta:
-        text = ''.join(text_delta)
-
-    if text:
-        st.markdown(text)
-
-    if suggestions:
-        # Display suggestions as buttons
-        for suggestion in suggestions:
-            st.button(suggestion)
 
 @st.cache_data(show_spinner=False)
-def get_query_exec_result(query):
+def get_query_exec_result(query: str) -> Tuple[Optional[pd.DataFrame], Optional[str]]:
     """
     Execute the SQL query and convert the results to a pandas DataFrame.
 
@@ -253,7 +280,7 @@ def get_query_exec_result(query):
         return None, str(e)
 
 
-def display_sql_confidence(confidence):
+def display_sql_confidence(confidence: dict):
     if confidence is None:
         return
     verified_query_used = confidence["verified_query_used"]
@@ -277,7 +304,9 @@ def display_sql_confidence(confidence):
             st.code(verified_query_used["sql"], language="sql", wrap_lines=True)
 
 
-def display_sql_query(sql, message_index, confidence, request_id):
+def display_sql_query(
+    sql: str, message_index: int, confidence: dict, request_id: Union[str, None] = None
+):
     """
     Executes the SQL query and displays the results in form of data frame and charts.
 
@@ -313,7 +342,7 @@ def display_sql_query(sql, message_index, confidence, request_id):
         display_feedback_section(request_id)
 
 
-def display_charts_tab(df, message_index):
+def display_charts_tab(df: pd.DataFrame, message_index: int) -> None:
     """
     Display the charts tab.
 
@@ -346,7 +375,7 @@ def display_charts_tab(df, message_index):
         st.write("At least 2 columns are required")
 
 
-def display_feedback_section(request_id):
+def display_feedback_section(request_id: str):
     with st.popover("📝 Query Feedback"):
         if request_id not in st.session_state.form_submitted:
             with st.form(f"feedback_form_{request_id}", clear_on_submit=True):
@@ -375,32 +404,32 @@ def display_feedback_section(request_id):
             st.error(st.session_state.form_submitted[request_id]["error"])
 
 
-def submit_feedback(request_id, positive, feedback_message):
+def submit_feedback(
+    request_id: str, positive: bool, feedback_message: str
+) -> Optional[str]:
     request_body = {
         "request_id": request_id,
         "positive": positive,
         "feedback_message": feedback_message,
     }
-
-    resp = requests.post(
-        url=f"https://{st.session_state.CONN.host}/api/v2/cortex/analyst/feedback",
-        json=request_body,
-        headers={
-            "Authorization": f'Snowflake Token="{st.session_state.CONN.rest.token}"',
-            "Content-Type": "application/json",
-        },
-        stream=True,
+    resp = _snowflake.send_snow_api_request(
+        "POST",  # method
+        FEEDBACK_API_ENDPOINT,  # path
+        {},  # headers
+        {},  # params
+        request_body,  # body
+        None,  # request_guid
+        API_TIMEOUT,  # timeout in milliseconds
     )
-
-    if resp.status_code == 200:
+    if resp["status"] == 200:
         return None
 
-    parsed_content = json.loads(resp)
+    parsed_content = json.loads(resp["content"])
     # Craft readable error message
     err_msg = f"""
         🚨 An Analyst API error has occurred 🚨
         
-        * response code: `{resp.status_code}`
+        * response code: `{resp['status']}`
         * request-id: `{parsed_content['request_id']}`
         * error code: `{parsed_content['error_code']}`
         

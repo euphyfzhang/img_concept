@@ -152,7 +152,7 @@ def parsed_response_message(content):
     error_code = None
     request_id = None
 
-    #st.header(parsed_list)
+    st.header(parsed_list)
 
     for each in parsed_list:
         if "text_delta" in each:

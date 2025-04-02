@@ -269,6 +269,7 @@ def display_message(content, request_id=""):
 
     """
 
+    text = None
     text_delta = []
     suggestions = []
 

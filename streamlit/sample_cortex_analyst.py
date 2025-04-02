@@ -118,7 +118,7 @@ def handle_user_inputs():
         ## Loop thru all the predictions
         for each in predictions:
           item_name = each.label_name
-          list_predited_items.append(item_name)
+          list_predicted_items.append(item_name)
 
     # Handle chat input
     question = "What are you looking up?"

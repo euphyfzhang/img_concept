@@ -181,7 +181,7 @@ def process_user_input(prompt: str):
             response, error_msg = get_analyst_response(st.session_state.messages)
 
             written_content, suggestions, statuses = parsed_response_message(response)
-            st.write(written_content)
+            st.markdown(written_content)
 
             if error_msg is None:
                 analyst_message = {

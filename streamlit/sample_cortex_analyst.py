@@ -226,7 +226,7 @@ def get_analyst_response(messages):
         error_msg = f"""
                         🚨 An Analyst API error has occurred 🚨
 
-                        * response code: `{resp.status_code]}`
+                        * response code: `{resp.status_code}`
                         * request-id: `{parsed_content['request_id']}`
                         * error code: `{parsed_content['error_code']}`
 

@@ -140,16 +140,12 @@ def process_user_input(prompt: str):
 
             written_content, request_id = get_analyst_response(st.session_state.messages)
 
-            st.header(written_content)
-
-            if error_msg is None:
+            if True:
                 analyst_message = {
                     "role": "analyst",
                     "content": written_content,
                     "request_id": {request_id}
                 }
-
-                st.header(written_content)
             else:
                 analyst_message = {
                     "role": "analyst",

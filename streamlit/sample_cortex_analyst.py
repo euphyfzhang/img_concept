@@ -159,7 +159,7 @@ def process_user_input(prompt: str):
 
             response, error_msg = get_analyst_response(st.session_state.messages)
 
-            st.json(response)
+            st.write(type(response))
 
             events = sseclient.SSEClient(response).events()
             written_content = st.write_stream(stream(events))

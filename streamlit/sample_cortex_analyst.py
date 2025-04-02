@@ -141,10 +141,11 @@ def process_user_input(prompt: str):
             analyst_message = {
                 "role": "analyst",
                 "content": content,
+                "suggestions" : suggestions,
                 "request_id": {request_id}
             }
 
-            display_message(analyst_message["content"], suggestions)
+            display_message(analyst_message["content"], analyst_message["suggestions"])
 
             st.session_state.messages.append(analyst_message)
             #st.rerun()
@@ -186,7 +187,10 @@ def display_conversation():
         role = message["role"]
         content = message["content"]
         with st.chat_message(role):
-            display_message(content)
+            if role == "analyst":
+                display_message(content, suggestions)
+            elif role == "user":
+                display_message(content)
 
 
 def display_message(content, suggestions = [], request_id=""):

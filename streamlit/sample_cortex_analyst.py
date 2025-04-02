@@ -201,12 +201,15 @@ def get_analyst_response(messages):
     Returns:
         Optional[Dict]: The response from the Cortex Analyst API.
     """
+    st.write()
     # Prepare the request body with the user's prompt
     request_body = {
         "messages": get_conversation_history(),
         "semantic_model_file": f"@{SEMANTIC_FILE}",
         "stream": True,
     }
+
+    st.write(f"request {request_body}")
 
     # Send a POST request to the Cortex Analyst API endpoint
     # Adjusted to use positional arguments as per the API's requirement

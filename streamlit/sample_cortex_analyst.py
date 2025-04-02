@@ -84,7 +84,7 @@ def handle_user_inputs():
     uploaded_file = st.file_uploader("📂 Choose a file")
     # API KEY
     api_key = st.text_input("API KEY", type = "password")
-    
+
     predictions = None
     err_message = None
 
@@ -101,7 +101,7 @@ def handle_user_inputs():
             predictor = Predictor(endpoint_id, api_key=api_key)
             predictions = predictor.predict(imagefile) #ObjectDetectionPrediction Object
         except Exception as e:
-            err_message = e.message
+            err_message = str(e)
     
     list_predicted_items = []
 

@@ -272,7 +272,7 @@ def display_message(content, message_index, request_id=""):
     if type(content) != list:
         content = parsed_response_message(content)
 
-    for item in written_content:
+    for item in content:
         if "type" in item and item["type"] == "text":
             st.markdown(item["text"])
         elif "type" in item and  item["type"] == "suggestions":

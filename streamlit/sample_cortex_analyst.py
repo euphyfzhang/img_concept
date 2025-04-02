@@ -105,7 +105,7 @@ def parsed_response_message(response):
     rebuilt_response = [{"text" : ''.join(text_delta)
                         , "suggestions" : suggestions_delta
                         }]
-
+    st.write(rebuilt_response)
     return rebuilt_response, request_id
 
 

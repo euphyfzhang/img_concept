@@ -274,7 +274,7 @@ def display_message(content, message_index, request_id=""):
     for item in content:
         if "type" in item and item["type"] == "text":
             if "text_delta" in item:
-                text.append(item["text_delta"])
+                text_delta.append(item["text_delta"])
             else:
                 text = item["text"]
             

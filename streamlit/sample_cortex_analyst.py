@@ -72,6 +72,13 @@ def show_header_and_sidebar():
         _, btn_container, _ = st.columns([2, 6, 2])
         if btn_container.button("Clear Chat History", use_container_width=True):
             reset_session_state()
+        
+        st.divider()
+        # API KEY
+        api_key = st.text_input("API KEY", type = "password") #bt
+
+        # Upload area
+        uploaded_file = st.file_uploader("📂 Choose a file")
 
 
 def handle_user_inputs():

@@ -159,7 +159,7 @@ def process_user_input(prompt: str):
 
             response, error_msg = get_analyst_response(st.session_state.messages)
 
-            written_content = st.write_stream(stream(events))
+            written_content = st.write_stream(stream(response))
             st.write(written_content)
 
             if error_msg is None:

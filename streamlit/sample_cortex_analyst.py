@@ -168,7 +168,7 @@ def get_analyst_response(messages):
             "Authorization": f'Snowflake Token="{st.session_state.CONN.rest.token}"',
             "Content-Type": "application/json",
         },
-        stream=True,
+        stream=False,
     )
     #st.write(st.session_state.CONN.host)
     st.write(f"here : {resp.text}")

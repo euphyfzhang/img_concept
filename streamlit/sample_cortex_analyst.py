@@ -202,7 +202,7 @@ def display_conversation():
     """
     Display the conversation history between the user and the assistant.
     """
-    for idx, message in enumerate(st.session_state.messages):
+    for message in st.session_state.messages:
         role = message["role"]
         content = message["content"]
         with st.chat_message(role):
@@ -218,15 +218,12 @@ def display_message(content, request_id=""):
         message_index (int): The index of the message.
 
     """
-
-    st.write(content)
     text = None
     text_delta = []
     suggestions = []
 
     for item in content:
         if "type" in item and item["type"] == "text":
-            st.write(item)
             if "text_delta" in item:
                 text_delta.append(item["text_delta"])
             if "text" in item:
@@ -244,18 +241,16 @@ def display_message(content, request_id=""):
             # Handle other content types if necessary
             pass
 
-    st.write(text_delta)
-    
     if text_delta:
         text = ''.join(text_delta)
 
     if text:
         st.markdown(text)
 
-    #if suggestions:
+    if suggestions:
         # Display suggestions as buttons
-        #for suggestion in suggestions:
-           # st.button(suggestion)
+        for suggestion in suggestions:
+           st.button(suggestion)
 
 
 @st.cache_data(show_spinner=False)

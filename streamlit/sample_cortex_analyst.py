@@ -232,8 +232,8 @@ def get_analyst_response(messages):
     # Check if the response is successful
     if response.status_code < 400:
         # Return the content of the response as a JSON object
-        st.header(response)
-        return response.content, None
+        content = parsed_response_message(response.content)
+        return content, None
     else:
         # Craft readable error message
         error_msg = f"""
@@ -269,8 +269,6 @@ def display_message(content, message_index, request_id=""):
         message_index (int): The index of the message.
 
     """
-    if type(content) != list:
-        content = parsed_response_message(content)
 
     for item in content:
         if "type" in item and item["type"] == "text":

@@ -111,6 +111,7 @@ def process_user_input(prompt: str):
         with st.spinner("Waiting for Analyst's response..."):
 
             response, error_msg = get_analyst_response(st.session_state.messages)
+            st.write(response)
             if error_msg is None:
                 analyst_message = {
                     "role": "analyst",

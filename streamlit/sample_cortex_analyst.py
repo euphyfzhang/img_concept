@@ -188,10 +188,10 @@ def get_analyst_response(messages):
     Returns:
         Optional[Dict]: The response from the Cortex Analyst API.
     """
-    st.write()
+    st.write(st.session_state.messages)
     # Prepare the request body with the user's prompt
     request_body = {
-        "messages": "".join(st.session_state.messages),
+        "messages": st.session_state.messages,
         "semantic_model_file": f"@{SEMANTIC_FILE}",
         "stream": True,
     }

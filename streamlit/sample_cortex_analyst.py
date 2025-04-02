@@ -170,8 +170,6 @@ def process_user_input(prompt: str):
 
             written_content = parsed_response_message(response)
 
-            st.write(written_content)
-
             if error_msg is None:
                 analyst_message = {
                     "role": "analyst",
@@ -268,7 +266,10 @@ def display_message(content, message_index, request_id=""):
     Args:
         content (List[Dict[str, str]]): The message content.
         message_index (int): The index of the message.
+
     """
+    st.write("HERE", content)
+
     for item in content:
         if item["type"] == "text":
             st.markdown(item["text"])

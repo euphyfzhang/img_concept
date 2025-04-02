@@ -112,7 +112,7 @@ def process_user_input(prompt: str):
     }
 
     st.session_state.messages.append(new_user_message)
-
+    
     with st.chat_message("user"):
         user_msg_index = len(st.session_state.messages) - 1
         display_message(new_user_message["content"])
@@ -122,7 +122,7 @@ def process_user_input(prompt: str):
     with st.chat_message("analyst"):
         with st.spinner("Waiting for Analyst's response..."):
 
-            written_content, error_msg = get_analyst_response(new_user_message["content"])
+            written_content, error_msg = get_analyst_response(st.session_state.messages)
 
             if error_msg is None:
                 analyst_message = {
@@ -164,9 +164,11 @@ def get_analyst_response(messages):
     Returns:
         Optional[Dict]: The response from the Cortex Analyst API.
     """
+    msg_str = ''.join(messages)
+
     # Prepare the request body with the user's prompt
     request_body = {
-        "messages": messages,
+        "messages": msg_str,
         "semantic_model_file": f"@{SEMANTIC_FILE}",
         "stream": True,
     }

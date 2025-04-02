@@ -168,7 +168,7 @@ def get_analyst_response(messages):
 
     # Prepare the request body with the user's prompt
     request_body = {
-        "messages": msg_str,
+        "messages": messages,
         "semantic_model_file": f"@{SEMANTIC_FILE}",
         "stream": True,
     }

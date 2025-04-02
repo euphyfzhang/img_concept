@@ -20,6 +20,19 @@ AVAILABLE_SEMANTIC_MODELS_PATHS = f"{DATABASE}.{SCHEMA}.{STAGE}/{FILE}"
 session = Session.builder.configs(st.secrets["connections"]["snowflake"]).getOrCreate()
 st.session_state.CONN = session.connection
 
+def get_conversation_history():
+    messages = []
+    for msg in st.session_state.messages:
+        m: dict[str, Any] = {}
+        if msg["role"] == "user":
+            m["role"] = "user"
+        else:
+            m["role"] = "analyst"
+        text_content = "\n".join([c for c in msg["content"] if isinstance(c, str)])
+        m["content"] = [{"type": "text", "text": text_content}]
+        messages.append(m)
+    return messages
+
 def main():
     # Initialize session state
     if "messages" not in st.session_state:

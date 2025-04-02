@@ -148,7 +148,7 @@ def process_user_input(prompt: str):
 
             if suggestions:
                 for sug in suggestions:
-                    st.button(sug)
+                    st.write(f":red[{sug}]")
 
             st.session_state.messages.append(analyst_message)
             st.rerun()

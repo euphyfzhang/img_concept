@@ -161,6 +161,7 @@ def parsed_response_message(content):
     messages = []
     request_id = None
     error_code = None
+    request_id = None
 
     for each in parsed_list:
         if "text_delta" in each:
@@ -173,6 +174,8 @@ def parsed_response_message(content):
             messages.append(each["message"])
         elif "error_code" in each:
             error_code = each["error_code"]
+        elif "request_id" in each:
+            request_id = each["request_id"]
 
     rebuilt_response = [{ "type" : "text"
                         , "text" : "".join(text_delta)
@@ -180,6 +183,7 @@ def parsed_response_message(content):
                         , "request_id": request_id
                         , "messages" : messages
                         , "error_code" : error_code
+                        , "request_id" : request_id
                         }]
 
     return rebuilt_response

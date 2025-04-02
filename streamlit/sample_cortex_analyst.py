@@ -84,6 +84,52 @@ def handle_error_notifications():
         st.toast("An API error has occured!", icon="🚨")
         st.session_state["fire_API_error_notify"] = False
 
+def stream(events):
+    prev_index = -1
+    prev_type = ""
+    prev_suggestion_index = -1
+    while True:
+        event = next(events, None)
+        if not event:
+            return
+        data = json.loads(event.data)
+        new_content_block = event.event != "message.content.delta" or data["index"] != prev_index
+
+        if prev_type == "sql" and new_content_block:
+            # Close sql markdown once sql section finishes.
+            yield "\n```\n\n"
+        match event.event:
+            case "message.content.delta":
+                match data["type"]:
+                    case "sql":
+                        if new_content_block:
+                            # Add sql markdown when we enter a new sql block.
+                            yield "```sql\n"
+                        yield data["statement_delta"]
+                    case "text":
+                        yield data["text_delta"]
+                    case "suggestions":
+                        if new_content_block:
+                            # Add a suggestions header when we enter a new suggestions block.
+                            yield "\nHere are some example questions you could ask:\n\n"
+                            yield "\n- "
+                        elif (
+                            prev_suggestion_index != data["suggestions_delta"]["index"]
+                        ):
+                            yield "\n- "
+                        yield data["suggestions_delta"]["suggestion_delta"]
+                        prev_suggestion_index = data["suggestions_delta"]["index"]
+                prev_index = data["index"]
+                prev_type = data["type"]
+            case "status":
+                st.session_state.status = data["status_message"]
+                # We return here to allow the spinner to update with the latest status, but this method will be
+                #  called again for the next iteration
+                return
+            case "error":
+                st.session_state.error = data
+                return
+
 
 def process_user_input(prompt: str):
     """
@@ -168,13 +214,14 @@ def get_analyst_response(messages):
             "Authorization": f'Snowflake Token="{st.session_state.CONN.rest.token}"',
             "Content-Type": "application/json",
         },
-        stream=False,
+        stream=True,
     )
-    #st.write(st.session_state.CONN.host)
-    st.write(f"here : {resp.text}")
+
+    events = sseclient.SSEClient(response).events()  # type: ignore
+    written_content = st.write_stream(stream(events))
 
     # Content is a string with serialized JSON object
-    parsed_content = json.loads(resp.text)
+    parsed_content = json.loads(written_content)
 
     # Check if the response is successful
     if resp.status_code < 400:

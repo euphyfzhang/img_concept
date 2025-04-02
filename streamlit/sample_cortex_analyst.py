@@ -127,15 +127,14 @@ def process_message(prompt: str) -> None:
     with st.chat_message("user"):
         st.markdown(prompt)
 
-    accumulated_content = []
     with st.chat_message("assistant"):
         with st.spinner("Sending request..."):
             response = send_message()
         st.markdown(
             f"```request_id: {response.headers.get('X-Snowflake-Request-Id')}```"
         )
-        st.write(response.content)
-        events = sseclient.SSEClient(response).events()  # type: ignore
+        st.write(f"here is the response content : {response.content}")
+
         while st.session_state.status.lower() != "done":
             with st.spinner(st.session_state.status):
                 written_content = st.write_stream(stream(events))

@@ -269,8 +269,8 @@ def display_message(content, message_index, request_id=""):
         message_index (int): The index of the message.
 
     """
-    st.header(content)
-    written_content = parsed_response_message(content)
+    if type(content) != list:
+        content = parsed_response_message(content)
 
     for item in written_content:
         if "type" in item and item["type"] == "text":

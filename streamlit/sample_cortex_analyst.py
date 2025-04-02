@@ -181,7 +181,7 @@ def parsed_response_message(content):
                         , "sql" : sql
                         }]
     
-    st.header(rebuilt_response)
+    #st.header(rebuilt_response)
 
     return rebuilt_response
 
@@ -217,6 +217,9 @@ def get_analyst_response(messages):
     )
 
     # Content is a string with serialized JSON object
+
+    st.write(resp)
+
     parsed_content = parsed_response_message(resp.content)
 
     # Check if the response is successful
@@ -254,7 +257,7 @@ def display_message(content, message_index, request_id=""):
         message_index (int): The index of the message.
     """
 
-    st.header(content)
+    #st.header(content)
 
     for item in content:
         if item["type"] == "text":

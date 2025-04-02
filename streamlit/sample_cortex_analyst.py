@@ -176,13 +176,13 @@ def process_user_input(prompt: str):
                 analyst_message = {
                     "role": "analyst",
                     "content": written_content,
-                    "request_id": {statuses[0]["request_id"]}
+                    "request_id": {written_content[0]["request_id"]}
                 }
             else:
                 analyst_message = {
                     "role": "analyst",
                     "content": [{"type": "text", "text": error_msg}],
-                    "request_id": {statuses[0]["request_id"]}
+                    "request_id": {written_content[0]["request_id"]}
                 }
                 st.session_state["fire_API_error_notify"] = True
 

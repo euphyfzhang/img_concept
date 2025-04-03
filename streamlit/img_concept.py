@@ -50,7 +50,7 @@ if __name__ == "__main__":
   ### Side Bar
   with st.sidebar:
     # API KEY
-    api_key = st.text_input("API KEY", type = "password") #bt
+    api_key = st.text_input("API KEY", type = "password")
 
     # Upload area
     uploaded_file = st.file_uploader("📂 Choose a file")

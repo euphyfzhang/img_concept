@@ -439,9 +439,12 @@ if __name__ == "__main__":
         reset_session_state()
     
     ### HEADER AREA
+    st.set_page_config(layout="centered"
+                        , page_icon="🧊"
+                        , initial_sidebar_state="expanded")
     # Set the title and introductory text of the app
     with st.container(border = False):
-        st.image(banner_image, width = 650, caption = "by Euphemia")
+        st.image(banner_image, width = 700, caption = "by Euphemia")
 
     with st.expander("🛍️ Shopping Transactions"):
         st.dataframe(tran_info)

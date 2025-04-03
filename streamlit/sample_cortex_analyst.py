@@ -338,8 +338,8 @@ def display_charts_tab(df, message_index):
         df (pd.DataFrame): The query results.
         message_index (int): The index of the message.
     """
-    # There should be at least 2 columns to draw charts
-    if len(df.columns) >= 2:
+    # There should be at least 2 columns and 2 records to draw charts
+    if df.size >= 4:
         all_cols_set = set(df.columns)
         col1, col2 = st.columns(2)
         x_col = col1.selectbox(

@@ -524,26 +524,11 @@ if __name__ == "__main__":
                 display_message(content, idx)
 
     ### CHAT AREA
-
-    if uploaded_file and api_key:
-        bytes_data = uploaded_file.getvalue()
-
     if err_message:
         st.warning(err_message, icon = "💥")
 
-    if predictions:
-        ## Loop thru all the predictions
-        for each in predictions:
-          item_name = each.label_name
-          list_predicted_items.append(item_name)
-
     # Handle chat input
-    question = "What are you looking up?"
-
-    if list_predicted_items:
-        question = f"Would you want to ask questions about {" and ".join(list_predicted_items)} ?? "
-
-    user_input = st.chat_input(question
+    user_input = st.chat_input("What are you looking up?"
                             , accept_file=True
                             , file_type=["jpg", "jpeg", "png"]
                             )

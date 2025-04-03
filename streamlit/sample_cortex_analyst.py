@@ -169,7 +169,14 @@ def parsed_response_message(content):
     cleaned_reponse = re.sub(r"event: [\s\w\n.:]*", "", response_string)
     #debug purpose
     st.subheader(cleaned_reponse)
-    parsed_list = [json.loads(x) for x in cleaned_reponse.split("\n") if x != ""]
+    parsed_list = []
+
+    for each in cleaned_reponse.split("\n"):
+        if each:
+            try:
+                parsed_list.append(json.loads(x))
+            except Exception as e:
+                pass
 
     text_delta = []
     suggestions_delta = []

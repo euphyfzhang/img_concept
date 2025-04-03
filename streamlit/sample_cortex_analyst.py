@@ -80,7 +80,7 @@ def process_user_input(prompt):
                         }
     
     if prompt["files"]:
-        new_user_message["content"].append({"type": "image", "image": prompt["files"][0]})
+        new_user_message["content"].append({"type": "image", "image": prompt["files"]})
 
     st.session_state.messages.append(new_user_message)
 

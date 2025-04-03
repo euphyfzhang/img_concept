@@ -183,7 +183,8 @@ def get_analyst_response(messages):
     """
     #st.write(f"session_state.message: {st.session_state.messages}")
     # Prepare the request body with the user's prompt
-    text_messages = list(filter(lambda x: x["content"]["type"] == "text" , st.session_state.messages))
+    overall_messages = st.session_state.messages
+    text_messages = list(filter(lambda x: x["content"]["type"] == "text", overall_messages))
     request_body = {
         "messages": text_messages,
         "semantic_model_file": f"@{SEMANTIC_FILE}",

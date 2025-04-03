@@ -473,10 +473,7 @@ if __name__ == "__main__":
             if role == "analyst":
                 display_message(content, idx, message["request_id"])
             else:
-                if content["type"] == "text":
-                    display_message(content, idx)
-                elif content["type"] == "image":
-                    st.image(content["image"])
+                display_message(content, idx)
 
     ### CHAT AREA
     if uploaded_file:

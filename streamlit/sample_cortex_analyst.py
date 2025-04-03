@@ -440,7 +440,8 @@ if __name__ == "__main__":
     
     ### HEADER AREA
     st.set_page_config(layout="centered"
-                        , page_icon="🧊"
+                        , page_title="SnapLedger"
+                        , page_icon="🍭"
                         , initial_sidebar_state="expanded")
     # Set the title and introductory text of the app
     with st.container(border = False):

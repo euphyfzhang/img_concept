@@ -476,15 +476,7 @@ if __name__ == "__main__":
                 display_message(content, idx)
 
     ### CHAT AREA
-    if uploaded_file:
-        if st.button("Upload image"):
-            st.session_state.messages.append(
-                {
-                    "role": "user",
-                    "content": [{"type": "image", "image": uploaded_file}],
-                }
-            )
-    
+
     if uploaded_file and api_key:
         bytes_data = uploaded_file.getvalue()
 
@@ -513,6 +505,14 @@ if __name__ == "__main__":
     user_input = st.chat_input(question)
     if user_input:
         process_user_input(user_input)
+    if uploaded_file:
+        if st.button("Upload image"):
+            st.session_state.messages.append(
+                {
+                    "role": "user",
+                    "content": [{"type": "image", "image": uploaded_file}],
+                }
+            )
     # Handle suggested question click
     elif st.session_state.active_suggestion is not None:
         suggestion = st.session_state.active_suggestion

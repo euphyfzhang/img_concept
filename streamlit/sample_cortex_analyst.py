@@ -35,18 +35,14 @@ website_imgs = session.table("IMG_RECG.WEBSITE_IMAGES").to_pandas()
 banner_loc = website_imgs[website_imgs["DESCRIPTION"]=="BANNER"]["IMAGE_NAME"].values[0]
 banner_image = session.file.get_stream(f"{images_path}/BANNER/{banner_loc}" , decompress=False).read()
 
+## Transaction data
 tran_info = session.table("IMG_RECG.TRANSACTION").to_pandas()
 
-
-def main():
-    # Initialize session state
-    if "messages" not in st.session_state:
-        reset_session_state()
-    show_header_and_sidebar()
-    display_conversation()
-    handle_user_inputs()
-    handle_error_notifications()
-
+##
+uploaded_file = None
+api_key = None
+predictions = None
+err_message = None
 
 def reset_session_state():
     """Reset important session state elements."""
@@ -58,41 +54,8 @@ def reset_session_state():
     )  # Dictionary to store feedback submission for each request
 
 
-def show_header_and_sidebar():
-    """Display the header and sidebar of the app."""
-    st.set_page_config(layout="wide")
-    # Set the title and introductory text of the app
-    st.image(banner_image, width = 1400, caption = "by Euphemia")
-
-    with st.expander("🛍️ Shopping Transactions"):
-        st.dataframe(tran_info)
-
-    # Sidebar with a reset button
-    with st.sidebar:
-        # Center this button
-        _, btn_container, _ = st.columns([2, 6, 2])
-        if btn_container.button("Clear Chat History", use_container_width=True):
-            reset_session_state()
-
-        st.selectbox(
-            "Selected semantic model:",
-            AVAILABLE_SEMANTIC_MODELS_PATHS,
-            format_func=lambda s: s.split("/")[-1],
-            key="selected_semantic_model_path",
-            on_change=reset_session_state,
-        )
-        
-        
-
 def handle_user_inputs():
     """Handle user inputs from the chat interface."""
-
-    uploaded_file = st.file_uploader("📂 Choose a file")
-    # API KEY
-    api_key = st.text_input("API KEY", type = "password")
-
-    predictions = None
-    err_message = None
 
     if uploaded_file:
         st.image(uploaded_file, width=300)
@@ -515,4 +478,40 @@ def submit_feedback(request_id, positive, feedback_message):
     return err_msg
 
 if __name__ == "__main__":
-    main()
+    # Initialize session state
+    if "messages" not in st.session_state:
+        reset_session_state()
+    
+    ### HEADER AREA
+    st.set_page_config(layout="wide")
+    # Set the title and introductory text of the app
+    st.image(banner_image, width = 1400, caption = "by Euphemia")
+
+    with st.expander("🛍️ Shopping Transactions"):
+        st.dataframe(tran_info)
+
+    ### SIDEBAR AREA
+    with st.sidebar:
+        # Center this button
+        _, btn_container, _ = st.columns([2, 6, 2])
+        if btn_container.button("Clear Chat History", use_container_width=True):
+            reset_session_state()
+
+        st.selectbox(
+            "Selected semantic model:",
+            AVAILABLE_SEMANTIC_MODELS_PATHS,
+            format_func=lambda s: s.split("/")[-1],
+            key="selected_semantic_model_path",
+            on_change=reset_session_state,
+        )
+
+        st.divider()
+
+        ## UPLOAD FILE AREA
+        uploaded_file = st.file_uploader("📂 Choose a file")
+        ## API KEY
+        api_key = st.text_input("API KEY", type = "password")
+
+    display_conversation()
+    handle_user_inputs()
+    handle_error_notifications()

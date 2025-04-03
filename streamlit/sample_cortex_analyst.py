@@ -71,6 +71,8 @@ def process_user_input(prompt):
     # Clear previous warnings at the start of a new request
     st.session_state.warnings = []
 
+    st.header(prompt)
+
     # Create a new message, append to history and display imidiately
     new_user_message = {
                         "role": "user",

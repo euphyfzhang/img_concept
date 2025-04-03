@@ -71,23 +71,25 @@ def process_user_input(prompt):
     # Clear previous warnings at the start of a new request
     st.session_state.warnings = []
 
+    # Create a new message, append to history and display imidiately
     new_user_message = None
 
+    # If prompt is just text, no file attached:
     if type(prompt) == str:
         new_user_message = {
                         "role": "user",
                         "content": [{"type": "text", "text": prompt}]
                         }
-    
+    # If prompt is a file attached:
     else:
-        # Create a new message, append to history and display imidiately
+        
         new_user_message = {
                             "role": "user",
                             "content": [{"type": "text", "text": prompt.text}]
                             }
         
         if prompt["files"]:
-            new_user_message["content"].append({"type": "image", "image": prompt["files"]})
+            new_user_message["content"].append({"type": "image", "image": prompt["files"][0]})
 
     st.session_state.messages.append(new_user_message)
 
@@ -102,10 +104,7 @@ def process_user_input(prompt):
             text_messages = st.session_state.messages
 
             for each in text_messages:
-                st.header(f":red[debug] {list(filter(lambda x: x["type"] == "text", each["content"]))}")
                 each["content"] = list(filter(lambda x: x["type"] == "text", each["content"]))
-
-                st.header(f":red[each content] : {each["content"]}")
 
             response, request_id, error_msg = get_analyst_response(text_messages)
             #st.write(response)

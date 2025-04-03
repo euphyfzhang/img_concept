@@ -74,7 +74,7 @@ def process_user_input(prompt):
     # Create a new message, append to history and display imidiately
     new_user_message = {
         "role": "user",
-        "content": [{"type": "text", "text": prompt.txt}
+        "content": [{"type": "text", "text": prompt.text}
                     , {"type": "image", "image": prompt["files"][0]}],
     }
 

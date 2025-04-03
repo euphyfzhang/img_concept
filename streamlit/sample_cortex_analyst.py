@@ -460,14 +460,14 @@ if __name__ == "__main__":
     with st.container(border = False):
         st.image(banner_image, width = 700, caption = "by Euphemia (2025.03)")
 
-    with st.expander("🛍️ Shopping Transactions"):
+    with st.expander("🛒 Shopping Transactions"):
         st.dataframe(tran_info)
 
     ### SIDEBAR AREA
     with st.sidebar:
         # Center this button
         _, btn_container, _ = st.columns([2, 6, 2])
-        if btn_container.button("Clear Chat History", use_container_width=True):
+        if btn_container.button("🗑️ Clear Chat History", use_container_width=True):
             reset_session_state()
 
         st.selectbox(
@@ -481,7 +481,7 @@ if __name__ == "__main__":
         st.divider()
 
         ## API KEY
-        api_key = st.text_input("API KEY", type = "password")
+        api_key = st.text_input("🔑 API KEY", type = "password")
 
     ### CHAT DISPLAY
     for idx, message in enumerate(st.session_state.messages):

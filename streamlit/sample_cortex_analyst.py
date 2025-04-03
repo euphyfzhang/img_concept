@@ -234,18 +234,15 @@ def display_message(content, message_index, request_id=""):
             # Display suggestions as buttons
             suggestions = {}
             for each in item["suggestions"]:
-                st.header(each)
                 idx = each["index"]
                 if idx in suggestions:
                     suggestions.update({idx:suggestions[idx] + each["suggestion_delta"]})
                 else:
                     suggestions[idx] = each["suggestion_delta"]
-
-            st.header(suggestions)
             
             for key, value in suggestions.items():
                 if st.button(value, key=f"suggestion_{key}"):
-                    st.session_state.active_suggestion = suggestion
+                    st.session_state.active_suggestion = value
 
         if "sql" in item and item["sql"]:
             # Display the SQL query and results

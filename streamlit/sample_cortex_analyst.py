@@ -133,7 +133,7 @@ def parsed_response_message(content):
                         , "text" : "".join(text_delta)
                         }]
     
-    for key, value in parsed_list.items():
+    for each in parsed_list:
         if "text_delta" not in each:
             rebuilt_response[key] = value
     

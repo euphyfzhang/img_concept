@@ -439,7 +439,7 @@ if __name__ == "__main__":
         reset_session_state()
     
     ### HEADER AREA
-    _, banner_container, _ = st.columns([1, 11, 1], vertical_alignment="center", border = True)
+    _, banner_container, _ = st.columns([1, 20, 1], vertical_alignment="center", border = True)
     # Set the title and introductory text of the app
     with banner_container:
         st.image(banner_image, width = 650, caption = "by Euphemia")

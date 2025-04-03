@@ -231,8 +231,14 @@ def display_message(content, message_index, request_id=""):
 
         if "suggestions" in item and item["suggestions"]:
             # Display suggestions as buttons
-            for suggestion_index, suggestion in enumerate(item["suggestions"]):
-                st.button(suggestion, key = f"suggestion_delta_{suggestion_index}")
+            count = 0
+            for each in item["suggestions"]:
+                suggestion_delta = []
+                suggestion_delta.append(each["suggestion_delta"])
+                suggestion = "".join(suggestion_delta)
+                st.button(suggestion, key = f"suggestion_{count}")
+
+                count = count + 1
                 #if st.button(
                 #    suggestion, key=f"suggestion_{message_index}_{suggestion_index}"
                 #):

@@ -233,7 +233,7 @@ def display_message(content, message_index, request_id=""):
             st.markdown(item["text"])
         
         if item["type"] == "image":
-            st.image(item["image"])
+            st.image(item["image"], width = 200)
 
         if "suggestions" in item and item["suggestions"]:
             

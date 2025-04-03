@@ -183,6 +183,7 @@ def get_analyst_response(messages):
     # Prepare the request body with the user's prompt
 
     text_messages = list(filter(lambda x: x["content"][0]["type"] == "text", st.session_state.messages))
+    st.header(text_messages)
     request_body = {
         "messages": text_messages,
         "semantic_model_file": f"@{SEMANTIC_FILE}",

@@ -133,7 +133,7 @@ def parsed_response_message(content):
                         , "text" : "".join(text_delta)
                         }]
     
-    for key, value in parsed_list:
+    for key, value in parsed_list.items():
         if "text_delta" not in each:
             rebuilt_response[key] = value
     
@@ -402,7 +402,7 @@ if __name__ == "__main__":
     ### HEADER AREA
     st.set_page_config(layout="wide")
     # Set the title and introductory text of the app
-    st.image(banner_image, width = 1400, caption = "by Euphemia")
+    st.image(banner_image, width = 700, caption = "by Euphemia")
 
     with st.expander("🛍️ Shopping Transactions"):
         st.dataframe(tran_info)

@@ -458,7 +458,7 @@ if __name__ == "__main__":
                         , initial_sidebar_state="expanded")
     # Set the title and introductory text of the app
     with st.container(border = False):
-        st.image(banner_image, width = 700, caption = "by Euphemia")
+        st.image(banner_image, width = 700, caption = "by Euphemia (2025.03)")
 
     with st.expander("🛍️ Shopping Transactions"):
         st.dataframe(tran_info)

@@ -518,14 +518,14 @@ if __name__ == "__main__":
                 )
                 st.rerun()
 
-    user_input = st.chat_input("What are you looking up?")
+    if list_predicted_items:
+        question = f"Would you want to ask questions about {" and ".join(list_predicted_items)} ?? "
+
+    user_input = st.chat_input(question)
 
     if user_input:
         process_user_input(user_input)
-    
-    if list_predicted_items:
-        st.session_state.active_suggestion = list_predicted_items[0]
-        
+
     # Handle suggested question click
     elif st.session_state.active_suggestion is not None:
         suggestion = st.session_state.active_suggestion

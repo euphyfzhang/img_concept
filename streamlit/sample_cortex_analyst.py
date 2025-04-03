@@ -477,12 +477,13 @@ if __name__ == "__main__":
 
     ### CHAT AREA
     if uploaded_file:
-        st.session_state.messages.append(
-            {
-                "role": "user",
-                "content": [{"type": "image", "image": uploaded_file}],
-            }
-        )
+        if st.button("Upload image"):
+            st.session_state.messages.append(
+                {
+                    "role": "user",
+                    "content": [{"type": "image", "image": uploaded_file}],
+                }
+            )
     
     if uploaded_file and api_key:
         bytes_data = uploaded_file.getvalue()

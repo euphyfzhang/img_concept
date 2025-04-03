@@ -197,13 +197,8 @@ def get_analyst_response(messages):
     #st.write(f"session_state.message: {st.session_state.messages}")
     # Prepare the request body with the user's prompt
 
-    text_messages = copy.deepcopy(st.session_state.messages)
-
-    for each in text_messages:
-        each["content"] = list(filter(lambda x: x["type"] == "text", each["content"]))
-
     request_body = {
-        "messages": text_messages,
+        "messages": messages,
         "semantic_model_file": f"@{SEMANTIC_FILE}",
         "stream": True,
     }

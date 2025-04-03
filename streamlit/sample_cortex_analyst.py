@@ -534,7 +534,7 @@ if __name__ == "__main__":
                             )
 
     if user_input:
-        process_user_input(user_input)
+        process_user_input(user_input, api_key)
 
     # Handle suggested question click
     elif st.session_state.active_suggestion is not None:

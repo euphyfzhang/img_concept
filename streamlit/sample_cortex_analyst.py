@@ -61,7 +61,7 @@ def computer_vision_prediction(image_file, api_key=""):
     results = []
 
     # Upload the image:
-    imagefile = Image.open(uploaded_file)
+    imagefile = Image.open(image_file)
 
     if api_key:
         try:

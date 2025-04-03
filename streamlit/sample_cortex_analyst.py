@@ -71,16 +71,23 @@ def process_user_input(prompt):
     # Clear previous warnings at the start of a new request
     st.session_state.warnings = []
 
-    st.header(prompt)
+    new_user_message = None
 
-    # Create a new message, append to history and display imidiately
-    new_user_message = {
+    if type(prompt) == str:
+        new_user_message = {
                         "role": "user",
-                        "content": [{"type": "text", "text": prompt.text}]
+                        "content": [{"type": "text", "text": prompt}]
                         }
     
-    if prompt["files"]:
-        new_user_message["content"].append({"type": "image", "image": prompt["files"]})
+    else:
+        # Create a new message, append to history and display imidiately
+        new_user_message = {
+                            "role": "user",
+                            "content": [{"type": "text", "text": prompt.text}]
+                            }
+        
+        if prompt["files"]:
+            new_user_message["content"].append({"type": "image", "image": prompt["files"]})
 
     st.session_state.messages.append(new_user_message)
 

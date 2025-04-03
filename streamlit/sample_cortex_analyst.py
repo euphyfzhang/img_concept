@@ -84,9 +84,7 @@ def process_user_input(prompt):
     # Show progress indicator inside analyst chat message while waiting for response
     with st.chat_message("analyst"):
         with st.spinner("Waiting for Analyst's response..."):
-            overall_messages = st.session_state.messages
-            st.header(overall_messages)
-            text_messages = list(filter(lambda x: x["content"][0]["type"] == "text", overall_messages))
+            text_messages = list(filter(lambda x: x["content"][0]["type"] == "text", st.session_state.messages))
 
             response, error_msg = get_analyst_response(text_messages)
             #st.write(response)
@@ -183,8 +181,8 @@ def get_analyst_response(messages):
     """
     #st.write(f"session_state.message: {st.session_state.messages}")
     # Prepare the request body with the user's prompt
-    overall_messages = st.session_state.messages
-    text_messages = list(filter(lambda x: x["content"][0]["type"] == "text", overall_messages))
+
+    text_messages = list(filter(lambda x: x["content"][0]["type"] == "text", st.session_state.messages))
     request_body = {
         "messages": text_messages,
         "semantic_model_file": f"@{SEMANTIC_FILE}",

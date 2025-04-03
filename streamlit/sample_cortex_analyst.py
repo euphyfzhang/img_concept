@@ -74,9 +74,12 @@ def process_user_input(prompt):
     # Create a new message, append to history and display imidiately
     new_user_message = {
         "role": "user",
-        "content": [{"type": "text", "text": prompt}],
+        "content": [{"type": "text", "text": prompt.txt}
+                    , {"type": "image", "image": prompt["files"][0]}],
     }
+
     st.session_state.messages.append(new_user_message)
+
     with st.chat_message("user"):
         user_msg_index = len(st.session_state.messages) - 1
         display_message(new_user_message["content"], user_msg_index)
@@ -153,16 +156,12 @@ def parsed_response_message(content):
         #else:
             #sql = each
 
-    rebuilt_response = [{ "type" : "text"
-                        , "text" : "".join(text_delta)
-                        , "suggestions" : suggestions_delta
-                        , "request_id": request_id
-                        , "messages" : messages
-                        , "error_code" : error_code
-                        , "request_id" : request_id
-                        , "sql" : sql
-                        , "confidence" : confidence
-                        }]
+    rebuilt_response = [{ "type" : "text", "text" : "".join(text_delta)}
+                        , {"type" : "suggestion", "suggestions" : suggestions_delta}
+                        , {"type" : "request_id", "request_id": request_id}
+                        , {"type" : "status", "messages" : messages, "error_code" : error_code}
+                        , {"type" : "sql", "sql": sql, "confidence" : confidence}
+                        ]
     
     #st.header(rebuilt_response)
 
@@ -229,32 +228,33 @@ def display_message(content, message_index, request_id=""):
     #st.header(content)
 
     for item in content:
-        if item["type"] == "text":
-            st.markdown(item["text"])
-        
-        if item["type"] == "image":
-            st.image(item["image"], width = 200)
-
-        if "suggestions" in item and item["suggestions"]:
+        match item["type"]:
+            case "text":
+                st.markdown(item["text"])
             
-            # Display suggestions as buttons
-            suggestions = {}
-            for each in item["suggestions"]:
-                idx = each["index"]
-                if idx in suggestions:
-                    suggestions.update({idx:suggestions[idx] + each["suggestion_delta"]})
-                else:
-                    suggestions[idx] = each["suggestion_delta"]
-            
-            for key, value in suggestions.items():
-                if st.button(value, key=f"suggestion_{message_index}_{key}"):
-                    st.session_state.active_suggestion = value
+            case "image":
+                st.image(item["image"], width = 200)
 
-        if "sql" in item and item["sql"]:
-            # Display the SQL query and results
-            display_sql_query(
-                item["sql"], message_index, item["confidence"], request_id
-            )
+            case "suggestion":
+                # Consolidate the suggestion_delta (word pieces) into a complete sentence.
+                suggestions = {}
+                for each in item["suggestions"]:
+                    idx = each["index"]
+                    if idx in suggestions:
+                        suggestions.update({idx:suggestions[idx] + each["suggestion_delta"]})
+                    else:
+                        suggestions[idx] = each["suggestion_delta"]
+
+                # Display suggestions as buttons
+                for key, value in suggestions.items():
+                    if st.button(value, key=f"suggestion_{message_index}_{key}"):
+                        st.session_state.active_suggestion = value
+
+            case "sql":
+                # Display the SQL query and results
+                display_sql_query(
+                    item["sql"], message_index, item["confidence"], request_id
+                )
 
 
 @st.cache_data(show_spinner=False)
@@ -496,33 +496,13 @@ if __name__ == "__main__":
     # Handle chat input
     question = "What are you looking up?"
 
-    if uploaded_file:
-        _1, _2 = st.columns(2)
-        with _1:
-            st.warning("Would you like to upload the **image**?", icon = "🚨")
-        with _2:
-            if st.button("Submit"):
-                # Upload the image:
-
-                imagefile = Image.open(uploaded_file)
-                st.session_state.messages.append(
-                    {
-                        "role": "user",
-                        "content": [{"type": "image", "image": uploaded_file}],
-                    }
-                )
-                try:
-                    # Send to model for prediction,
-                    predictor = Predictor(endpoint_id, api_key=api_key)
-                    predictions = predictor.predict(imagefile) #ObjectDetectionPrediction Object
-                except Exception as e:
-                    err_message = str(e)
-                st.rerun()
-
     if list_predicted_items:
         question = f"Would you want to ask questions about {" and ".join(list_predicted_items)} ?? "
 
-    user_input = st.chat_input(question)
+    user_input = st.chat_input(question
+                            , accept_file=True
+                            , file_type=["jpg", "jpeg", "png"]
+                            )
 
     if user_input:
         process_user_input(user_input)

@@ -516,7 +516,7 @@ if __name__ == "__main__":
                     "content": [{"type": "image", "image": uploaded_file}],
                 }
             )
-        st.rerun()
+            st.rerun()
 
     user_input = st.chat_input(question)
 

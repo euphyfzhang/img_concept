@@ -166,7 +166,7 @@ def parsed_response_message(content):
     for each in cleaned_reponse.split("\n"):
         if each:
             try:
-                parsed_list.append(json.loads(x))
+                parsed_list.append(json.loads(each))
             except Exception as e:
                 error_message = str(e)
 

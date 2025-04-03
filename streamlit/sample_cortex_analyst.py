@@ -237,12 +237,9 @@ def display_message(content, message_index, request_id=""):
     """
     Display a single message content.
 
-    Args:
-        content (List[Dict[str, str]]): The message content.
-        message_index (int): The index of the message.
     """
     #For debug purpose
-    #st.header(content)
+    st.subheader(content)
 
     for item in content:
         match item["type"]:

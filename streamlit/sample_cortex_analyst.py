@@ -95,6 +95,7 @@ def process_user_input(prompt):
             text_messages = st.session_state.messages
 
             for each in text_messages:
+                st.header(f":red[debug] {list(filter(lambda x: x["type"] == "text", each["content"]))}")
                 each["content"] = list(filter(lambda x: x["type"] == "text", each["content"]))
 
                 st.header(f":red[each content] : {each["content"]}")

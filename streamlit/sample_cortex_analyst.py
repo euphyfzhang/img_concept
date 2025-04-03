@@ -503,9 +503,6 @@ if __name__ == "__main__":
 
     # Handle chat input
     question = "What are you looking up?"
-    if list_predicted_items:
-        for each in list_predicted_items:
-            st.session_state.active_suggestion = f"When is the last purchase of {each}?"
 
     if uploaded_file:
         _1, _2 = st.columns(2)
@@ -526,6 +523,9 @@ if __name__ == "__main__":
     if user_input:
         process_user_input(user_input)
     
+    if list_predicted_items:
+        st.session_state.active_suggestion = list_predicted_items[0]
+        
     # Handle suggested question click
     elif st.session_state.active_suggestion is not None:
         suggestion = st.session_state.active_suggestion

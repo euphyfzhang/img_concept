@@ -508,13 +508,15 @@ if __name__ == "__main__":
         question = "Looking up :" + " and ".join(set(list_predicted_items)) + "?"
 
     if uploaded_file:
-        if st.button("Upload image"):
+        st.warning("Would you like to upload the image?", icon = "🚨")
+        if st.button("Submit"):
             st.session_state.messages.append(
                 {
                     "role": "user",
                     "content": [{"type": "image", "image": uploaded_file}],
                 }
             )
+        st.rerun()
 
     user_input = st.chat_input(question)
 

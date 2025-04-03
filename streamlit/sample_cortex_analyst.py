@@ -124,20 +124,47 @@ def parsed_response_message(content):
     parsed_list = [json.loads(x) for x in cleaned_reponse.split("\n") if x != ""]
 
     text_delta = []
+    suggestions_delta = []
+    messages = []
+    request_id = None
+    error_code = None
+    request_id = None
+    sql = None
+    confidence = None
+    other = None
 
     for each in parsed_list:
         if "text_delta" in each:
             text_delta.append(each["text_delta"])
+        elif "suggestions_delta" in each:
+            suggestions_delta.append(each["suggestions_delta"])
+        elif "status" in each:
+            request_id = each["request_id"]
+        elif "message" in each:
+            messages.append(each["message"])
+        elif "error_code" in each:
+            error_code = each["error_code"]
+        elif "request_id" in each:
+            request_id = each["request_id"]
+        elif "type" in each and "sql" in each["type"]:
+            sql = each["statement_delta"]
+            confidence = each["confidence"]
+        #else:
+            #sql = each
 
     rebuilt_response = [{ "type" : "text"
                         , "text" : "".join(text_delta)
+                        , "suggestions" : suggestions_delta
+                        , "request_id": request_id
+                        , "messages" : messages
+                        , "error_code" : error_code
+                        , "request_id" : request_id
+                        , "sql" : sql
+                        , "confidence" : confidence
                         }]
     
-    for each in parsed_list:
-        if "text_delta" not in each:
-            rebuilt_response[key] = value
-    
     #st.header(rebuilt_response)
+
     return rebuilt_response
 
 
@@ -402,7 +429,7 @@ if __name__ == "__main__":
     ### HEADER AREA
     st.set_page_config(layout="wide")
     # Set the title and introductory text of the app
-    st.image(banner_image, width = 700, caption = "by Euphemia")
+    st.image(banner_image, width = 1400, caption = "by Euphemia")
 
     with st.expander("🛍️ Shopping Transactions"):
         st.dataframe(tran_info)

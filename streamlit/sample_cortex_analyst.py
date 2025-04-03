@@ -237,7 +237,7 @@ def display_message(content, message_index, request_id=""):
 
     """
     #For debug purpose
-    st.subheader(content)
+    #st.subheader(content)
 
     for item in content:
         match item["type"]:
@@ -480,8 +480,6 @@ if __name__ == "__main__":
 
         st.divider()
 
-        ## UPLOAD FILE AREA
-        uploaded_file = st.file_uploader("📂 Choose a file")
         ## API KEY
         api_key = st.text_input("API KEY", type = "password")
 

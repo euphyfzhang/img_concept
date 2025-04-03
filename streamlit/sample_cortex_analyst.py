@@ -101,7 +101,7 @@ def process_user_input(prompt):
     with st.chat_message("analyst"):
         with st.spinner("Waiting for Analyst's response..."):
 
-            text_messages = st.session_state.messages
+            text_messages = st.session_state.messages.copy()
 
             for each in text_messages:
                 each["content"] = list(filter(lambda x: x["type"] == "text", each["content"]))

@@ -477,8 +477,6 @@ if __name__ == "__main__":
 
     ### CHAT AREA
     if uploaded_file:
-        st.image(uploaded_file, width=300)
-
         st.session_state.messages.append(
             {
                 "role": "user",

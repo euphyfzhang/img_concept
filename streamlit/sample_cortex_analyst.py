@@ -504,7 +504,8 @@ if __name__ == "__main__":
     # Handle chat input
     question = "What are you looking up?"
     if list_predicted_items:
-        question = "Would you like to look up : " + " and ".join(set(list_predicted_items)) + "❓"
+        for each in list_predicted_items:
+            st.session_state.active_suggestion = f"When is the last purchase of {each}?"
 
     if uploaded_file:
         _1, _2 = st.columns(2)
@@ -520,7 +521,7 @@ if __name__ == "__main__":
                 )
                 st.rerun()
 
-    user_input = st.chat_input(question)
+    user_input = st.chat_input("What are you looking up?")
 
     if user_input:
         process_user_input(user_input)

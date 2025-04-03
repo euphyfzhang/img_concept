@@ -73,10 +73,12 @@ def process_user_input(prompt):
 
     # Create a new message, append to history and display imidiately
     new_user_message = {
-        "role": "user",
-        "content": [{"type": "text", "text": prompt.text}
-                    , {"type": "image", "image": prompt["files"][0]}],
-    }
+                        "role": "user",
+                        "content": [{"type": "text", "text": prompt.text}]
+                        }
+    
+    if prompt["files"]:
+        new_user_message["content"].append({"type": "image", "image": prompt["files"][0]})
 
     st.session_state.messages.append(new_user_message)
 

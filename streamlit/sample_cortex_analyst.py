@@ -230,6 +230,7 @@ def display_message(content, message_index, request_id=""):
             st.markdown(item["text"])
 
         if "suggestions" in item and item["suggestions"]:
+            st.header(item["suggestions"])
             # Display suggestions as buttons
             count = 0
             for each in item["suggestions"]:

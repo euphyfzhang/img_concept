@@ -234,6 +234,7 @@ def display_message(content, message_index, request_id=""):
             # Display suggestions as buttons
             suggestions = {}
             for each in item["suggestions"]:
+                st.header(each)
                 idx = each["index"]
                 if idx in suggestions:
                     suggestions.update({idx:suggestions[idx] + each["suggestion_delta"]})

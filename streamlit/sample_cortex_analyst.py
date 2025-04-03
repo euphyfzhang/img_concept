@@ -228,6 +228,9 @@ def display_message(content, message_index, request_id=""):
     for item in content:
         if item["type"] == "text":
             st.markdown(item["text"])
+        
+        if item["type"] == "image":
+            st.image(itemp["image"])
 
         if "suggestions" in item and item["suggestions"]:
             
@@ -338,8 +341,8 @@ def display_charts_tab(df, message_index):
         df (pd.DataFrame): The query results.
         message_index (int): The index of the message.
     """
-    # There should be at least 2 columns and 2 records to draw charts
-    if df.size >= 4:
+    # There should be at least 2 columns to draw charts
+    if len(df.columns) >= 2:
         all_cols_set = set(df.columns)
         col1, col2 = st.columns(2)
         x_col = col1.selectbox(
@@ -470,11 +473,21 @@ if __name__ == "__main__":
             if role == "analyst":
                 display_message(content, idx, message["request_id"])
             else:
-                display_message(content, idx)
+                if content["type"] == "text":
+                    display_message(content, idx)
+                elif content["type"] == "image":
+                    st.image(content["image"])
 
     ### CHAT AREA
     if uploaded_file:
         st.image(uploaded_file, width=300)
+
+        st.session_state.messages.append(
+            {
+                "role": "user",
+                "content": [{"type": "image", "image": uploaded_file}],
+            }
+        )
     
     if uploaded_file and api_key:
         bytes_data = uploaded_file.getvalue()

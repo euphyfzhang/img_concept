@@ -232,7 +232,7 @@ def display_message(content, message_index, request_id=""):
         if "suggestions" in item and item["suggestions"]:
             # Display suggestions as buttons
             for suggestion_index, suggestion in enumerate(item["suggestions"]):
-                st.button(suggestion["suggestion_delta"], key = f"suggestion_delta_{suggestion_index}")
+                st.button(suggestion, key = f"suggestion_delta_{suggestion_index}")
                 #if st.button(
                 #    suggestion, key=f"suggestion_{message_index}_{suggestion_index}"
                 #):
@@ -429,7 +429,7 @@ if __name__ == "__main__":
     ### HEADER AREA
     st.set_page_config(layout="wide")
     # Set the title and introductory text of the app
-    st.image(banner_image, width = 1400, caption = "by Euphemia")
+    st.image(banner_image, width = 1000, caption = "by Euphemia")
 
     with st.expander("🛍️ Shopping Transactions"):
         st.dataframe(tran_info)

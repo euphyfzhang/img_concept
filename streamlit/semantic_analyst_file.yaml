@@ -219,7 +219,19 @@ relationships:
 verified_queries:
   - name: daily total expenses
     question: What is the total expenses per day?
+    verified_at : 1743698451
+    verified_by: Euphemia Zhang
+    use_as_onboarding_question: true
     sql: ' SELECT TO_DATE(TRANSACTION_TIMESTAMP) AS DATE, SUM(AMOUNT) AS TOTAL_AMOUNT FROM __TRANSACTION GROUP BY TO_DATE(TRANSACTION_TIMESTAMP) ORDER BY TO_DATE(TRANSACTION_TIMESTAMP) DESC; '
   - name: most recent purchase of the specifc item
     question: When is the most recent date of the purchase of Pez Candies?
+    verified_at : 1743698452
+    verified_by: Euphemia Zhang
+    use_as_onboarding_question: true
     sql: 'SELECT ITEM, MAX(TRANSACTION_TIMESTAMP) AS MOST_RECENT_TIMESTAMP FROM __TRANSACTION WHERE ITEM = ''Pez candy'' GROUP BY ITEM; '
+  - name: total cost of the month
+    question: what is the total expense of the month?
+    verified_at : 1743698453
+    verified_by: Euphemia Zhang
+    use_as_onboarding_question: true
+    sql: 'SELECT TO_VARCHAR(TRANSACTION_TIMESTAMP,''YYYYMM'') AS YEARMONTH, SUM(AMOUNT) AS TOTAL_AMOUNT FROM __TRANSACTION GROUP BY TO_VARCHAR(TRANSACTION_TIMESTAMP,''YYYYMM'') ORDER BY TO_VARCHAR(TRANSACTION_TIMESTAMP,''YYYYMM''); '

@@ -16,13 +16,34 @@ VALUES
 ('2025-03-25 13:15:47', 3, 'Costco Store #4567', 1, 'Granola bar', 7.49),
 ('2025-03-26 17:22:09', 4, 'Walmart Store #7890', 2, 'Oatmeal', 3.99),
 ('2025-03-28 08:45:33', 1, 'Loblaws Store #1234',4,  'Pez candy', 2.49),
-('2025-03-28 11:30:18', 2, 'Metro Store #9876', 3, 'Goldfish cracker', 3.99),
+('2025-04-02 11:30:18', 2, 'Metro Store #9876', 3, 'Goldfish cracker', 3.99),
 ('2025-03-28 14:12:55', 3, 'Costco Store #4567', 2, 'Oatmeal', 6.99),
 ('2025-03-28 16:45:27', 4, 'Walmart Store #7890', 1, 'Granola bar', 3.29),
 ('2025-03-29 10:15:42', 1, 'Loblaws Store #1234', 1, 'Granola bar', 3.99),
-('2025-03-29 12:30:11', 2, 'Metro Store #9876', 2, 'Oatmeal', 4.19),
-('2025-03-29 15:45:39', 3, 'Costco Store #4567', 3, 'Goldfish cracker', 9.49),
-('2025-03-29 18:20:05', 4, 'Walmart Store #7890', 4, 'Pez candy', 1.79);
+('2025-03-30 12:30:11', 2, 'Metro Store #9876', 2, 'Oatmeal', 4.19),
+('2025-03-31 15:45:39', 3, 'Costco Store #4567', 3, 'Goldfish cracker', 9.49),
+('2025-04-01 18:20:05', 4, 'Walmart Store #7890', 4, 'Pez candy', 1.79),
+('2025-03-15 09:23:45', 2, 'Metro Store #9876', 3, 'Goldfish cracker', 8.49),
+('2025-03-16 11:45:12', 1, 'Loblaws Store #1234',  1, 'Granola bar', 3.49),
+('2025-03-17 14:33:22', 3, 'Costco Store #4567', 2, 'Oatmeal', 4.47 ),
+('2025-03-18 16:12:37', 1, 'Loblaws Store #1234' , 1, 'Granola bar', 3.79),
+('2025-03-19 08:11:53', 4, 'Walmart Store #7890', 2, 'Oatmeal', 4.29),
+('2025-03-20 10:03:41', 3, 'Costco Store #4567', 1, 'Granola bar', 3.09),
+('2025-03-21 12:47:19', 2, 'Metro Store #9876', 4, 'Pez candy', 5.09),
+('2025-03-22 12:33:28', 4, 'Walmart Store #7890', 3, 'Goldfish cracker', 3.49),
+('2025-03-23 07:58:11', 3, 'Costco Store #4567', 3, 'Goldfish cracker', 4.89),
+('2025-03-24 09:42:34', 2, 'Metro Store #9876', 4, 'Pez candy', 2.39),
+('2025-03-25 13:17:47', 3, 'Costco Store #4567', 1, 'Granola bar', 7.67),
+('2025-03-26 17:29:09', 4, 'Walmart Store #7890', 4,  'Pez candy', 2.49),
+('2025-03-28 08:45:10', 1, 'Loblaws Store #1234',2, 'Oatmeal', 3.99),
+('2025-03-28 11:31:18', 2, 'Metro Store #9876', 3, 'Goldfish cracker', 3.39),
+('2025-04-03 13:12:55', 3, 'Costco Store #4567', 2, 'Oatmeal', 6.29),
+('2025-03-28 17:44:20', 4, 'Walmart Store #7890', 1, 'Granola bar', 3.29),
+('2025-03-29 13:15:42', 1, 'Loblaws Store #1234', 4, 'Pez candy', 1.99),
+('2025-03-29 12:34:15', 2, 'Metro Store #9876', 2, 'Oatmeal', 4.29),
+('2025-03-30 13:45:34', 1, 'Loblaws Store #1234', 3, 'Goldfish cracker', 9.69),
+('2025-03-31 19:25:05', 4, 'Walmart Store #7890', 4, 'Pez candy', 1.70)
+;
 
 
 CREATE OR REPLACE TABLE IMG_RECG.DIM_MERCHANT(

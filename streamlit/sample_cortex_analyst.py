@@ -108,13 +108,13 @@ def process_user_input(prompt, api_key = ""):
         if prompt["files"]:
             new_user_message["content"].append({"type": "image", "image": prompt["files"][0]})
 
-        # Send to Computer Vision Tool for prediction.
-        predicted_item = computer_vision_prediction(prompt["files"][0], api_key=api_key)
+            # Send to Computer Vision Tool for prediction.
+            predicted_item = computer_vision_prediction(prompt["files"][0], api_key=api_key)
 
-        if predicted_item[0]["status"] == "SUCCESS":
-            for each in new_user_message["content"]:
-                if each["type"] == "text":
-                    each["text"] = each["text"] + f"( for the item **:red[{predicted_item[0]["item"]}]** )"
+            if predicted_item[0]["status"] == "SUCCESS":
+                for each in new_user_message["content"]:
+                    if each["type"] == "text":
+                        each["text"] = each["text"] + f"( for the item **:red[{predicted_item[0]["item"]}]** )"
 
     st.session_state.messages.append(new_user_message)
 

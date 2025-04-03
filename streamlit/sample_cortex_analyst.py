@@ -241,7 +241,7 @@ def display_message(content, message_index, request_id=""):
                     suggestions[idx] = each["suggestion_delta"]
             
             for key, value in suggestions.items():
-                if st.button(value, key=f"suggestion_{key}"):
+                if st.button(value, key=f"suggestion_{message_index}_{key}"):
                     st.session_state.active_suggestion = value
 
         if "sql" in item and item["sql"]:

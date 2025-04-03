@@ -43,6 +43,7 @@ uploaded_file = None
 api_key = None
 predictions = None
 err_message = None
+list_predicted_items = []
 
 def reset_session_state():
     """Reset important session state elements."""
@@ -52,49 +53,6 @@ def reset_session_state():
     st.session_state.form_submitted = (
         {}
     )  # Dictionary to store feedback submission for each request
-
-
-def handle_user_inputs():
-    """Handle user inputs from the chat interface."""
-
-    if uploaded_file:
-        st.image(uploaded_file, width=300)
-    
-    if uploaded_file and api_key:
-        bytes_data = uploaded_file.getvalue()
-
-         # Upload the image:
-        imagefile = Image.open(uploaded_file)
-        try:
-            # Send to model for prediction,
-            predictor = Predictor(endpoint_id, api_key=api_key)
-            predictions = predictor.predict(imagefile) #ObjectDetectionPrediction Object
-        except Exception as e:
-            err_message = str(e)
-    
-    list_predicted_items = []
-
-    if err_message:
-        st.warning(err_message, icon = "💥")
-
-    if predictions:
-        ## Loop thru all the predictions
-        for each in predictions:
-          item_name = each.label_name
-          list_predicted_items.append(item_name)
-
-    # Handle chat input
-    question = "What are you looking up?"
-    if list_predicted_items:
-        question = "Looking up :" + " and ".join(set(list_predicted_items)) + "?"
-    user_input = st.chat_input(question)
-    if user_input:
-        process_user_input(user_input)
-    # Handle suggested question click
-    elif st.session_state.active_suggestion is not None:
-        suggestion = st.session_state.active_suggestion
-        st.session_state.active_suggestion = None
-        process_user_input(suggestion)
 
 
 def handle_error_notifications():
@@ -513,5 +471,43 @@ if __name__ == "__main__":
         api_key = st.text_input("API KEY", type = "password")
 
     display_conversation()
-    handle_user_inputs()
+
+    ### CHAT AREA
+    if uploaded_file:
+        st.image(uploaded_file, width=300)
+    
+    if uploaded_file and api_key:
+        bytes_data = uploaded_file.getvalue()
+
+         # Upload the image:
+        imagefile = Image.open(uploaded_file)
+        try:
+            # Send to model for prediction,
+            predictor = Predictor(endpoint_id, api_key=api_key)
+            predictions = predictor.predict(imagefile) #ObjectDetectionPrediction Object
+        except Exception as e:
+            err_message = str(e)
+
+    if err_message:
+        st.warning(err_message, icon = "💥")
+
+    if predictions:
+        ## Loop thru all the predictions
+        for each in predictions:
+          item_name = each.label_name
+          list_predicted_items.append(item_name)
+
+    # Handle chat input
+    question = "What are you looking up?"
+    if list_predicted_items:
+        question = "Looking up :" + " and ".join(set(list_predicted_items)) + "?"
+    user_input = st.chat_input(question)
+    if user_input:
+        process_user_input(user_input)
+    # Handle suggested question click
+    elif st.session_state.active_suggestion is not None:
+        suggestion = st.session_state.active_suggestion
+        st.session_state.active_suggestion = None
+        process_user_input(suggestion)
+
     handle_error_notifications()

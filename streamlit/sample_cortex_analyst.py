@@ -439,9 +439,10 @@ if __name__ == "__main__":
         reset_session_state()
     
     ### HEADER AREA
-    st.set_page_config(layout="wide")
+    _, banner_container, _ = st.columns([1, 6, 1])
     # Set the title and introductory text of the app
-    st.image(banner_image, width = 1000, caption = "by Euphemia")
+    with banner_container:
+        st.image(banner_image, width = 1000, caption = "by Euphemia")
 
     with st.expander("🛍️ Shopping Transactions"):
         st.dataframe(tran_info)
@@ -483,15 +484,6 @@ if __name__ == "__main__":
     if uploaded_file and api_key:
         bytes_data = uploaded_file.getvalue()
 
-         # Upload the image:
-        imagefile = Image.open(uploaded_file)
-        try:
-            # Send to model for prediction,
-            predictor = Predictor(endpoint_id, api_key=api_key)
-            predictions = predictor.predict(imagefile) #ObjectDetectionPrediction Object
-        except Exception as e:
-            err_message = str(e)
-
     if err_message:
         st.warning(err_message, icon = "💥")
 
@@ -510,12 +502,21 @@ if __name__ == "__main__":
             st.warning("Would you like to upload the **image**?", icon = "🚨")
         with _2:
             if st.button("Submit"):
+                # Upload the image:
+
+                imagefile = Image.open(uploaded_file)
                 st.session_state.messages.append(
                     {
                         "role": "user",
                         "content": [{"type": "image", "image": uploaded_file}],
                     }
                 )
+                try:
+                    # Send to model for prediction,
+                    predictor = Predictor(endpoint_id, api_key=api_key)
+                    predictions = predictor.predict(imagefile) #ObjectDetectionPrediction Object
+                except Exception as e:
+                    err_message = str(e)
                 st.rerun()
 
     if list_predicted_items:

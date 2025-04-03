@@ -158,12 +158,13 @@ def display_warnings():
 def parsed_response_message(content):
 
     response_string = content.decode("utf-8")
-    cleaned_reponse = re.sub(r"event: [\s\w\n.:]*", "", response_string)
+    removed_charactor = re.sub(r"event: [\s\w\n.:]*", "", response_string)
+    cleaned_reponse = removed_charactor.split("\n")
     #debug purpose
     parsed_list = []
     error_message = None
 
-    for each in cleaned_reponse.split("\n"):
+    for each in cleaned_reponse:
         if each:
             try:
                 parsed_list.append(json.loads(each))

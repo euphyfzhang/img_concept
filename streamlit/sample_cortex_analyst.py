@@ -134,22 +134,14 @@ def process_user_input(prompt, api_key = ""):
             response, request_id, error_msg = get_analyst_response(text_messages)
             #st.write(response)
 
-            if error_msg is None:
-                analyst_message = {
+            analyst_message = {
                     "role": "analyst",
                     "content": response,
                     "request_id": request_id,
                 }
-            else:
-                analyst_message = {
-                    "role": "analyst",
-                    "content": [{"type": "text", "text": error_msg}],
-                    "request_id": request_id,
-                }
-                st.session_state["fire_API_error_notify"] = True
 
-            if "warnings" in response:
-                st.session_state.warnings = response["warnings"]
+            if error_msg:
+                st.session_state["fire_API_error_notify"] = True
 
             st.session_state.messages.append(analyst_message)
             st.rerun()
@@ -169,13 +161,14 @@ def parsed_response_message(content):
     cleaned_reponse = re.sub(r"event: [\s\w\n.:]*", "", response_string)
     #debug purpose
     parsed_list = []
+    error_message = None
 
     for each in cleaned_reponse.split("\n"):
         if each:
             try:
                 parsed_list.append(json.loads(x))
             except Exception as e:
-                pass
+                error_message = str(e)
 
     text_delta = []
     suggestions_delta = []
@@ -206,7 +199,12 @@ def parsed_response_message(content):
         #else:
             #sql = each
 
-    rebuilt_response = [{ "type" : "text", "text" : "".join(text_delta)}
+    if error_message:
+        text = error_message
+    else:
+        text = "".join(text_delta)
+
+    rebuilt_response = [{ "type" : "text", "text" : text}
                         , {"type" : "suggestion", "suggestions" : suggestions_delta}
                         , {"type" : "status", "messages" : messages, "error_code" : error_code}
                         , {"type" : "sql", "sql": sql, "confidence" : confidence}
@@ -215,7 +213,7 @@ def parsed_response_message(content):
     
     #st.header(rebuilt_response)
 
-    return rebuilt_response, request_id
+    return rebuilt_response, request_id, error_message
 
 
 def get_analyst_response(messages):
@@ -250,19 +248,10 @@ def get_analyst_response(messages):
     )
 
     # Content is a string with serialized JSON object
+    parsed_content, request_id, error_message = parsed_response_message(resp.content)
 
-    parsed_content, request_id = parsed_response_message(resp.content)
+    return parsed_content, request_id, error_message
 
-    # Check if the response is successful
-    if resp.status_code < 400:
-        # Return the content of the response as a JSON object
-        return parsed_content, request_id, None
-    else:
-        # Craft readable error message
-        error_msg = f"""
-                        🚨 An Analyst API error has occurred 🚨
-        """
-        return parsed_content, request_id, error_msg
 
 
 def display_message(content, message_index, request_id=""):

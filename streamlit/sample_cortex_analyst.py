@@ -230,7 +230,7 @@ def display_message(content, message_index, request_id=""):
             st.markdown(item["text"])
         
         if item["type"] == "image":
-            st.image(itemp["image"])
+            st.image(item["image"])
 
         if "suggestions" in item and item["suggestions"]:
             

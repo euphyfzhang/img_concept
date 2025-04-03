@@ -91,20 +91,20 @@ def process_user_input(prompt):
         with st.spinner("Waiting for Analyst's response..."):
             text_messages = list(filter(lambda x: x["content"][0]["type"] == "text", st.session_state.messages))
 
-            response, error_msg = get_analyst_response(text_messages)
+            response, request_id, error_msg = get_analyst_response(text_messages)
             #st.write(response)
 
             if error_msg is None:
                 analyst_message = {
                     "role": "analyst",
                     "content": response,
-                    "request_id": list(filter(lambda x : x["type"]=="request_id", response))["request_id"],
+                    "request_id": request_id,
                 }
             else:
                 analyst_message = {
                     "role": "analyst",
                     "content": [{"type": "text", "text": error_msg}],
-                    "request_id": response["request_id"],
+                    "request_id": request_id,
                 }
                 st.session_state["fire_API_error_notify"] = True
 
@@ -167,7 +167,7 @@ def parsed_response_message(content):
     
     #st.header(rebuilt_response)
 
-    return rebuilt_response
+    return rebuilt_response, request_id
 
 
 def get_analyst_response(messages):
@@ -204,18 +204,18 @@ def get_analyst_response(messages):
 
     # Content is a string with serialized JSON object
 
-    parsed_content = parsed_response_message(resp.content)
+    parsed_content, request_id = parsed_response_message(resp.content)
 
     # Check if the response is successful
     if resp.status_code < 400:
         # Return the content of the response as a JSON object
-        return parsed_content, None
+        return parsed_content, request_id, None
     else:
         # Craft readable error message
         error_msg = f"""
                         🚨 An Analyst API error has occurred 🚨
         """
-        return parsed_content, error_msg
+        return parsed_content, request_id, error_msg
 
 
 def display_message(content, message_index, request_id=""):

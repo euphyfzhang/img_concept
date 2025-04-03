@@ -504,7 +504,7 @@ if __name__ == "__main__":
     # Handle chat input
     question = "What are you looking up?"
     if list_predicted_items:
-        question = "Looking up :" + " and ".join(set(list_predicted_items)) + "?"
+        question = "Would you like to look up : " + " and ".join(set(list_predicted_items)) + "❓"
 
     if uploaded_file:
         _1, _2 = st.columns(2)

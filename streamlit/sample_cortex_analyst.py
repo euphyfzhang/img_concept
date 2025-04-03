@@ -97,7 +97,7 @@ def process_user_input(prompt):
             for each in text_messages:
                 each["content"] = list(filter(lambda x: x["type"] == "text", each["content"]))
 
-            st.header(f":red[text messages] : {text_messages}")
+                st.header(f":red[each content] : {each["content"]}")
 
             response, request_id, error_msg = get_analyst_response(text_messages)
             #st.write(response)

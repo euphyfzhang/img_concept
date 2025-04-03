@@ -442,7 +442,7 @@ if __name__ == "__main__":
     _, banner_container, _ = st.columns([1, 9, 1])
     # Set the title and introductory text of the app
     with banner_container:
-        st.image(banner_image, width = 700, caption = "by Euphemia")
+        st.image(banner_image, width = 600, caption = "by Euphemia")
 
     with st.expander("🛍️ Shopping Transactions"):
         st.dataframe(tran_info)

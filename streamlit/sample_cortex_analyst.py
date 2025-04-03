@@ -168,7 +168,6 @@ def parsed_response_message(content):
     response_string = content.decode("utf-8")
     cleaned_reponse = re.sub(r"event: [\s\w\n.:]*", "", response_string)
     #debug purpose
-    st.subheader(cleaned_reponse)
     parsed_list = []
 
     for each in cleaned_reponse.split("\n"):

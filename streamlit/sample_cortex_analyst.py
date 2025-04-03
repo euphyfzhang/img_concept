@@ -1,7 +1,6 @@
 # Public Docs: https://docs.snowflake.com/LIMITEDACCESS/snowflake-cortex/rest-api/cortex-analyst
 
-import json
-import re
+import json, re, copy
 from typing import Any, Generator, Iterator
 
 import pandas
@@ -101,7 +100,7 @@ def process_user_input(prompt):
     with st.chat_message("analyst"):
         with st.spinner("Waiting for Analyst's response..."):
 
-            text_messages = st.session_state.messages.copy()
+            text_messages = copy.deepcopy(st.session_state.messages)
 
             for each in text_messages:
                 each["content"] = list(filter(lambda x: x["type"] == "text", each["content"]))

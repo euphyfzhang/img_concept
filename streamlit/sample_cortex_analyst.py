@@ -230,20 +230,18 @@ def display_message(content, message_index, request_id=""):
             st.markdown(item["text"])
 
         if "suggestions" in item and item["suggestions"]:
-            st.header(item["suggestions"])
+            
             # Display suggestions as buttons
-            count = 0
+            suggestions = {}
             for each in item["suggestions"]:
-                suggestion_delta = []
-                suggestion_delta.append(each["suggestion_delta"])
-                suggestion = "".join(suggestion_delta)
-                st.button(suggestion, key = f"suggestion_{count}")
+                suggestions[each["index"]] = ""
+                suggestions[each["index"]] = suggestions[each["index"]] + each["suggestion_delta"]
 
-                count = count + 1
-                #if st.button(
-                #    suggestion, key=f"suggestion_{message_index}_{suggestion_index}"
-                #):
-                 #   st.session_state.active_suggestion = suggestion
+            st.header(suggestions)
+            
+            for key, value in suggestions.items():
+                if st.button(value, key=f"suggestion_{key}"):
+                    st.session_state.active_suggestion = suggestion
 
         if "sql" in item and item["sql"]:
             # Display the SQL query and results

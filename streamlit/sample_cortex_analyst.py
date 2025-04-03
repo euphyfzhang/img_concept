@@ -108,23 +108,19 @@ def process_user_input(prompt, api_key = ""):
         if prompt["files"]:
             new_user_message["content"].append({"type": "image", "image": prompt["files"][0]})
 
-            # Send to Computer Vision Tool for prediction.
-            predicted_item = computer_vision_prediction(prompt["files"][0], api_key=api_key)
+        # Send to Computer Vision Tool for prediction.
+        predicted_item = computer_vision_prediction(prompt["files"][0], api_key=api_key)
 
-            if predicted_item[0]["status"] == "SUCCESS":
-                for each in new_user_message["cotent"]:
-                    if each["type"] == "text":
-                        each["text"] = each["text"] + f"( for the item **:red[{predicted_item[0]["item"]}]** )"
+        if predicted_item[0]["status"] == "SUCCESS":
+            for each in new_user_message["cotent"]:
+                if each["type"] == "text":
+                    each["text"] = each["text"] + f"( for the item **:red[{predicted_item[0]["item"]}]** )"
 
     st.session_state.messages.append(new_user_message)
 
     with st.chat_message("user"):
         user_msg_index = len(st.session_state.messages) - 1
         display_message(new_user_message["content"], user_msg_index)
-
-    
-
-    
 
     # Show progress indicator inside analyst chat message while waiting for response
     with st.chat_message("analyst"):

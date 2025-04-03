@@ -234,7 +234,10 @@ def display_message(content, message_index, request_id=""):
             # Display suggestions as buttons
             suggestions = {}
             for each in item["suggestions"]:
-                suggestions[each["index"]] = suggestions[each["index"]] + each["suggestion_delta"]
+                if "index" not in each:
+                    suggestions[each["index"]] = ""
+                else:
+                    suggestions[each["index"]] = suggestions[each["index"]] + each["suggestion_delta"]
 
             st.header(suggestions)
             

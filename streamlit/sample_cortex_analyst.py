@@ -254,9 +254,10 @@ def display_message(content, message_index, request_id=""):
 
             case "sql":
                 # Display the SQL query and results
-                display_sql_query(
-                    item["sql"], message_index, item["confidence"], request_id
-                )
+                if item["sql"]:
+                    display_sql_query(
+                        item["sql"], message_index, item["confidence"], request_id
+                    )
 
 
 @st.cache_data(show_spinner=False)

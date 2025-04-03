@@ -124,47 +124,20 @@ def parsed_response_message(content):
     parsed_list = [json.loads(x) for x in cleaned_reponse.split("\n") if x != ""]
 
     text_delta = []
-    suggestions_delta = []
-    messages = []
-    request_id = None
-    error_code = None
-    request_id = None
-    sql = None
-    confidence = None
-    other = None
 
     for each in parsed_list:
         if "text_delta" in each:
             text_delta.append(each["text_delta"])
-        elif "suggestions_delta" in each:
-            suggestions_delta.append(each["suggestions_delta"])
-        elif "status" in each:
-            request_id = each["request_id"]
-        elif "message" in each:
-            messages.append(each["message"])
-        elif "error_code" in each:
-            error_code = each["error_code"]
-        elif "request_id" in each:
-            request_id = each["request_id"]
-        elif "type" in each and "sql" in each["type"]:
-            sql = each["statement_delta"]
-            confidence = each["confidence"]
-        #else:
-            #sql = each
 
     rebuilt_response = [{ "type" : "text"
                         , "text" : "".join(text_delta)
-                        , "suggestions" : suggestions_delta
-                        , "request_id": request_id
-                        , "messages" : messages
-                        , "error_code" : error_code
-                        , "request_id" : request_id
-                        , "sql" : sql
-                        , "confidence" : confidence
                         }]
     
+    for key, value in parsed_list:
+        if "text_delta" not in each:
+            rebuilt_response[key] = value
+    
     #st.header(rebuilt_response)
-
     return rebuilt_response
 
 
@@ -212,20 +185,6 @@ def get_analyst_response(messages):
                         🚨 An Analyst API error has occurred 🚨
         """
         return parsed_content, error_msg
-
-
-def display_conversation():
-    """
-    Display the conversation history between the user and the assistant.
-    """
-    for idx, message in enumerate(st.session_state.messages):
-        role = message["role"]
-        content = message["content"]
-        with st.chat_message(role):
-            if role == "analyst":
-                display_message(content, idx, message["request_id"])
-            else:
-                display_message(content, idx)
 
 
 def display_message(content, message_index, request_id=""):
@@ -470,7 +429,15 @@ if __name__ == "__main__":
         ## API KEY
         api_key = st.text_input("API KEY", type = "password")
 
-    display_conversation()
+    ### CHAT DISPLAY
+    for idx, message in enumerate(st.session_state.messages):
+        role = message["role"]
+        content = message["content"]
+        with st.chat_message(role):
+            if role == "analyst":
+                display_message(content, idx, message["request_id"])
+            else:
+                display_message(content, idx)
 
     ### CHAT AREA
     if uploaded_file:

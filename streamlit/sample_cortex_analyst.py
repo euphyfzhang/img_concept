@@ -440,7 +440,7 @@ if __name__ == "__main__":
     
     ### HEADER AREA
     # Set the title and introductory text of the app
-    with st.container(border = True):
+    with st.container(border = False):
         st.image(banner_image, width = 650, caption = "by Euphemia")
 
     with st.expander("🛍️ Shopping Transactions"):

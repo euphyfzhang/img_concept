@@ -98,7 +98,7 @@ def process_user_input(prompt):
                 analyst_message = {
                     "role": "analyst",
                     "content": response,
-                    "request_id": response[0]["request_id"],
+                    "request_id": list(filter(lambda x : x["type"]=="request_id", response))["request_id"],
                 }
             else:
                 analyst_message = {
@@ -160,9 +160,9 @@ def parsed_response_message(content):
 
     rebuilt_response = [{ "type" : "text", "text" : "".join(text_delta)}
                         , {"type" : "suggestion", "suggestions" : suggestions_delta}
-                        , {"type" : "request_id", "request_id": request_id}
                         , {"type" : "status", "messages" : messages, "error_code" : error_code}
                         , {"type" : "sql", "sql": sql, "confidence" : confidence}
+                        , {"type" : "request_id", "request_id": request_id}
                         ]
     
     #st.header(rebuilt_response)

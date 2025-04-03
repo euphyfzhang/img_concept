@@ -85,7 +85,9 @@ def process_user_input(prompt):
     with st.chat_message("analyst"):
         with st.spinner("Waiting for Analyst's response..."):
 
-            response, error_msg = get_analyst_response(st.session_state.messages)
+            text_messages = list(filter(lambda x: x["content"]["type"] == "text" , st.session_state.messages))
+
+            response, error_msg = get_analyst_response(text_messages)
             #st.write(response)
 
             if error_msg is None:
@@ -180,8 +182,9 @@ def get_analyst_response(messages):
     """
     #st.write(f"session_state.message: {st.session_state.messages}")
     # Prepare the request body with the user's prompt
+    text_messages = list(filter(lambda x: x["content"]["type"] == "text" , st.session_state.messages))
     request_body = {
-        "messages": st.session_state.messages,
+        "messages": text_messages,
         "semantic_model_file": f"@{SEMANTIC_FILE}",
         "stream": True,
     }
@@ -502,9 +505,7 @@ if __name__ == "__main__":
     question = "What are you looking up?"
     if list_predicted_items:
         question = "Looking up :" + " and ".join(set(list_predicted_items)) + "?"
-    user_input = st.chat_input(question)
-    if user_input:
-        process_user_input(user_input)
+
     if uploaded_file:
         if st.button("Upload image"):
             st.session_state.messages.append(
@@ -513,6 +514,12 @@ if __name__ == "__main__":
                     "content": [{"type": "image", "image": uploaded_file}],
                 }
             )
+
+    user_input = st.chat_input(question)
+
+    if user_input:
+        process_user_input(user_input)
+    
     # Handle suggested question click
     elif st.session_state.active_suggestion is not None:
         suggestion = st.session_state.active_suggestion

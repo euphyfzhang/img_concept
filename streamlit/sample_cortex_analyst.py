@@ -27,6 +27,7 @@ api_info = session.table("IMG_RECG.API_CREDENTIALS").to_pandas()
 landingai_api = api_info[api_info["NAME"]=="LANDINGAI"]
 api_key_euph = landingai_api["API_KEY"].values[0]
 endpoint_id = landingai_api["ENDPOINT_ID"].values[0]
+api_key = None
 
 ## Website contents
 images_path = "@IMG_RECG.INSTAGE"
@@ -38,9 +39,6 @@ banner_image = session.file.get_stream(f"{images_path}/BANNER/{banner_loc}" , de
 tran_info = session.table("IMG_RECG.TRANSACTION").to_pandas()
 
 ##
-uploaded_file = None
-api_key = None
-predictions = None
 err_message = None
 list_predicted_items = []
 
@@ -59,8 +57,29 @@ def handle_error_notifications():
         st.toast("An API error has occured!", icon="🚨")
         st.session_state["fire_API_error_notify"] = False
 
+def computer_vision_prediction(image_file, api_key=""):
+    results = []
 
-def process_user_input(prompt):
+    # Upload the image:
+    imagefile = Image.open(uploaded_file)
+
+    if api_key:
+        try:
+            # Send to model for prediction,
+            predictor = Predictor(endpoint_id, api_key=api_key)
+            predictions = predictor.predict(imagefile) #ObjectDetectionPrediction Object
+
+            for each in predictions:
+                results.append({"status" : "SUCCESS", "item" : each.label_name})
+
+        except Exception as e:
+            err_message = str(e)
+            results.append({"status" : "FAILURE", "error_message" : err_message})
+    
+    return results
+
+
+def process_user_input(prompt, api_key = ""):
     """
     Process user input and update the conversation history.
 
@@ -81,7 +100,6 @@ def process_user_input(prompt):
                         }
     # If prompt is a file attached:
     else:
-        
         new_user_message = {
                             "role": "user",
                             "content": [{"type": "text", "text": prompt.text}]
@@ -90,11 +108,23 @@ def process_user_input(prompt):
         if prompt["files"]:
             new_user_message["content"].append({"type": "image", "image": prompt["files"][0]})
 
+            # Send to Computer Vision Tool for prediction.
+            predicted_item = computer_vision_prediction(prompt["files"][0], api_key=api_key)
+
+            if predicted_item[0]["status"] == "SUCCESS":
+                for each in new_user_message["cotent"]:
+                    if each["type"] == "text":
+                        each["text"] = each["text"] + f"( for the item **:red[{predicted_item[0]["item"]}]** )"
+
     st.session_state.messages.append(new_user_message)
 
     with st.chat_message("user"):
         user_msg_index = len(st.session_state.messages) - 1
         display_message(new_user_message["content"], user_msg_index)
+
+    
+
+    
 
     # Show progress indicator inside analyst chat message while waiting for response
     with st.chat_message("analyst"):
@@ -481,7 +511,7 @@ if __name__ == "__main__":
         st.divider()
 
         ## API KEY
-        api_key = st.text_input("🔑 API KEY", type = "password")
+        api_key = st.text_input("🔑 API Key", type = "password")
 
     ### CHAT DISPLAY
     for idx, message in enumerate(st.session_state.messages):

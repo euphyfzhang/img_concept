@@ -91,8 +91,12 @@ def process_user_input(prompt):
     # Show progress indicator inside analyst chat message while waiting for response
     with st.chat_message("analyst"):
         with st.spinner("Waiting for Analyst's response..."):
-            
-            text_messages = list(filter(lambda x: x["content"][0]["type"] == "text", st.session_state.messages))
+
+            text_messages = st.session_state.messages
+
+            for each in text_messages:
+                each["content"] = list(filter(lambda x: x["type"] == "text", each["content"]))
+
             st.header(f":red[text messages] : {text_messages}")
 
             response, request_id, error_msg = get_analyst_response(text_messages)

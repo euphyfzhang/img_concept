@@ -239,7 +239,7 @@ def display_message(content, message_index, request_id=""):
                 if idx in suggestions:
                     suggestions.update({idx:suggestions[idx] + each["suggestion_delta"]})
                 else:
-                    suggestions[idx] = ""
+                    suggestions[idx] = each["suggestion_delta"]
 
             st.header(suggestions)
             

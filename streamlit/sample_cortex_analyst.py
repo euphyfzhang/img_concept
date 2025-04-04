@@ -8,23 +8,25 @@ from PIL import Image
 from snowflake.snowpark import Session
 from landingai.predict import Predictor
 
-release_update = "Release-1.0.2 [2025-04-04]"
+### Release info
+release_version = "Release-1.0.3 [2025-04-04]"
 
 ### Open config.yaml file.
 with open("streamlit/config.yaml", "r") as file:
     config = yaml.safe_load(file)
 
-FILE = "SEMANTIC_FILE/semantic_analyst_file.yaml"
+### Configurations
 SEMANTIC_FILE = f"{config["snowflake"]["database"]}.{config["snowflake"]["schema"]}.{config["snowflake"]["stage"]}/{config["snowflake"]["semantic_analyst_file"]}"
 
+### Snowflake connection
 session = Session.builder.configs(st.secrets["connections"]["snowflake"]).getOrCreate()
 st.session_state.CONN = session.connection
 
 ## API Info
 api_info = session.table("IMG_RECG.API_CREDENTIALS").to_pandas()
-landingai_api = api_info[api_info["NAME"]=="LANDINGAI"]
-api_key_euph = landingai_api["API_KEY"].values[0]
-endpoint_id = landingai_api["ENDPOINT_ID"].values[0]
+landingai_api = "https://api.landing.ai/v1/projects/"
+api_key_euph = st.secrets["LandingAI_key"]
+endpoint_id = config["endpoint"]["landingai"]
 api_key = None
 
 ## Website contents
@@ -216,18 +218,6 @@ def parsed_response_message(content):
 
 
 def get_analyst_response(messages):
-    """
-    Send chat history to the Cortex Analyst API and return the response.
-
-    Args:
-        messages (List[Dict]): The conversation history.
-
-    Returns:
-        Optional[Dict]: The response from the Cortex Analyst API.
-    """
-    #st.write(f"session_state.message: {st.session_state.messages}")
-    # Prepare the request body with the user's prompt
-
     request_body = {
         "messages": messages,
         "semantic_model_file": f"@{SEMANTIC_FILE}",
@@ -237,7 +227,7 @@ def get_analyst_response(messages):
     # Send a POST request to the Cortex Analyst API endpoint
     # Adjusted to use positional arguments as per the API's requirement
     resp = requests.post(
-        url=f"https://{st.session_state.CONN.host}/api/v2/cortex/analyst/message",
+        url=f"https://{st.session_state.CONN.host}{config["endpoint"][cortex_analyst]}",
         json=request_body,
         headers={
             "Authorization": f'Snowflake Token="{st.session_state.CONN.rest.token}"',
@@ -480,7 +470,7 @@ if __name__ == "__main__":
                         , initial_sidebar_state="expanded")
     # Set the title and introductory text of the app
     with st.container(border = False):
-        st.image(banner_image, width = 700, caption = release_update)
+        st.image(banner_image, width = 700, caption = release_version)
 
     with st.expander("🛒 Shopping Transactions"):
         st.dataframe(tran_info)

@@ -1,6 +1,7 @@
-end_point:
+endpoint:
   cortex_analyst: "/api/v2/cortex/analyst/message"
   cortex_agent: "/api/v2/cortex/agent:run"
+  landingai: "ab945845-aaf9-41f8-9a03-9ab724b2f60c"
 snowflake:
   database: "RESUME_AI_DB"
   schema: "IMG_RECG"

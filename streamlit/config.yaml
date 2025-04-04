@@ -1,0 +1,10 @@
+end_point:
+  cortex_analyst: "/api/v2/cortex/analyst/message"
+  cortex_agent: "/api/v2/cortex/agent:run"
+snowflake:
+  warehouse: "your_warehouse"
+  database: "RESUME_AI_DB"
+  schema: "IMG_RECG"
+  stage: "INSTAGE"
+  semantic_analyst_file: "SEMANTIC_FILE/semantic_analyst_file.yaml"
+

@@ -1,6 +1,6 @@
 # Public Docs: https://docs.snowflake.com/LIMITEDACCESS/snowflake-cortex/rest-api/cortex-analyst
 
-import json, re, copy
+import json, re, copy, yaml
 import pandas as pd
 import requests
 import streamlit as st
@@ -8,14 +8,14 @@ from PIL import Image
 from snowflake.snowpark import Session
 from landingai.predict import Predictor
 
-release_update = "Release-1.0.0 [2025-04-04]"
+release_update = "Release-1.0.2 [2025-04-04]"
 
-DATABASE = "RESUME_AI_DB"
-SCHEMA = "IMG_RECG"
-STAGE = "INSTAGE"
+### Open config.yaml file.
+with open("streamlit/config.yaml", "r") as file:
+    config = yaml.safe_load(file)
+
 FILE = "SEMANTIC_FILE/semantic_analyst_file.yaml"
-SEMANTIC_FILE = f"{DATABASE}.{SCHEMA}.{STAGE}/{FILE}"
-AVAILABLE_SEMANTIC_MODELS_PATHS = f"{DATABASE}.{SCHEMA}.{STAGE}/{FILE}"
+SEMANTIC_FILE = f"{config["snowflake"]["database"]}.{config["snowflake"]["schema"]}.{config["snowflake"]["stage"]}/{config["snowflake"]["semantic_analyst_file"]}"
 
 session = Session.builder.configs(st.secrets["connections"]["snowflake"]).getOrCreate()
 st.session_state.CONN = session.connection
@@ -494,7 +494,7 @@ if __name__ == "__main__":
 
         st.selectbox(
             "Selected semantic model:",
-            AVAILABLE_SEMANTIC_MODELS_PATHS,
+            SEMANTIC_FILE,
             format_func=lambda s: s.split("/")[-1],
             key="selected_semantic_model_path",
             on_change=reset_session_state,

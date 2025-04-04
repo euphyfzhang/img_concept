@@ -57,7 +57,6 @@ def handle_error_notifications():
 def cortex_agent_call(message, limit = 10):
 
     cleansed_message = message[-1]["content"][0]["text"]
-    st.header(cleansed_message)
 
     request_body = {
         "model": "llama3.1-70b",
@@ -220,6 +219,7 @@ def parsed_response_message(content):
     response_string = content.decode("utf-8")
     removed_charactor = re.sub(r"event: [\s\w\n.:]*", "", response_string)
     cleaned_reponse = removed_charactor.split("\n")
+    st.header(cleaned_response)
 
     st.subheader(cleaned_reponse)
     #debug purpose

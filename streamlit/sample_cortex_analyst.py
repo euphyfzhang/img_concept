@@ -9,7 +9,7 @@ from snowflake.snowpark import Session
 from landingai.predict import Predictor
 
 ### Release info
-release_version = "Release-1.0.3 [2025-04-04]"
+release_version = "Release-1.0.4 [2025-04-04]"
 
 ### Open config.yaml file.
 with open("streamlit/config.yaml", "r") as file:
@@ -36,8 +36,9 @@ banner_image = session.file.get_stream(f"{images_path}/BANNER/{banner_loc}" , de
 ## Transaction data
 tran_info = session.table("IMG_RECG.TRANSACTION").to_pandas()
 
-##
+## ERROR
 err_message = None
+
 list_predicted_items = []
 
 def reset_session_state():
@@ -45,9 +46,7 @@ def reset_session_state():
     st.session_state.messages = []  # List to store conversation messages
     st.session_state.active_suggestion = None  # Currently selected suggestion
     st.session_state.warnings = []  # List to store warnings
-    st.session_state.form_submitted = (
-        {}
-    )  # Dictionary to store feedback submission for each request
+    st.session_state.form_submitted = ({})  # Dictionary to store feedback submission for each request
 
 
 def handle_error_notifications():

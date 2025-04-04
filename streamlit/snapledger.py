@@ -9,7 +9,7 @@ from snowflake.snowpark import Session
 from landingai.predict import Predictor
 
 ### Release info
-release_version = "Release-1.0.7 [2025-04-04]"
+release_version = "Release-1.0.8 [2025-04-04]"
 
 ### Open config.yaml file.
 with open("streamlit/config.yaml", "r") as file:
@@ -17,6 +17,7 @@ with open("streamlit/config.yaml", "r") as file:
 
 ### Configurations
 SEMANTIC_FILE = f"{config["snowflake"]["database"]}.{config["snowflake"]["schema"]}.{config["snowflake"]["stage"]}/{config["snowflake"]["semantic_analyst_file"]}"
+CORTEX_SEARCH_SERVICES = f"{config["snowflake"]["database"]}.{config["snowflake"]["schema"]}.{config["snowflake"]["stage"]}/{config["snowflake"]["cortex_search_services"]}"
 
 ### Snowflake connection
 session = Session.builder.configs(st.secrets["connections"]["snowflake"]).getOrCreate()
@@ -52,6 +53,74 @@ def handle_error_notifications():
     if st.session_state.get("fire_API_error_notify"):
         st.toast("An API error has occured!", icon="🚨")
         st.session_state["fire_API_error_notify"] = False
+
+def cortex_agent_call(query, limit = 10):
+    payload = {
+        "model": "llama3.1-70b",
+        "messages": [
+            {
+                "role": "user",
+                "content": [
+                    {
+                        "type": "text",
+                        "text": query
+                    }
+                ]
+            }
+        ],
+        "tools": [
+            {
+                "tool_spec": {
+                    "type": "cortex_analyst_text_to_sql",
+                    "name": "analyst1"
+                }
+            },
+            {
+                "tool_spec": {
+                    "type": "cortex_search",
+                    "name": "search1"
+                }
+            }
+        ],
+        "tool_resources": {
+            "analyst1": {"semantic_model_file": f"@{SEMANTIC_FILE}"},
+            "search1": {
+                "name": CORTEX_SEARCH_SERVICES,
+                "max_results": limit,
+                "id_column": "conversation_id"
+            }
+        }
+    }
+    
+    try:
+
+        resp = requests.post(
+                    url=f"https://{st.session_state.CONN.host}{config["endpoint"]["cortex_agent"]}",
+                    json=request_body,
+                    headers={
+                        "Authorization": f'Snowflake Token="{st.session_state.CONN.rest.token}"',
+                        "Content-Type": "application/json",
+                    },
+                    body=payload,
+                )
+
+        if resp.status_code != 200:
+            st.error(f"❌ HTTP Error: {resp.status_code}")
+            st.error(f"Response details: {resp}")
+            return None
+        
+        try:
+            response_content, request_id, error_message = parsed_response_message(resp.content)
+        except json.JSONDecodeError as e:
+            st.error("❌ Failed to parse API response. The server may have returned an invalid JSON format.")
+            st.error(f"Raw response: {str(e)}")
+            return None
+            
+        return response_content
+            
+    except Exception as e:
+        st.error(f"Error making request: {str(e)}")
+        return None
 
 def computer_vision_prediction(image_file, api_key=""):
     results = []

@@ -8,4 +8,5 @@ snowflake:
   schema: "IMG_RECG"
   stage: "INSTAGE"
   semantic_analyst_file: "SEMANTIC_FILE/semantic_analyst_file.yaml"
+  cortex_search_service: "CS_PRODUCT"
 

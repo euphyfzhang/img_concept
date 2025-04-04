@@ -183,7 +183,7 @@ def process_user_input(prompt, api_key = ""):
 
     # Show progress indicator inside analyst chat message while waiting for response
     with st.chat_message("assistant"):
-        with st.spinner("🗨️ Aime the bot assistant is responding..."):
+        with st.spinner(" Aime the bot assistant is responding...	💬"):
 
             text_messages = copy.deepcopy(st.session_state.messages)
 
@@ -220,7 +220,7 @@ def parsed_response_message(content):
     removed_charactor = re.sub(r"event: [\s\w\n.:]*", "", response_string)
     cleaned_response = removed_charactor.split("\n")
 
-    session.sql(f"INSERT INTO RESUME_AI_DB.IMG_RECG.LOG VALUES ('{cleaned_response}');")
+    session.sql(f"INSERT INTO RESUME_AI_DB.IMG_RECG.LOG(MESSAGE) VALUES ('{cleaned_response}');").collect()
     #debug purpose
     parsed_list = []
     error_message = None

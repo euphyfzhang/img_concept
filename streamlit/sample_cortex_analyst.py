@@ -209,8 +209,6 @@ def parsed_response_message(content):
                         , {"type" : "sql", "sql": sql, "confidence" : confidence}
                         , {"type" : "request_id", "request_id": request_id}
                         ]
-    
-    #st.header(rebuilt_response)
 
     return rebuilt_response, request_id, error_message
 
@@ -282,15 +280,6 @@ def display_message(content, message_index, request_id=""):
 
 @st.cache_data(show_spinner=False)
 def get_query_exec_result(query):
-    """
-    Execute the SQL query and convert the results to a pandas DataFrame.
-
-    Args:
-        query (str): The SQL query.
-
-    Returns:
-        Tuple[Optional[pd.DataFrame], Optional[str]]: The query results and the error message.
-    """
     global session
     try:
         df = session.sql(query).to_pandas()
@@ -313,26 +302,15 @@ def display_sql_confidence(confidence):
                     "There is no query from the Verified Query Repository used to generate this SQL answer"
                 )
                 return
-            #st.text(f"Name: {verified_query_used['name']}")
+
             st.text(f"Question: {verified_query_used['question']}")
-            #st.text(f"Verified by: {verified_query_used['verified_by']}")
-            #st.text(
-            #    f"Verified at: {datetime.fromtimestamp(verified_query_used['verified_at'])}"
-            #)
+            st.text(f"Verified by: {verified_query_used['verified_by']}")
+            #st.text(f"Verified at: {datetime.fromtimestamp(verified_query_used['verified_at'])}")
             st.text("SQL query:")
             st.code(verified_query_used["sql"], language="sql", wrap_lines=True)
 
 
 def display_sql_query(sql, message_index, confidence, request_id):
-    """
-    Executes the SQL query and displays the results in form of data frame and charts.
-
-    Args:
-        sql (str): The SQL query.
-        message_index (int): The index of the message.
-        confidence (dict): The confidence information of SQL query generation
-        request_id (str): Request id from user request
-    """
 
     # Display the SQL query
     with st.expander("SQL Query", expanded=False):
@@ -360,13 +338,7 @@ def display_sql_query(sql, message_index, confidence, request_id):
 
 
 def display_charts_tab(df, message_index):
-    """
-    Display the charts tab.
 
-    Args:
-        df (pd.DataFrame): The query results.
-        message_index (int): The index of the message.
-    """
     # There should be at least 2 columns to draw charts
     if len(df.columns) >= 2:
         all_cols_set = set(df.columns)

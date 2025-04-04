@@ -1,15 +1,11 @@
 # Public Docs: https://docs.snowflake.com/LIMITEDACCESS/snowflake-cortex/rest-api/cortex-analyst
 
 import json, re, copy
-from typing import Any, Generator, Iterator
-
-import pandas
 import pandas as pd
 import requests
-from snowflake.snowpark import Session
 import streamlit as st
-
 from PIL import Image
+from snowflake.snowpark import Session
 from landingai.predict import Predictor
 
 DATABASE = "RESUME_AI_DB"

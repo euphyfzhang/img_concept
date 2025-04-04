@@ -120,7 +120,7 @@ def process_user_input(prompt, api_key = ""):
         display_message(new_user_message["content"], user_msg_index)
 
     # Show progress indicator inside analyst chat message while waiting for response
-    with st.chat_message("analyst"):
+    with st.chat_message("assistant"):
         with st.spinner("Waiting for Analyst's response..."):
 
             text_messages = copy.deepcopy(st.session_state.messages)
@@ -132,7 +132,7 @@ def process_user_input(prompt, api_key = ""):
             #st.write(response)
 
             analyst_message = {
-                    "role": "analyst",
+                    "role": "assistant",
                     "content": response,
                     "request_id": request_id,
                 }
@@ -469,7 +469,7 @@ if __name__ == "__main__":
         role = message["role"]
         content = message["content"]
         with st.chat_message(role):
-            if role == "analyst":
+            if role == "assistant":
                 display_message(content, idx, message["request_id"])
             else:
                 display_message(content, idx)

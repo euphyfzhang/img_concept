@@ -219,6 +219,8 @@ def parsed_response_message(content):
     removed_charactor = re.sub(r"event: [\s\w\n.:]*", "", response_string)
     cleaned_response = removed_charactor.split("\n")
 
+    st.subheader(cleaned_response)
+
     session.sql(f"INSERT INTO RESUME_AI_DB.IMG_RECG.LOG(MESSAGE) VALUES ('{cleaned_response}');").collect()
 
     #debug purpose

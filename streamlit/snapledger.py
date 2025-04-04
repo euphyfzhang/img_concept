@@ -101,6 +101,8 @@ def cortex_agent_call(message, limit = 10):
                         "Content-Type": "application/json",
                     },
                 )
+
+        st.header(resp)
         if resp.status_code != 200:
             raise Exception(f"API call failed with status code {resp.status_code}")
         
@@ -166,7 +168,7 @@ def process_user_input(prompt, api_key = ""):
             predicted_item = computer_vision_prediction(prompt["files"][0], api_key=api_key)
 
             if predicted_item[0]["status"] == "SUCCESS":
-                for each in new_user_message["content"]:
+                for each in new_user_message["content"]
                     if each["type"] == "text":
                         each["text"] = each["text"] + f"( for the item **:red[{predicted_item[0]["item"]}]** )"
 

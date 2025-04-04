@@ -9,7 +9,7 @@ from snowflake.snowpark import Session
 from landingai.predict import Predictor
 
 ### Release info
-release_version = "Release-1.0.9 [2025-04-04]"
+release_version = "Release-1.0.10 [2025-04-04]"
 
 ### Open config.yaml file.
 with open("streamlit/config.yaml", "r") as file:
@@ -220,7 +220,7 @@ def parsed_response_message(content):
     cleaned_response = removed_charactor.split("\n")
 
     session.sql(f"INSERT INTO RESUME_AI_DB.IMG_RECG.LOG(MESSAGE) VALUES ('{cleaned_response}');").collect()
-    
+
     #debug purpose
     parsed_list = []
     error_message = None

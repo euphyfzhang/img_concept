@@ -105,7 +105,6 @@ def cortex_agent_call(message, limit = 10):
                     },
                 )
 
-        st.subheader(resp)
         if resp.status_code != 200:
             raise Exception(f"API call failed with status code {resp.status_code}")
         
@@ -221,6 +220,7 @@ def parsed_response_message(content):
     cleaned_response = removed_charactor.split("\n")
 
     session.sql(f"INSERT INTO RESUME_AI_DB.IMG_RECG.LOG(MESSAGE) VALUES ('{cleaned_response}');").collect()
+    
     #debug purpose
     parsed_list = []
     error_message = None

@@ -1,11 +1,14 @@
 # Public Docs: https://docs.snowflake.com/LIMITEDACCESS/snowflake-cortex/rest-api/cortex-analyst
 
-import json, re, copy, requests
+import json, re, copy
 import pandas as pd
+import requests
 import streamlit as st
 from PIL import Image
 from snowflake.snowpark import Session
 from landingai.predict import Predictor
+
+release_update = "Release-1.0.0 [2025-04-04]"
 
 DATABASE = "RESUME_AI_DB"
 SCHEMA = "IMG_RECG"
@@ -13,23 +16,16 @@ STAGE = "INSTAGE"
 FILE = "SEMANTIC_FILE/semantic_analyst_file.yaml"
 SEMANTIC_FILE = f"{DATABASE}.{SCHEMA}.{STAGE}/{FILE}"
 AVAILABLE_SEMANTIC_MODELS_PATHS = f"{DATABASE}.{SCHEMA}.{STAGE}/{FILE}"
-SEMANTIC_MODELS = f"@{DATABASE}.{SCHEMA}.{STAGE}/{FILE}"
 
 session = Session.builder.configs(st.secrets["connections"]["snowflake"]).getOrCreate()
 st.session_state.CONN = session.connection
 
-## API END POINT
-api_endpoint_cortex_analyst = f"https://{st.session_state.CONN.host}/api/v2/cortex/analyst/message"
-api_endpoint_cortex_agent = f"https://{st.session_state.CONN.host}/api/v2/cortex/agent:run"
-
-## API Info 
+## API Info
 api_info = session.table("IMG_RECG.API_CREDENTIALS").to_pandas()
-
-## API Key for landing.ai.
 landingai_api = api_info[api_info["NAME"]=="LANDINGAI"]
-landingai_api_key_euph = landingai_api["API_KEY"].values[0]
+api_key_euph = landingai_api["API_KEY"].values[0]
 endpoint_id = landingai_api["ENDPOINT_ID"].values[0]
-landingai_api_key = None
+api_key = None
 
 ## Website contents
 images_path = "@IMG_RECG.INSTAGE"
@@ -68,7 +64,7 @@ def computer_vision_prediction(image_file, api_key=""):
     if api_key:
         try:
             # Send to model for prediction,
-            predictor = Predictor(endpoint_id, api_key=landingai_api_key)
+            predictor = Predictor(endpoint_id, api_key=api_key)
             predictions = predictor.predict(imagefile) #ObjectDetectionPrediction Object
 
             for each in predictions:
@@ -111,7 +107,7 @@ def process_user_input(prompt, api_key = ""):
             new_user_message["content"].append({"type": "image", "image": prompt["files"][0]})
 
             # Send to Computer Vision Tool for prediction.
-            predicted_item = computer_vision_prediction(prompt["files"][0], api_key=landingai_api_key)
+            predicted_item = computer_vision_prediction(prompt["files"][0], api_key=api_key)
 
             if predicted_item[0]["status"] == "SUCCESS":
                 for each in new_user_message["content"]:
@@ -241,7 +237,7 @@ def get_analyst_response(messages):
     # Send a POST request to the Cortex Analyst API endpoint
     # Adjusted to use positional arguments as per the API's requirement
     resp = requests.post(
-        url=api_endpoint_cortex_analyst,
+        url=f"https://{st.session_state.CONN.host}/api/v2/cortex/analyst/message",
         json=request_body,
         headers={
             "Authorization": f'Snowflake Token="{st.session_state.CONN.rest.token}"',
@@ -484,7 +480,7 @@ if __name__ == "__main__":
                         , initial_sidebar_state="expanded")
     # Set the title and introductory text of the app
     with st.container(border = False):
-        st.image(banner_image, width = 700, caption = "release 1.0.0 by Euphemia (2025.04.04)")
+        st.image(banner_image, width = 700, caption = release_update)
 
     with st.expander("🛒 Shopping Transactions"):
         st.dataframe(tran_info)

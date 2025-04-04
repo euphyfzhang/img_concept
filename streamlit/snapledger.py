@@ -218,10 +218,10 @@ def parsed_response_message(content):
 
     response_string = content.decode("utf-8")
     removed_charactor = re.sub(r"event: [\s\w\n.:]*", "", response_string)
-    cleaned_reponse = removed_charactor.split("\n")
+    cleaned_response = removed_charactor.split("\n")
     st.header(cleaned_response)
 
-    st.subheader(cleaned_reponse)
+    st.subheader(cleaned_response)
     #debug purpose
     parsed_list = []
     error_message = None

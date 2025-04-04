@@ -14,17 +14,19 @@ STAGE = "INSTAGE"
 FILE = "SEMANTIC_FILE/semantic_analyst_file.yaml"
 SEMANTIC_FILE = f"{DATABASE}.{SCHEMA}.{STAGE}/{FILE}"
 AVAILABLE_SEMANTIC_MODELS_PATHS = f"{DATABASE}.{SCHEMA}.{STAGE}/{FILE}"
-
-api_endpoint_cortex_analyst = f"https://{st.session_state.CONN.host}/api/v2/cortex/analyst/message"
-api_endpoint_cortex_agent = f"https://{st.session_state.CONN.host}/api/v2/cortex/agent:run"
-
 SEMANTIC_MODELS = f"@{DATABASE}.{SCHEMA}.{STAGE}/{FILE}"
 
 session = Session.builder.configs(st.secrets["connections"]["snowflake"]).getOrCreate()
 st.session_state.CONN = session.connection
 
-## API Info
+## API END POINT
+api_endpoint_cortex_analyst = f"https://{st.session_state.CONN.host}/api/v2/cortex/analyst/message"
+api_endpoint_cortex_agent = f"https://{st.session_state.CONN.host}/api/v2/cortex/agent:run"
+
+## API Info 
 api_info = session.table("IMG_RECG.API_CREDENTIALS").to_pandas()
+
+## API Key for landing.ai.
 landingai_api = api_info[api_info["NAME"]=="LANDINGAI"]
 landingai_api_key_euph = landingai_api["API_KEY"].values[0]
 endpoint_id = landingai_api["ENDPOINT_ID"].values[0]

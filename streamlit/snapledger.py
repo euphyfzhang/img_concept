@@ -9,7 +9,7 @@ from snowflake.snowpark import Session
 from landingai.predict import Predictor
 
 ### Release info
-release_version = "Release-1.0.5 [2025-04-04]"
+release_version = "Release-1.0.6 [2025-04-04]"
 
 ### Open config.yaml file.
 with open("streamlit/config.yaml", "r") as file:
@@ -325,8 +325,8 @@ def display_sql_query(sql, message_index, confidence, request_id):
 
                 with chart_tab:
                     display_charts_tab(df, message_index)
-    #if request_id:
-        #display_feedback_section(request_id)
+    if request_id:
+        display_feedback_section(request_id)
 
 
 def display_charts_tab(df, message_index):

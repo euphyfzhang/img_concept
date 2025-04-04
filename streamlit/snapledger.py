@@ -9,7 +9,7 @@ from snowflake.snowpark import Session
 from landingai.predict import Predictor
 
 ### Release info
-release_version = "Release-1.0.6 [2025-04-04]"
+release_version = "Release-1.0.7 [2025-04-04]"
 
 ### Open config.yaml file.
 with open("streamlit/config.yaml", "r") as file:
@@ -114,7 +114,7 @@ def process_user_input(prompt, api_key = ""):
 
     # Show progress indicator inside analyst chat message while waiting for response
     with st.chat_message("assistant"):
-        with st.spinner("Waiting for Analyst's response..."):
+        with st.spinner("🗨️ Aime the bot assistant is responding..."):
 
             text_messages = copy.deepcopy(st.session_state.messages)
 

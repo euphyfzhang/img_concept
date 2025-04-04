@@ -87,7 +87,7 @@ def cortex_agent_call(message, limit = 10):
             "search1": {
                 "name": CORTEX_SEARCH_SERVICE,
                 "max_results": limit,
-                "id_column": "conversation_id"
+                "id_column": "product_id"
             }
         }
     }
@@ -102,7 +102,7 @@ def cortex_agent_call(message, limit = 10):
                     },
                 )
 
-        st.header(resp)
+        st.subheader(resp.content)
         if resp.status_code != 200:
             raise Exception(f"API call failed with status code {resp.status_code}")
         

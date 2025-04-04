@@ -9,7 +9,7 @@ from snowflake.snowpark import Session
 from landingai.predict import Predictor
 
 ### Release info
-release_version = "Release-1.0.8 [2025-04-04]"
+release_version = "Release-1.0.9 [2025-04-04]"
 
 ### Open config.yaml file.
 with open("streamlit/config.yaml", "r") as file:
@@ -54,7 +54,7 @@ def handle_error_notifications():
         st.toast("An API error has occured!", icon="🚨")
         st.session_state["fire_API_error_notify"] = False
 
-def cortex_agent_call(query, limit = 10):
+def cortex_agent_call(message, limit = 10):
     payload = {
         "model": "llama3.1-70b",
         "messages": [
@@ -63,7 +63,7 @@ def cortex_agent_call(query, limit = 10):
                 "content": [
                     {
                         "type": "text",
-                        "text": query
+                        "text": message
                     }
                 ]
             }
@@ -93,7 +93,6 @@ def cortex_agent_call(query, limit = 10):
     }
     
     try:
-
         resp = requests.post(
                     url=f"https://{st.session_state.CONN.host}{config["endpoint"]["cortex_agent"]}",
                     json=request_body,
@@ -103,21 +102,18 @@ def cortex_agent_call(query, limit = 10):
                     },
                     body=payload,
                 )
-
         if resp.status_code != 200:
-            st.error(f"❌ HTTP Error: {resp.status_code}")
-            st.error(f"Response details: {resp}")
-            return None
+            raise Exception(f"API call failed with status code {resp.status_code}")
         
-        try:
-            response_content, request_id, error_message = parsed_response_message(resp.content)
-        except json.JSONDecodeError as e:
+        response_content, request_id, error_message = parsed_response_message(resp.content)
+
+        return response_content, request_id, error_message
+
+    except json.JSONDecodeError as e:
             st.error("❌ Failed to parse API response. The server may have returned an invalid JSON format.")
             st.error(f"Raw response: {str(e)}")
             return None
-            
-        return response_content
-            
+
     except Exception as e:
         st.error(f"Error making request: {str(e)}")
         return None
@@ -140,7 +136,7 @@ def computer_vision_prediction(image_file, api_key=""):
         except Exception as e:
             err_message = str(e)
             results.append({"status" : "FAILURE", "error_message" : err_message})
-    
+
     return results
 
 
@@ -190,7 +186,7 @@ def process_user_input(prompt, api_key = ""):
             for each in text_messages:
                 each["content"] = list(filter(lambda x: x["type"] == "text", each["content"]))
 
-            response, request_id, error_msg = get_analyst_response(text_messages)
+            response, request_id, error_msg = cortex_agent_call(text_messages) #get_analyst_response(text_messages)
             #st.write(response)
 
             analyst_message = {

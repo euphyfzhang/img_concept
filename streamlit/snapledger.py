@@ -55,7 +55,7 @@ def handle_error_notifications():
         st.session_state["fire_API_error_notify"] = False
 
 def cortex_agent_call(message, limit = 10):
-    payload = {
+    request_body = {
         "model": "llama3.1-70b",
         "messages": [
             {
@@ -100,7 +100,6 @@ def cortex_agent_call(message, limit = 10):
                         "Authorization": f'Snowflake Token="{st.session_state.CONN.rest.token}"',
                         "Content-Type": "application/json",
                     },
-                    body=payload,
                 )
         if resp.status_code != 200:
             raise Exception(f"API call failed with status code {resp.status_code}")

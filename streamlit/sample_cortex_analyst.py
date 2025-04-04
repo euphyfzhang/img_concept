@@ -23,11 +23,9 @@ session = Session.builder.configs(st.secrets["connections"]["snowflake"]).getOrC
 st.session_state.CONN = session.connection
 
 ## API Info
-api_info = session.table("IMG_RECG.API_CREDENTIALS").to_pandas()
 landingai_api = "https://api.landing.ai/v1/projects/"
-api_key_euph = st.secrets["LandingAI_key"]
 endpoint_id = config["endpoint"]["landingai"]
-api_key = None
+api_key = st.secrets["LandingAI_key"]
 
 ## Website contents
 images_path = "@IMG_RECG.INSTAGE"
@@ -227,7 +225,7 @@ def get_analyst_response(messages):
     # Send a POST request to the Cortex Analyst API endpoint
     # Adjusted to use positional arguments as per the API's requirement
     resp = requests.post(
-        url=f"https://{st.session_state.CONN.host}{config["endpoint"][cortex_analyst]}",
+        url=f"https://{st.session_state.CONN.host}{config["endpoint"]["cortex_analyst"]}",
         json=request_body,
         headers={
             "Authorization": f'Snowflake Token="{st.session_state.CONN.rest.token}"',

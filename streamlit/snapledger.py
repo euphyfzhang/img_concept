@@ -108,7 +108,7 @@ def cortex_agent_call(message, limit = 10):
         if resp.status_code != 200:
             raise Exception(f"API call failed with status code {resp.status_code}")
         
-        response_content, request_id, error_message = parsed_response_message(resp.content)
+        response_content, request_id, error_message = parsed_response_message(resp.content, "agent")
 
         return response_content, request_id, error_message
 
@@ -213,11 +213,15 @@ def display_warnings():
     for warning in warnings:
         st.warning(warning["message"], icon="⚠️")
 
-def parsed_response_message(content):
+def parsed_response_message(content, cortex_type):
 
-    response_string = content.decode("utf-8")
-    removed_charactor = re.sub(r"event: [\s\w\n.:]*", "", response_string)
-    cleaned_response = removed_charactor.split("\n")
+    if cortex_type == "analyst":
+        response_string = content.decode("utf-8")
+        removed_charactor = re.sub(r"event: [\s\w\n.:]*", "", response_string)
+        cleaned_response = removed_charactor.split("\n")
+    elif cortex_type == "agent":
+        response_string = content
+        cleaned_response = response_string
 
     st.subheader(cleaned_response)
 
@@ -298,7 +302,7 @@ def get_analyst_response(messages):
     )
 
     # Content is a string with serialized JSON object
-    parsed_content, request_id, error_message = parsed_response_message(resp.content)
+    parsed_content, request_id, error_message = parsed_response_message(resp.content, "analyst")
 
     return parsed_content, request_id, error_message
 

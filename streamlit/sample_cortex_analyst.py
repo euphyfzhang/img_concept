@@ -15,15 +15,20 @@ FILE = "SEMANTIC_FILE/semantic_analyst_file.yaml"
 SEMANTIC_FILE = f"{DATABASE}.{SCHEMA}.{STAGE}/{FILE}"
 AVAILABLE_SEMANTIC_MODELS_PATHS = f"{DATABASE}.{SCHEMA}.{STAGE}/{FILE}"
 
+api_endpoint_cortex_analyst = f"https://{st.session_state.CONN.host}/api/v2/cortex/analyst/message"
+api_endpoint_cortex_agent = f"https://{st.session_state.CONN.host}/api/v2/cortex/agent:run"
+
+SEMANTIC_MODELS = f"@{DATABASE}.{SCHEMA}.{STAGE}/{FILE}"
+
 session = Session.builder.configs(st.secrets["connections"]["snowflake"]).getOrCreate()
 st.session_state.CONN = session.connection
 
 ## API Info
 api_info = session.table("IMG_RECG.API_CREDENTIALS").to_pandas()
 landingai_api = api_info[api_info["NAME"]=="LANDINGAI"]
-api_key_euph = landingai_api["API_KEY"].values[0]
+landingai_api_key_euph = landingai_api["API_KEY"].values[0]
 endpoint_id = landingai_api["ENDPOINT_ID"].values[0]
-api_key = None
+landingai_api_key = None
 
 ## Website contents
 images_path = "@IMG_RECG.INSTAGE"
@@ -62,7 +67,7 @@ def computer_vision_prediction(image_file, api_key=""):
     if api_key:
         try:
             # Send to model for prediction,
-            predictor = Predictor(endpoint_id, api_key=api_key)
+            predictor = Predictor(endpoint_id, api_key=landingai_api_key)
             predictions = predictor.predict(imagefile) #ObjectDetectionPrediction Object
 
             for each in predictions:
@@ -105,7 +110,7 @@ def process_user_input(prompt, api_key = ""):
             new_user_message["content"].append({"type": "image", "image": prompt["files"][0]})
 
             # Send to Computer Vision Tool for prediction.
-            predicted_item = computer_vision_prediction(prompt["files"][0], api_key=api_key)
+            predicted_item = computer_vision_prediction(prompt["files"][0], api_key=landingai_api_key)
 
             if predicted_item[0]["status"] == "SUCCESS":
                 for each in new_user_message["content"]:
@@ -235,7 +240,7 @@ def get_analyst_response(messages):
     # Send a POST request to the Cortex Analyst API endpoint
     # Adjusted to use positional arguments as per the API's requirement
     resp = requests.post(
-        url=f"https://{st.session_state.CONN.host}/api/v2/cortex/analyst/message",
+        url=api_endpoint_cortex_analyst,
         json=request_body,
         headers={
             "Authorization": f'Snowflake Token="{st.session_state.CONN.rest.token}"',

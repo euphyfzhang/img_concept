@@ -56,8 +56,8 @@ def handle_error_notifications():
 
 def cortex_agent_call(message, limit = 10):
 
-    st.header(message)
-    cleansed_message = ';'.join(message)
+    cleansed_message = ";".join([each["content"][0]["text"] for each in message])
+    st.header(cleansed_message)
 
     request_body = {
         "model": "llama3.1-70b",

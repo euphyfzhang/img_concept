@@ -17,7 +17,7 @@ with open("streamlit/config.yaml", "r") as file:
 
 ### Configurations
 SEMANTIC_FILE = f"{config["snowflake"]["database"]}.{config["snowflake"]["schema"]}.{config["snowflake"]["stage"]}/{config["snowflake"]["semantic_analyst_file"]}"
-CORTEX_SEARCH_SERVICES = f"{config["snowflake"]["database"]}.{config["snowflake"]["schema"]}.{config["snowflake"]["stage"]}/{config["snowflake"]["cortex_search_services"]}"
+CORTEX_SEARCH_SERVICE = f"{config["snowflake"]["database"]}.{config["snowflake"]["schema"]}.{config["snowflake"]["stage"]}/{config["snowflake"]["cortex_search_service"]}"
 
 ### Snowflake connection
 session = Session.builder.configs(st.secrets["connections"]["snowflake"]).getOrCreate()
@@ -85,7 +85,7 @@ def cortex_agent_call(query, limit = 10):
         "tool_resources": {
             "analyst1": {"semantic_model_file": f"@{SEMANTIC_FILE}"},
             "search1": {
-                "name": CORTEX_SEARCH_SERVICES,
+                "name": CORTEX_SEARCH_SERVICE,
                 "max_results": limit,
                 "id_column": "conversation_id"
             }

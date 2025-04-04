@@ -226,7 +226,7 @@ def parsed_response_message(content):
     parsed_list = []
     error_message = None
 
-    for each in cleaned_reponse:
+    for each in cleaned_response:
         if each:
             try:
                 parsed_list.append(json.loads(each))

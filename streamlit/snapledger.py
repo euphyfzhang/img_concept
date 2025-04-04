@@ -9,7 +9,7 @@ from snowflake.snowpark import Session
 from landingai.predict import Predictor
 
 ### Release info
-release_version = "Release-1.0.4 [2025-04-04]"
+release_version = "Release-1.0.5 [2025-04-04]"
 
 ### Open config.yaml file.
 with open("streamlit/config.yaml", "r") as file:
@@ -48,7 +48,6 @@ def reset_session_state():
     st.session_state.warnings = []  # List to store warnings
     st.session_state.form_submitted = ({})  # Dictionary to store feedback submission for each request
 
-
 def handle_error_notifications():
     if st.session_state.get("fire_API_error_notify"):
         st.toast("An API error has occured!", icon="🚨")
@@ -77,12 +76,6 @@ def computer_vision_prediction(image_file, api_key=""):
 
 
 def process_user_input(prompt, api_key = ""):
-    """
-    Process user input and update the conversation history.
-
-    Args:
-        prompt (str): The user's input.
-    """
     # Clear previous warnings at the start of a new request
     st.session_state.warnings = []
 
@@ -222,7 +215,7 @@ def get_analyst_response(messages):
     # Send a POST request to the Cortex Analyst API endpoint
     # Adjusted to use positional arguments as per the API's requirement
     resp = requests.post(
-        url=f"https://{st.session_state.CONN.host}{config["endpoint"]["cortex_analyst"]}",
+        url=f"https://{st.session_state.CONN.host}{config["endpoint"]["cortex_analyst_message"]}",
         json=request_body,
         headers={
             "Authorization": f'Snowflake Token="{st.session_state.CONN.rest.token}"',
@@ -376,13 +369,13 @@ def display_feedback_section(request_id):
                     and st.session_state.form_submitted[request_id]
                 )
 
-                #feedback_message = st.text_input("Optional feedback message")
-                #submitted = st.form_submit_button("Submit", disabled=submit_disabled)
-                #if submitted:
-                    #err_msg = submit_feedback(request_id, positive, feedback_message)
-                    #st.session_state.form_submitted[request_id] = {"error": err_msg}
-                    #st.session_state.popover_open = False
-                    #st.rerun()
+                feedback_message = st.text_input("Optional feedback message")
+                submitted = st.form_submit_button("Submit", disabled=submit_disabled)
+                if submitted:
+                    err_msg = submit_feedback(request_id, positive, feedback_message)
+                    st.session_state.form_submitted[request_id] = {"error": err_msg}
+                    st.session_state.popover_open = False
+                    st.rerun()
         elif (
             request_id in st.session_state.form_submitted
             and st.session_state.form_submitted[request_id]["error"] is None
@@ -398,25 +391,26 @@ def submit_feedback(request_id, positive, feedback_message):
         "positive": positive,
         "feedback_message": feedback_message,
     }
-    resp = _snowflake.send_snow_api_request(
-        "POST",  # method
-        FEEDBACK_API_ENDPOINT,  # path
-        {},  # headers
-        {},  # params
-        request_body,  # body
-        None,  # request_guid
-        API_TIMEOUT,  # timeout in milliseconds
+
+    resp = requests.post(
+        url=f"https://{st.session_state.CONN.host}{config["endpoint"]["cortex_analyst_feedback"]}",
+        json=request_body,
+        headers={
+            "Authorization": f'Snowflake Token="{st.session_state.CONN.rest.token}"',
+            "Content-Type": "application/json",
+        },
+        stream=True,
     )
 
-    if resp["status"] == 200:
+    if resp.status_code == 200:
         return None
 
-    parsed_content = json.loads(resp["content"])
+    parsed_content = json.loads(resp.content)
     # Craft readable error message
     err_msg = f"""
         #🚨 An Analyst API error has occurred 🚨
         
-        * response code: `{resp['status']}`
+        * response code: `{resp.status_code}`
         * request-id: `{parsed_content['request_id']}`
         * error code: `{parsed_content['error_code']}`
         

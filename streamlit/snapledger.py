@@ -55,6 +55,9 @@ def handle_error_notifications():
         st.session_state["fire_API_error_notify"] = False
 
 def cortex_agent_call(message, limit = 10):
+
+    cleansed_message = ';'.join(message)
+
     request_body = {
         "model": "llama3.1-70b",
         "messages": [
@@ -63,7 +66,7 @@ def cortex_agent_call(message, limit = 10):
                 "content": [
                     {
                         "type": "text",
-                        "text": message
+                        "text": cleansed_message
                     }
                 ]
             }

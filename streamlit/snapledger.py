@@ -102,7 +102,6 @@ def cortex_agent_call(message, limit = 10):
                     },
                 )
 
-        st.subheader(resp.content)
         if resp.status_code != 200:
             raise Exception(f"API call failed with status code {resp.status_code}")
         
@@ -216,6 +215,8 @@ def parsed_response_message(content):
     response_string = content.decode("utf-8")
     removed_charactor = re.sub(r"event: [\s\w\n.:]*", "", response_string)
     cleaned_reponse = removed_charactor.split("\n")
+
+    st.subheader(cleaned_reponse)
     #debug purpose
     parsed_list = []
     error_message = None

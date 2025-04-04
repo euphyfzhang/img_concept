@@ -56,7 +56,7 @@ def handle_error_notifications():
 
 def cortex_agent_call(message, limit = 10):
 
-    cleansed_message = ";".join([each["content"][0]["text"] for each in message])
+    cleansed_message = message[-1]["content"][0]["text"]
     st.header(cleansed_message)
 
     request_body = {

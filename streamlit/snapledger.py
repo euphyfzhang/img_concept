@@ -190,7 +190,7 @@ def process_user_input(prompt, api_key = ""):
                 each["content"] = list(filter(lambda x: x["type"] == "text", each["content"]))
 
             st.header(text_messages)
-            response, request_id, error_msg = cortex_agent_call(text_messages) #get_analyst_response(text_messages)
+            response, request_id, error_msg = cortex_agent_call(text_messages[-1]) #get_analyst_response(text_messages)
             #st.write(response)
 
             analyst_message = {

@@ -217,14 +217,14 @@ def display_warnings():
 def parsed_response_message(content, cortex_type):
 
     response_string = content.decode("utf-8")
-    session.sql(f"INSERT INTO RESUME_AI_DB.IMG_RECG.LOG(MESSAGE) VALUES ('{response_string}');").collect()
     removed_charactor = re.sub(r"event: [\s\w\n.:]*", "", response_string)
     cleaned_response = removed_charactor.split("\n")
     
     if cortex_type == "agent":
-
-        cleaned_response = cleaned_response[0]
         
+        wanted_response = json.loads(cleaned_response[0])
+        cleaned_response = wanted_response["delta"]["content"][0]
+        session.sql(f"INSERT INTO RESUME_AI_DB.IMG_RECG.LOG(MESSAGE) VALUES ('{cleaned_response}');").collect()
 
     elif cortex_type == "analyst":
 

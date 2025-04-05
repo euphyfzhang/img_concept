@@ -223,7 +223,7 @@ def parsed_response_message(content, cortex_type):
     #if cortex_type == "agent":
         #cleaned_response = re.sub(r"[']+", cleaned_response)
         
-    wanted_response = "#".join(cleaned_response)
+    wanted_response = cleaned_response[0]["delta"]
 
     session.sql(f"INSERT INTO RESUME_AI_DB.IMG_RECG.LOG(MESSAGE) VALUES ('{wanted_response}');").collect()
 

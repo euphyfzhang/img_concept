@@ -240,14 +240,13 @@ def parsed_response_message(content, cortex_type):
             for each in delta_content:
                 if each:
                     try:
-                        if "tool_results" in each:
-                            tool_results_content = each["tool_results"]["content"]
-                            for sub_each in tool_results_content:
-                                parsed_list.append(sub_each["json"])
-                        
                         if "text" in each:
                             parsed_list.append(each)
                             session.sql(f"INSERT INTO RESUME_AI_DB.IMG_RECG.LOG(MESSAGE) VALUES ('{each["text"]}');").collect()
+                        elif "tool_results" in each:
+                            tool_results_content = each["tool_results"]["content"]
+                            for sub_each in tool_results_content:
+                                parsed_list.append(sub_each["json"])
                     except Exception as e:
                         error_message = str(e)
 

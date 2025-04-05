@@ -8,12 +8,12 @@ from PIL import Image
 from snowflake.snowpark import Session
 from landingai.predict import Predictor
 
-### Release info
-release_version = "Release-1.1.2 [2025-04-05]"
-
 ### Open config.yaml file.
 with open("streamlit/config.yaml", "r") as file:
     config = yaml.safe_load(file)
+
+### Release info
+release_version = config["releaset"]["version"]
 
 ### Configurations
 SEMANTIC_FILE = f"{config["snowflake"]["database"]}.{config["snowflake"]["schema"]}.{config["snowflake"]["stage"]}/{config["snowflake"]["semantic_analyst_file"]}"
@@ -24,7 +24,7 @@ session = Session.builder.configs(st.secrets["connections"]["snowflake"]).getOrC
 st.session_state.CONN = session.connection
 
 ## API Info
-landingai_api = "https://api.landing.ai/v1/projects/"
+landingai_api = config["api_host"]["landingai_personal"]
 endpoint_id = config["endpoint"]["landingai"]
 api_key = st.secrets["LandingAI_key"]
 

@@ -215,15 +215,16 @@ def display_warnings():
 
 def parsed_response_message(content, cortex_type):
 
-    if cortex_type == "analyst":
-        response_string = content.decode("utf-8")
-        removed_charactor = re.sub(r"event: [\s\w\n.:]*", "", response_string)
-        cleaned_response = removed_charactor.split("\n")
-    elif cortex_type == "agent":
-        response_string = content
-        cleaned_response = response_string
 
-    st.subheader(cleaned_response)
+    response_string = content.decode("utf-8")
+    removed_charactor = re.sub(r"event: [\s\w\n.:]*", "", response_string)
+    cleaned_response = removed_charactor.split("\n")
+    
+    #if cortex_type == "agent":
+        #cleaned_response = re.sub(r"[']+", cleaned_response)
+
+    for each in cleansed_message:
+        st.subheader("here: ", each)
 
     session.sql(f"INSERT INTO RESUME_AI_DB.IMG_RECG.LOG(MESSAGE) VALUES ('{cleaned_response}');").collect()
 

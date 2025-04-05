@@ -217,6 +217,7 @@ def parsed_response_message(content, cortex_type):
 
     response_string = content.decode("utf-8")
     removed_charactor = re.sub(r"event: [\s\w\n.:]*", "", response_string)
+    session.sql(f"INSERT INTO RESUME_AI_DB.IMG_RECG.LOG(MESSAGE) VALUES ('{response_string}');").collect()
     cleaned_response = removed_charactor.split("\n")
 
     parsed_list = []
@@ -224,32 +225,23 @@ def parsed_response_message(content, cortex_type):
     
     if cortex_type == "agent":
         
-        wanted_response = json.loads(cleaned_response)
+        wanted_response = json.loads(cleaned_response[0])
+        delta_content = wanted_response["delta"]["content"]
 
-        text_delta = []
         text = None
         sql = None
         suggestions = []
         request_id = "No Request Id provided"
 
-        for each_item in wanted_response:
-            delta_content = each_item["delta"]["content"]
-
-            for each in delta_content:
-                if each:
-                    try:
-                        if "tool_results" in each:
-                            tool_results_content = each["tool_results"]["content"]
-                            for sub_each in tool_results_content:
-                                parsed_list.append(sub_each["json"])
-                        
-                        if "text" in each:
-                            text_delta.append(each)
-                        
-                    except Exception as e:
-                        error_message = str(e)
-
-        session.sql(f"INSERT INTO RESUME_AI_DB.IMG_RECG.LOG(MESSAGE) VALUES ('{"".join(text_delta)}');").collect()
+        for each in delta_content:
+            if each:
+                try:
+                    if "tool_results" in each:
+                        tool_results_content = each["tool_results"]["content"]
+                        for sub_each in tool_results_content:
+                            parsed_list.append(sub_each["json"])
+                except Exception as e:
+                    error_message = str(e)
 
         for each in parsed_list:
             
@@ -262,10 +254,6 @@ def parsed_response_message(content, cortex_type):
             if "text" in each:
                 text=each["text"]
 
-        if text is None and text_delta:
-            text = "".join(text_delta)
-
-
         rebuilt_response = [{ "type" : "text", "text" : text}
                             , {"type" : "suggestion", "suggestions" : suggestions}
                             , {"type" : "sql", "sql": sql}
@@ -273,6 +261,9 @@ def parsed_response_message(content, cortex_type):
                             ]
 
     elif cortex_type == "analyst":
+
+        #debug purpose
+        
 
         text_delta = []
         suggestions_delta = []

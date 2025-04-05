@@ -58,9 +58,14 @@ def cortex_agent_call(message, limit = 10):
 
     cleansed_message = message[-1]["content"][0]["text"]
 
+    when_to_greet = [each for each in st.session_state.messages if each["role"]=="assistant"]
+
     request_body = {
         "model": "llama3.1-70b",
-        "response_instruction" : "You have a name, which is 'Aime'. You always respond with a postive mood.",
+        "response_instruction" : f"""
+                                 If {when_to_greet} == 0, please greet with your name 'Aime'.Otherwise, only say your name when asked.
+                                Please always respond with a postive mood.
+                                Do not hallucinate.""",
         "messages": [
             {
                 "role": "user",
@@ -106,7 +111,8 @@ def cortex_agent_call(message, limit = 10):
                     },
                 )
 
-        st.header(resp.content)
+        #debug:
+        #st.header(resp.content)
 
         if resp.status_code != 200:
             raise Exception(f"API call failed with status code {resp.status_code}.")

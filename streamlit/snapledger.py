@@ -237,7 +237,7 @@ def parsed_response_message(content, cortex_type):
                 except Exception as e:
                     pass
 
-        session.sql(f"INSERT INTO RESUME_AI_DB.IMG_RECG.LOG(MESSAGE) VALUES ('{"".join(wanted_response)}');").collect()
+        session.sql(f"INSERT INTO RESUME_AI_DB.IMG_RECG.LOG(MESSAGE) VALUES ('{str(wanted_response)}');").collect()
         
         for each_response in wanted_response:
             delta_content = each_response["delta"]["content"]

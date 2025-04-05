@@ -57,7 +57,6 @@ def handle_error_notifications():
 def cortex_agent_call(message, limit = 10):
 
     cleansed_message = message[-1]["content"][0]["text"]
-    st.header(cleansed_message)
 
     request_body = {
         "model": "llama3.1-70b",
@@ -218,6 +217,7 @@ def parsed_response_message(content, cortex_type):
 
     response_string = content.decode("utf-8")
     removed_charactor = re.sub(r"event: [\s\w\n.:]*", "", response_string)
+    session.sql(f"INSERT INTO RESUME_AI_DB.IMG_RECG.LOG(MESSAGE) VALUES ('{response_string}');").collect()
     cleaned_response = removed_charactor.split("\n")
 
     parsed_list = []
@@ -253,9 +253,6 @@ def parsed_response_message(content, cortex_type):
 
             if "text" in each:
                 text=each["text"]
-
-        #cleaned_response = str(wanted_response["delta"]["content"][1][]["content"][0]["json"])
-        #session.sql(f"INSERT INTO RESUME_AI_DB.IMG_RECG.LOG(MESSAGE) VALUES ('{cleaned_response}');").collect()
 
         rebuilt_response = [{ "type" : "text", "text" : text}
                             , {"type" : "suggestion", "suggestions" : suggestions}

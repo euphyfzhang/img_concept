@@ -1,6 +1,6 @@
 # Public Docs: https://docs.snowflake.com/LIMITEDACCESS/snowflake-cortex/rest-api/cortex-analyst
 
-import json, re, copy, yaml
+import time, json, re, copy, yaml
 import pandas as pd
 import requests
 import streamlit as st
@@ -226,7 +226,7 @@ def parsed_response_message(content, cortex_type):
     text = None
     sql = None
     suggestions = []
-    request_id = "No Request Id provided"
+    request_id = str(time.time())
     
     if cortex_type == "agent":
         
@@ -235,7 +235,7 @@ def parsed_response_message(content, cortex_type):
                 wanted_response = json.loads(each_response)
             except Exception as e:
                 pass
-            
+
             delta_content = wanted_response["delta"]["content"]
 
             for each in delta_content:
@@ -266,13 +266,9 @@ def parsed_response_message(content, cortex_type):
 
     elif cortex_type == "analyst":
 
-        #debug purpose
-        
-
         text_delta = []
         suggestions_delta = []
         messages = []
-        request_id = None
         error_code = None
         request_id = None
         sql = None

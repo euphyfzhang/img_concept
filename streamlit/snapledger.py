@@ -223,6 +223,8 @@ def parsed_response_message(content, cortex_type):
     if cortex_type == "agent":
         cleaned_response = cleaned_response[0]
 
+    session.sql(f"INSERT INTO RESUME_AI_DB.IMG_RECG.LOG(MESSAGE) VALUES ('{cleaned_response}');").collect()
+
     #debug purpose
     parsed_list = []
     error_message = None

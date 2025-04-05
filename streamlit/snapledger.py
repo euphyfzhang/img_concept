@@ -217,7 +217,6 @@ def parsed_response_message(content, cortex_type):
 
     response_string = content.decode("utf-8")
     removed_charactor = re.sub(r"event: [\s\w\n.:]*", "", response_string)
-    session.sql(f"INSERT INTO RESUME_AI_DB.IMG_RECG.LOG(MESSAGE) VALUES ('{response_string}');").collect()
     cleaned_response = removed_charactor.split("\n")
 
     parsed_list = []
@@ -247,7 +246,7 @@ def parsed_response_message(content, cortex_type):
                                 parsed_list.append(sub_each["json"])
                         
                         if "text" in each:
-                            parsed_list.append(each)
+                            parsed_list.append(each["text"])
                     except Exception as e:
                         error_message = str(e)
 

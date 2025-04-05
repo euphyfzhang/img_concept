@@ -9,7 +9,7 @@ from snowflake.snowpark import Session
 from landingai.predict import Predictor
 
 ### Release info
-release_version = "Release-1.1.1 [2025-04-05]"
+release_version = "Release-1.1.2 [2025-04-05]"
 
 ### Open config.yaml file.
 with open("streamlit/config.yaml", "r") as file:
@@ -571,7 +571,7 @@ if __name__ == "__main__":
                     , Cortex Analyst and Cortext Search Service, with :green[LandingAI] Computer Vision's 
                     image recognition technology, enabling the agent to provide responses based on the user's query.""")
 
-        st.caption("Made by Euphemia")
+        st.caption("Made by Euphemia Zhang🎈")
         st.divider()
 
         ## API KEY

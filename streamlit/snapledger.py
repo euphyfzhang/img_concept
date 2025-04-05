@@ -228,8 +228,9 @@ def parsed_response_message(content, cortex_type):
     request_id = str(time.time())
     
     if cortex_type == "agent":
-        
+        cnt = 1
         for each_response in cleaned_response:
+            session.sql(f"INSERT INTO RESUME_AI_DB.IMG_RECG.LOG(MESSAGE) VALUES ('{cnt}');").collect()
             try:
                 wanted_response = json.loads(each_response)
             except Exception as e:
@@ -238,6 +239,7 @@ def parsed_response_message(content, cortex_type):
             delta_content = wanted_response["delta"]["content"]
 
             for each in delta_content:
+                cnt = cnt + 1
                 if each:
                     try:
                         if "text" in each:

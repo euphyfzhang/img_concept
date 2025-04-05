@@ -231,7 +231,11 @@ def parsed_response_message(content, cortex_type):
     if cortex_type == "agent":
         
         for each_response in cleaned_response:
-            wanted_response = json.loads(each_response)
+            try:
+                wanted_response = json.loads(each_response)
+            except Exception as e:
+                pass
+            
             delta_content = wanted_response["delta"]["content"]
 
             for each in delta_content:

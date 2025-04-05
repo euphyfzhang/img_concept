@@ -246,7 +246,8 @@ def parsed_response_message(content, cortex_type):
                                 parsed_list.append(sub_each["json"])
                         
                         if "text" in each:
-                            parsed_list.append(each["text"])
+                            parsed_list.append(each)
+                            session.sql(f"INSERT INTO RESUME_AI_DB.IMG_RECG.LOG(MESSAGE) VALUES ('{each["text"]}');").collect()
                     except Exception as e:
                         error_message = str(e)
 

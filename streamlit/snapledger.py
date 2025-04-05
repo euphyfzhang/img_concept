@@ -225,23 +225,35 @@ def parsed_response_message(content, cortex_type):
     
     if cortex_type == "agent":
         
-        wanted_response = json.loads(cleaned_response[0])
+        wanted_response = json.loads(cleaned_response)
         delta_content = wanted_response["delta"]["content"]
 
+        text_delta = []
         text = None
         sql = None
         suggestions = []
         request_id = "No Request Id provided"
 
-        for each in delta_content:
-            if each:
-                try:
-                    if "tool_results" in each:
-                        tool_results_content = each["tool_results"]["content"]
-                        for sub_each in tool_results_content:
-                            parsed_list.append(sub_each["json"])
-                except Exception as e:
-                    error_message = str(e)
+        for each_item in wanted_response:
+            if "delta" in each_item:
+                delta = each_item["delta"]
+                
+                if "content" in each_item:
+                    delta_content = delta["content"]
+
+                    for each in delta_content:
+                        if each:
+                            try:
+                                if "tool_results" in each:
+                                    tool_results_content = each["tool_results"]["content"]
+                                    for sub_each in tool_results_content:
+                                        parsed_list.append(sub_each["json"])
+                                
+                                if "text" in each:
+                                    text_delta.append(each)
+                                
+                            except Exception as e:
+                                error_message = str(e)
 
         for each in parsed_list:
             
@@ -253,6 +265,10 @@ def parsed_response_message(content, cortex_type):
 
             if "text" in each:
                 text=each["text"]
+
+        if text is None and text_delta:
+            text = "".join(text_delta)
+
 
         rebuilt_response = [{ "type" : "text", "text" : text}
                             , {"type" : "suggestion", "suggestions" : suggestions}

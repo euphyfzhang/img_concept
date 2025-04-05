@@ -106,6 +106,8 @@ def cortex_agent_call(message, limit = 10):
                     },
                 )
 
+        st.header(resp.content)
+
         if resp.status_code != 200:
             raise Exception(f"API call failed with status code {resp.status_code}.")
         

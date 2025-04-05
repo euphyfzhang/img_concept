@@ -220,12 +220,8 @@ def parsed_response_message(content, cortex_type):
     removed_charactor = re.sub(r"event: [\s\w\n.:]*", "", response_string)
     cleaned_response = removed_charactor.split("\n")
     
-    #if cortex_type == "agent":
-        #cleaned_response = re.sub(r"[']+", cleaned_response)
-        
-    wanted_response = cleaned_response[0]
-
-    session.sql(f"INSERT INTO RESUME_AI_DB.IMG_RECG.LOG(MESSAGE) VALUES ('{wanted_response}');").collect()
+    if cortex_type == "agent":
+        cleaned_response = cleaned_response[0]
 
     #debug purpose
     parsed_list = []

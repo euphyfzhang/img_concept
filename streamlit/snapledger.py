@@ -564,23 +564,24 @@ if __name__ == "__main__":
 
     ### SIDEBAR AREA
     with st.sidebar:
-        # Center this button
-        _, btn_container, _ = st.columns([2, 6, 2])
-        if btn_container.button("🗑️ Clear Chat History", use_container_width=True):
-            reset_session_state()
-
-        st.selectbox(
-            "Selected semantic model:",
-            SEMANTIC_FILE,
-            format_func=lambda s: s.split("/")[-1],
-            key="selected_semantic_model_path",
-            on_change=reset_session_state,
-        )
-
-        st.divider()
 
         ## API KEY
         api_key = st.text_input("🔑 API Key", type = "password")
+        st.badge("Note : API KEY is needed for Image Recognition.", icon="🔖", color="orange")
+        st.divider()
+
+        with st.container:
+            if btn_container.button("🗑️ Clear Chat History", use_container_width=True):
+                reset_session_state()
+        st.divider()
+
+        with st.container(border = True):
+            st.subheader(":rainbow[Welcome to SnapLedger!]🎉")
+            st.write("""This application demonstrates the integration of Snowflake Cortex Agent 
+                        with LandingAI Computer Vision's image recognition technology, 
+                        enabling the agent to provide accurate responses based on the user's query.""")
+
+        
 
     ### CHAT DISPLAY
     for idx, message in enumerate(st.session_state.messages):

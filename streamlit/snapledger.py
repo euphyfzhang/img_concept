@@ -57,7 +57,6 @@ def handle_error_notifications():
 def cortex_agent_call(message, limit = 10):
 
     cleansed_message = message[-1]["content"][0]["text"]
-
     when_to_greet = [each for each in st.session_state.messages if each["role"]=="assistant"]
 
     request_body = {
@@ -325,6 +324,9 @@ def parsed_response_message(content, cortex_type):
                             , {"type" : "request_id", "request_id": request_id}
                             ]
 
+    session.sql(f"""insert into IMG_RECG.CHAT_MESSAGE(REQUEST_ID, MESSAGE, SUGGESTION, SQL, CONFIDENCE) 
+                select '{request_id}','{text}',{str(suggestions_delta)}, '{sql}', '{confidence}';""").collect()
+
     return rebuilt_response, request_id, error_message
 
 
@@ -349,9 +351,7 @@ def get_analyst_response(messages):
 
     # Content is a string with serialized JSON object
     parsed_content, request_id, error_message = parsed_response_message(resp.content, "analyst")
-
     return parsed_content, request_id, error_message
-
 
 
 def display_message(content, message_index, request_id=""):
@@ -488,26 +488,27 @@ def display_feedback_section(request_id):
     with st.popover("📝 Query Feedback"):
         if request_id not in st.session_state.form_submitted:
             with st.form(f"feedback_form_{request_id}", clear_on_submit=True):
-                positive = st.radio(
-                    "Rate the generated SQL", options=["👍", "👎"], horizontal=True
-                )
+                positive = st.radio("Rate the generated SQL:", options=["👍", "👎"], horizontal=True)
                 positive = positive == "👍"
                 submit_disabled = (
-                    request_id in st.session_state.form_submitted
-                    and st.session_state.form_submitted[request_id]
-                )
+                                    request_id in st.session_state.form_submitted
+                                    and st.session_state.form_submitted[request_id]
+                                    )
 
-                feedback_message = st.text_input("Optional feedback message")
+                feedback_message = st.text_input("Feedback message (Optional)")
                 submitted = st.form_submit_button("Submit", disabled=submit_disabled)
                 if submitted:
                     err_msg = submit_feedback(request_id, positive, feedback_message)
                     st.session_state.form_submitted[request_id] = {"error": err_msg}
+                    
+                    ## log feedback
+                    session.sql(f"""insert into IMG_RECG.FEEDBACK(REQUEST_ID, RATING, FEEDBACK_MESSAGE) values ('{request_id}','{positive}','{feedback_message}');""").collect()
                     st.session_state.popover_open = False
                     st.rerun()
         elif (
-            request_id in st.session_state.form_submitted
-            and st.session_state.form_submitted[request_id]["error"] is None
-        ):
+                request_id in st.session_state.form_submitted
+                and st.session_state.form_submitted[request_id]["error"] is None
+                ):
             st.success("Feedback submitted", icon="✅")
         else:
             st.error(st.session_state.form_submitted[request_id]["error"])

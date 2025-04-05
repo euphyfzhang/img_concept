@@ -1,5 +1,5 @@
 release:
-  version: "1.1.5"
+  version: "1.2.0"
   updated_date: "2025-04-05"
 api_host:
   landingai_personal: "https://api.landing.ai/v1/projects/"

@@ -329,7 +329,7 @@ def parsed_response_message(content, cortex_type, request_id=""):
     
     st.code(sql)
     session.sql(f"""insert into IMG_RECG.CHAT_MESSAGE(REQUEST_ID, ROLE, MESSAGE, SUGGESTION, SQL, CONFIDENCE) 
-                select '{request_id}','assistant', '{"".join(text)}',{suggestions}, '{sql}', '{confidence}';""").collect()
+                select '{request_id}','assistant', '{"".join(text)}',{suggestions}, '{sql.replace("'","")}', '{confidence}';""").collect()
 
     return rebuilt_response, request_id, error_message
 

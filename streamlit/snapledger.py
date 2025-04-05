@@ -225,7 +225,7 @@ def parsed_response_message(content, cortex_type):
     wanted_response = cleaned_response["delta"]["content"][1]["content"]
     st.header(wanted_response)
 
-    session.sql(f"INSERT INTO RESUME_AI_DB.IMG_RECG.LOG(MESSAGE) VALUES ('{str(cleaned_response)}');").collect()
+    #session.sql(f"INSERT INTO RESUME_AI_DB.IMG_RECG.LOG(MESSAGE) VALUES ('{(removed_charactor)}');").collect()
 
     #debug purpose
     parsed_list = []

@@ -9,7 +9,7 @@ from snowflake.snowpark import Session
 from landingai.predict import Predictor
 
 ### Release info
-release_version = "Release-1.1.1 [2025-04-04]"
+release_version = "Release-1.1.1 [2025-04-05]"
 
 ### Open config.yaml file.
 with open("streamlit/config.yaml", "r") as file:
@@ -60,7 +60,7 @@ def cortex_agent_call(message, limit = 10):
 
     request_body = {
         "model": "llama3.1-70b",
-        "response_instruction" : "Your name is Aime. You always respond with a postive",
+        "response_instruction" : "You have a name, which is 'Aime'. You always respond with a postive",
         "messages": [
             {
                 "role": "user",

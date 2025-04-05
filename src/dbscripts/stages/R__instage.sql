@@ -3,8 +3,10 @@ CREATE STAGE IF NOT EXISTS IMG_RECG.INSTAGE
 ENCRYPTION = (TYPE = 'SNOWFLAKE_SSE') 
 DIRECTORY = ( ENABLE = TRUE);
 
-/* Put file into the stage. */
+/* Put files into the stage. */
 put file://src/dbscripts/stages/images/snapledger_banner.jpg @IMG_RECG.INSTAGE/BANNER AUTO_COMPRESS=FALSE;
+
+put file://streamlit/semantic_analyst_file.yaml @IMG_RECG.INSTAGE/SEMANTIC_FILE AUTO_COMPRESS=FALSE;
 
 /* Refresh the stage */
 ALTER STAGE IMG_RECG.INSTAGE REFRESH;

@@ -326,10 +326,15 @@ def parsed_response_message(content, cortex_type, request_id=""):
                             , {"type" : "sql", "sql": sql, "confidence" : confidence}
                             , {"type" : "request_id", "request_id": request_id}
                             ]
-    
-    st.code(sql)
+
+
+    cleansed_text = "".join(text)
+    cleansed_text = cleansed_text.replace("'","")
+    cleansed_sugg = [x.replace("'", "") for x in suggestions] if suggestions else suggestions
+    cleansed_sql = sql.replace("'","")
+    cleansed_conf = confidence.replace("'", "") if confidence else confidence
     session.sql(f"""insert into IMG_RECG.CHAT_MESSAGE(REQUEST_ID, ROLE, MESSAGE, SUGGESTION, SQL, CONFIDENCE) 
-                select '{request_id}','assistant', '{"".join(text)}',{suggestions}, '{sql.replace("'","")}', '{confidence}';""").collect()
+                select '{request_id}','assistant', '{cleansed_text}', {cleansed_sugg}, '{cleansed_sql}', '{confidence}';""").collect()
 
     return rebuilt_response, request_id, error_message
 

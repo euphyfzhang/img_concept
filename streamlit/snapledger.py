@@ -223,7 +223,7 @@ def parsed_response_message(content, cortex_type):
     parsed_list = []
     error_message = None
 
-    text = None
+    text = []
     sql = None
     suggestions = []
     request_id = str(time.time())
@@ -245,6 +245,9 @@ def parsed_response_message(content, cortex_type):
                             tool_results_content = each["tool_results"]["content"]
                             for sub_each in tool_results_content:
                                 parsed_list.append(sub_each["json"])
+                        
+                        if "text" in each:
+                            parsed_list.append(each)
                     except Exception as e:
                         error_message = str(e)
 
@@ -253,12 +256,12 @@ def parsed_response_message(content, cortex_type):
                 suggestions.append(each["suggestions"])
 
             if "sql" in each:
-                sql=each["sql"]
+                sql = each["sql"]
 
             if "text" in each:
-                text=each["text"]
+                text.append(each["text"])
 
-        rebuilt_response = [{ "type" : "text", "text" : text}
+        rebuilt_response = [{ "type" : "text", "text" : "".join(text)}
                             , {"type" : "suggestion", "suggestions" : suggestions}
                             , {"type" : "sql", "sql": sql}
                             , {"type" : "request_id", "request_id": request_id}

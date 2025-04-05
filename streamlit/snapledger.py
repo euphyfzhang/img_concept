@@ -217,9 +217,7 @@ def parsed_response_message(content, cortex_type):
 
     response_string = content.decode("utf-8")
     removed_charactor = re.sub(r"event: [\s\w\n.:]*", "", response_string)
-    session.sql(f"INSERT INTO RESUME_AI_DB.IMG_RECG.LOG(MESSAGE) VALUES ('{removed_charactor}');").collect()
     cleaned_response = removed_charactor.split("\n")
-    
 
     parsed_list = []
     error_message = None
@@ -235,25 +233,23 @@ def parsed_response_message(content, cortex_type):
         request_id = "No Request Id provided"
 
         for each_item in wanted_response:
-            if "delta" in each_item:
-                delta = each_item["delta"]
-                
-                if "content" in delta:
-                    delta_content = delta["content"]
+            delta_content = each_item["delta"]["content"]
 
-                    for each in delta_content:
-                        if each:
-                            try:
-                                if "tool_results" in each:
-                                    tool_results_content = each["tool_results"]["content"]
-                                    for sub_each in tool_results_content:
-                                        parsed_list.append(sub_each["json"])
-                                
-                                if "text" in each:
-                                    text_delta.append(each)
-                                
-                            except Exception as e:
-                                error_message = str(e)
+            for each in delta_content:
+                if each:
+                    try:
+                        if "tool_results" in each:
+                            tool_results_content = each["tool_results"]["content"]
+                            for sub_each in tool_results_content:
+                                parsed_list.append(sub_each["json"])
+                        
+                        if "text" in each:
+                            text_delta.append(each)
+                        
+                    except Exception as e:
+                        error_message = str(e)
+
+        session.sql(f"INSERT INTO RESUME_AI_DB.IMG_RECG.LOG(MESSAGE) VALUES ('{"".join(text_delta)}');").collect()
 
         for each in parsed_list:
             
@@ -277,9 +273,6 @@ def parsed_response_message(content, cortex_type):
                             ]
 
     elif cortex_type == "analyst":
-
-        #debug purpose
-        
 
         text_delta = []
         suggestions_delta = []

@@ -235,8 +235,9 @@ def parsed_response_message(content, cortex_type, request_id=""):
     error_message = None
 
     text = []
-    sql = None
+    sql = ""
     suggestions = []
+    confidence = ""
     
     ### CORTEX AGENT
     if cortex_type == "agent":
@@ -288,9 +289,6 @@ def parsed_response_message(content, cortex_type, request_id=""):
         suggestions = []
         messages = []
         error_code = None
-        request_id = None
-        sql = None
-        confidence = None
         other = None
 
         for each in cleaned_response:

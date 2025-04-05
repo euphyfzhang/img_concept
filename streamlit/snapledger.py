@@ -365,11 +365,12 @@ def display_message(content, message_index, request_id=""):
                 # Consolidate the suggestion_delta (word pieces) into a complete sentence.
                 suggestions = {}
                 for each in item["suggestions"]:
-                    idx = each["index"]
-                    if idx in suggestions:
-                        suggestions.update({idx:suggestions[idx] + each["suggestion_delta"]})
-                    else:
-                        suggestions[idx] = each["suggestion_delta"]
+                    if "index" in each:
+                        idx = each["index"]
+                        if idx in suggestions:
+                            suggestions.update({idx:suggestions[idx] + each["suggestion_delta"]})
+                        else:
+                            suggestions[idx] = each["suggestion_delta"]
 
                 # Display suggestions as buttons
                 for key, value in suggestions.items():

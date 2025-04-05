@@ -227,7 +227,6 @@ def parsed_response_message(content, cortex_type):
     if cortex_type == "agent":
         
         wanted_response = json.loads(cleaned_response)
-        delta_content = wanted_response["delta"]["content"]
 
         text_delta = []
         text = None
@@ -239,7 +238,7 @@ def parsed_response_message(content, cortex_type):
             if "delta" in each_item:
                 delta = each_item["delta"]
                 
-                if "content" in each_item:
+                if "content" in delta:
                     delta_content = delta["content"]
 
                     for each in delta_content:

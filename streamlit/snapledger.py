@@ -107,19 +107,14 @@ def cortex_agent_call(message, limit = 10):
                 )
 
         if resp.status_code != 200:
-            raise Exception(f"API call failed with status code {resp.status_code}")
+            raise Exception(f"API call failed with status code {resp.status_code}.")
         
+        # Gather the return.
         response_content, request_id, error_message = parsed_response_message(resp.content, "agent")
-
         return response_content, request_id, error_message
 
-    except json.JSONDecodeError as e:
-            st.error("❌ Failed to parse API response. The server may have returned an invalid JSON format.")
-            st.error(f"Raw response: {str(e)}")
-            return None
-
     except Exception as e:
-        st.error(f"Error making request: {str(e)}")
+        st.error(f"Error Message : {str(e)}")
         return None
 
 def computer_vision_prediction(image_file, api_key=""):

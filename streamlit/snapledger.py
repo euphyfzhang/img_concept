@@ -229,7 +229,6 @@ def parsed_response_message(content, cortex_type):
     request_id = str(time.time())
     
     if cortex_type == "agent":
-        cnt = 1
         for each_response in cleaned_response:
             
             try:
@@ -240,19 +239,17 @@ def parsed_response_message(content, cortex_type):
             delta_content = wanted_response["delta"]["content"]
             session.sql(f"INSERT INTO RESUME_AI_DB.IMG_RECG.LOG(MESSAGE) VALUES ('{len(delta_content)}');").collect()
 
-            for each in delta_content:
-                cnt = cnt + 1
-                if each:
-                    try:
-                        if "text" in each:
-                            parsed_list.append(each)
-                            #session.sql(f"INSERT INTO RESUME_AI_DB.IMG_RECG.LOG(MESSAGE) VALUES ('{each["text"]}');").collect()
-                        elif "tool_results" in each:
-                            tool_results_content = each["tool_results"]["content"]
-                            for sub_each in tool_results_content:
-                                parsed_list.append(sub_each["json"])
-                    except Exception as e:
-                        error_message = str(e)
+            if delta_content:
+                try:
+                    if "text" in delta_content:
+                        parsed_list.append(delta_content)
+                        #session.sql(f"INSERT INTO RESUME_AI_DB.IMG_RECG.LOG(MESSAGE) VALUES ('{each["text"]}');").collect()
+                    elif "tool_results" in delta_content:
+                        tool_results_content = delta_content["tool_results"]["content"]
+                        for sub_each in tool_results_content:
+                            parsed_list.append(sub_each["json"])
+                except Exception as e:
+                    error_message = str(e)
 
         for each in parsed_list:
             if "suggestions" in each:

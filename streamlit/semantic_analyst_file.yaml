@@ -80,6 +80,7 @@ tables:
           - purchase
           - sale_item
           - transaction_item
+          - snack
         sample_values:
           - Granola bar
           - Oatmeal

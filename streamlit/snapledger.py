@@ -216,7 +216,8 @@ def parsed_response_message(content, cortex_type):
     response_string = content.decode("utf-8")
     removed_charactor = re.sub(r"event: [\s\w\n.:]*", "", response_string)
     cleaned_response = removed_charactor.split("\n")
-    session.sql(f"INSERT INTO RESUME_AI_DB.IMG_RECG.LOG(MESSAGE) VALUES ('{"#".join(cleaned_response)}');").collect()
+    #DEBUG :
+    #session.sql(f"INSERT INTO RESUME_AI_DB.IMG_RECG.LOG(MESSAGE) VALUES ('{"#".join(cleaned_response)}');").collect()
 
     wanted_response = []
     parsed_list = []

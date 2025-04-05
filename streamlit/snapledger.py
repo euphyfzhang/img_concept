@@ -584,8 +584,10 @@ if __name__ == "__main__":
             reset_session_state()
         st.divider()
 
-        ## Contact
-        st.caption("Made by **Euphemia Zhang**🎈")
+        st.button("Report Bugs 🐞")
+        st.divider()
+        
+        st.caption("by **Euphemia Zhang**")
 
     ### CHAT DISPLAY
     for idx, message in enumerate(st.session_state.messages):

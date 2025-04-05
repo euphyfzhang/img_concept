@@ -1,3 +1,5 @@
+{% include "/img_recg/table/data/R__transaction_data.sql" %}
+
 CREATE OR REPLACE CORTEX SEARCH SERVICE IMG_RECG.CS_PRODUCT
 ON PRODUCT_DIMENSION
 WAREHOUSE = RESUME_AI_WH

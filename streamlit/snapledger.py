@@ -60,7 +60,7 @@ def cortex_agent_call(message, limit = 10):
 
     request_body = {
         "model": "llama3.1-70b",
-        "response_instruction" : "You have a name, which is 'Aime'. You always respond with a postive",
+        "response_instruction" : "You have a name, which is 'Aime'. You always respond with a postive mood.",
         "messages": [
             {
                 "role": "user",
@@ -183,7 +183,7 @@ def process_user_input(prompt, api_key = ""):
 
     # Show progress indicator inside analyst chat message while waiting for response
     with st.chat_message("assistant"):
-        with st.spinner(" Aime the bot assistant is responding...	💬"):
+        with st.spinner(" Aime the bot assistant is typing...	💬"):
 
             text_messages = copy.deepcopy(st.session_state.messages)
 

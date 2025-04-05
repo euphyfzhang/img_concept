@@ -567,11 +567,11 @@ if __name__ == "__main__":
 
         ## Introduction
         st.subheader(":rainbow[Welcome to SnapLedger!]🎉")
-        st.write("""This application demonstrates the integration of :blue[Snowflake] Cortex Agent
-                    , Cortex Analyst and Cortext Search Service, with :green[LandingAI] Computer Vision's 
+        st.write("""This application demonstrates the integration of :blue[**Snowflake**] Cortex Agent
+                    , Cortex Analyst and Cortext Search Service, with :green[**LandingAI**] Computer Vision's 
                     image recognition technology, enabling the agent to provide responses based on the user's query.""")
 
-        st.caption("Made by Euphemia Zhang🎈")
+        
         st.divider()
 
         ## API KEY
@@ -585,7 +585,7 @@ if __name__ == "__main__":
         st.divider()
 
         ## Contact
-        st.write(":blue[]")
+        st.caption("Made by **Euphemia Zhang**🎈")
 
     ### CHAT DISPLAY
     for idx, message in enumerate(st.session_state.messages):

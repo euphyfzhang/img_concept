@@ -217,65 +217,68 @@ def display_warnings():
 def parsed_response_message(content, cortex_type):
 
     response_string = content.decode("utf-8")
+    session.sql(f"INSERT INTO RESUME_AI_DB.IMG_RECG.LOG(MESSAGE) VALUES ('{response_string}');").collect()
     removed_charactor = re.sub(r"event: [\s\w\n.:]*", "", response_string)
     cleaned_response = removed_charactor.split("\n")
     
     if cortex_type == "agent":
+
         cleaned_response = cleaned_response[0]
+        
 
-    session.sql(f"INSERT INTO RESUME_AI_DB.IMG_RECG.LOG(MESSAGE) VALUES ('{cleaned_response}');").collect()
+    elif cortex_type == "analyst":
 
-    #debug purpose
-    parsed_list = []
-    error_message = None
+        #debug purpose
+        parsed_list = []
+        error_message = None
 
-    for each in cleaned_response:
-        if each:
-            try:
-                parsed_list.append(json.loads(each))
-            except Exception as e:
-                error_message = str(e)
+        for each in cleaned_response:
+            if each:
+                try:
+                    parsed_list.append(json.loads(each))
+                except Exception as e:
+                    error_message = str(e)
 
-    text_delta = []
-    suggestions_delta = []
-    messages = []
-    request_id = None
-    error_code = None
-    request_id = None
-    sql = None
-    confidence = None
-    other = None
+        text_delta = []
+        suggestions_delta = []
+        messages = []
+        request_id = None
+        error_code = None
+        request_id = None
+        sql = None
+        confidence = None
+        other = None
 
-    for each in parsed_list:
-        if "text_delta" in each:
-            text_delta.append(each["text_delta"])
-        elif "suggestions_delta" in each:
-            suggestions_delta.append(each["suggestions_delta"])
-        elif "status" in each:
-            request_id = each["request_id"]
-        elif "message" in each:
-            messages.append(each["message"])
-        elif "error_code" in each:
-            error_code = each["error_code"]
-        elif "request_id" in each:
-            request_id = each["request_id"]
-        elif "type" in each and "sql" in each["type"]:
-            sql = each["statement_delta"]
-            confidence = each["confidence"]
-        #else:
-            #sql = each
+        for each in parsed_list:
+            if "text_delta" in each:
+                text_delta.append(each["text_delta"])
+            elif "suggestions_delta" in each:
+                suggestions_delta.append(each["suggestions_delta"])
+            elif "status" in each:
+                request_id = each["request_id"]
+            elif "message" in each:
+                messages.append(each["message"])
+            elif "error_code" in each:
+                error_code = each["error_code"]
+            elif "request_id" in each:
+                request_id = each["request_id"]
+            elif "type" in each and "sql" in each["type"]:
+                sql = each["statement_delta"]
+                confidence = each["confidence"]
+            #else:
+                #sql = each
 
-    if error_message:
-        text = error_message
-    else:
-        text = "".join(text_delta)
+        if error_message:
+            text = error_message
+        else:
+            text = "".join(text_delta)
 
-    rebuilt_response = [{ "type" : "text", "text" : text}
-                        , {"type" : "suggestion", "suggestions" : suggestions_delta}
-                        , {"type" : "status", "messages" : messages, "error_code" : error_code}
-                        , {"type" : "sql", "sql": sql, "confidence" : confidence}
-                        , {"type" : "request_id", "request_id": request_id}
-                        ]
+        rebuilt_response = [{ "type" : "text", "text" : text}
+                            , {"type" : "suggestion", "suggestions" : suggestions_delta}
+                            , {"type" : "status", "messages" : messages, "error_code" : error_code}
+                            , {"type" : "sql", "sql": sql, "confidence" : confidence}
+                            , {"type" : "request_id", "request_id": request_id}
+                            ]
 
     return rebuilt_response, request_id, error_message
 

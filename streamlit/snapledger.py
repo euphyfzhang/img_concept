@@ -56,6 +56,7 @@ def handle_error_notifications():
 
 def cortex_agent_call(message, limit = 10):
 
+    request_id = str(time.time())
     cleansed_message = message[-1]["content"][0]["text"]
     when_to_greet = [each for each in st.session_state.messages if each["role"]=="assistant"]
 
@@ -99,6 +100,11 @@ def cortex_agent_call(message, limit = 10):
             }
         }
     }
+
+    ## LOG users question
+    session.sql(f"""insert into IMG_RECG.CHAT_MESSAGE(REQUEST_ID, ROLE, MESSAGE, SUGGESTION, SQL, CONFIDENCE) 
+                select '{request_id}','user', '{cleansed_message}', NULL, NULL, NULL;""").collect()
+
     
     try:
         resp = requests.post(
@@ -117,7 +123,7 @@ def cortex_agent_call(message, limit = 10):
             raise Exception(f"API call failed with status code {resp.status_code}.")
         
         # Gather the return.
-        response_content, request_id, error_message = parsed_response_message(resp.content, "agent")
+        response_content, request_id, error_message = parsed_response_message(resp.content, "agent", request_id)
         return response_content, request_id, error_message
 
     except Exception as e:
@@ -216,7 +222,7 @@ def display_warnings():
     for warning in warnings:
         st.warning(warning["message"], icon="⚠️")
 
-def parsed_response_message(content, cortex_type):
+def parsed_response_message(content, cortex_type, request_id=""):
 
     response_string = content.decode("utf-8")
     removed_charactor = re.sub(r"event: [\s\w\n.:]*", "", response_string)
@@ -231,8 +237,8 @@ def parsed_response_message(content, cortex_type):
     text = []
     sql = None
     suggestions = []
-    request_id = str(time.time())
     
+    ### CORTEX AGENT
     if cortex_type == "agent":
         for each_response in cleaned_response:
             if each_response:
@@ -275,13 +281,14 @@ def parsed_response_message(content, cortex_type):
                             , {"type" : "request_id", "request_id": request_id}
                             ]
 
+    ### CORTEX ANALYST
     elif cortex_type == "analyst":
 
         text_delta = []
         suggestions_delta = []
         messages = []
         error_code = None
-        request_id = None
+        request_id_v1 = None
         sql = None
         confidence = None
         other = None
@@ -298,14 +305,12 @@ def parsed_response_message(content, cortex_type):
                 text_delta.append(each["text_delta"])
             elif "suggestions_delta" in each:
                 suggestions_delta.append(each["suggestions_delta"])
-            elif "status" in each:
-                request_id = each["request_id"]
             elif "message" in each:
                 messages.append(each["message"])
             elif "error_code" in each:
                 error_code = each["error_code"]
             elif "request_id" in each:
-                request_id = each["request_id"]
+                request_id_v1 = each["request_id"]
             elif "type" in each and "sql" in each["type"]:
                 sql = each["statement_delta"]
                 confidence = each["confidence"]
@@ -321,11 +326,11 @@ def parsed_response_message(content, cortex_type):
                             , {"type" : "suggestion", "suggestions" : suggestions_delta}
                             , {"type" : "status", "messages" : messages, "error_code" : error_code}
                             , {"type" : "sql", "sql": sql, "confidence" : confidence}
-                            , {"type" : "request_id", "request_id": request_id}
+                            , {"type" : "request_id", "request_id": request_id_v1}
                             ]
 
-    session.sql(f"""insert into IMG_RECG.CHAT_MESSAGE(REQUEST_ID, MESSAGE, SUGGESTION, SQL, CONFIDENCE) 
-                select '{request_id}','{text}',{str(suggestions_delta)}, '{sql}', '{confidence}';""").collect()
+    session.sql(f"""insert into IMG_RECG.CHAT_MESSAGE(REQUEST_ID, ROLE, MESSAGE, SUGGESTION, SQL, CONFIDENCE) 
+                select '{request_id_v1}','assistant', '{text}',{str(suggestions_delta)}, '{sql}', '{confidence}';""").collect()
 
     return rebuilt_response, request_id, error_message
 

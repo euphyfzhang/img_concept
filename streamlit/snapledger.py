@@ -57,6 +57,7 @@ def handle_error_notifications():
 def cortex_agent_call(message, limit = 10):
 
     cleansed_message = message[-1]["content"][0]["text"]
+    st.header(cleansed_message)
 
     request_body = {
         "model": "llama3.1-70b",
@@ -189,8 +190,7 @@ def process_user_input(prompt, api_key = ""):
             for each in text_messages:
                 each["content"] = list(filter(lambda x: x["type"] == "text", each["content"]))
 
-            st.header(text_messages)
-            response, request_id, error_msg = cortex_agent_call(text_messages[-1]) #get_analyst_response(text_messages)
+            response, request_id, error_msg = cortex_agent_call(text_messages) #get_analyst_response(text_messages)
             #st.write(response)
 
             analyst_message = {

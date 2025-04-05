@@ -63,7 +63,7 @@ def cortex_agent_call(message, limit = 10):
     request_body = {
         "model": "llama3.1-70b",
         "response_instruction" : f"""
-                                 If {when_to_greet} == 0, please greet with your name 'Aime'.Otherwise, only say your name when asked.
+                                 If {when_to_greet} == 0, please greet with your name 'Aime'.Otherwise, say your name 'Aime' only when asked.
                                 Please always respond with a postive mood.
                                 Do not hallucinate.""",
         "messages": [

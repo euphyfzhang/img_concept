@@ -567,9 +567,11 @@ if __name__ == "__main__":
 
         ## Introduction
         st.subheader(":rainbow[Welcome to SnapLedger!]🎉")
-        st.write("""This application demonstrates the integration of Snowflake Cortex Agent 
-                    with LandingAI Computer Vision's image recognition technology, 
-                    enabling the agent to provide accurate responses based on the user's query.""")
+        st.write("""This application demonstrates the integration of :blue[Snowflake] Cortex Agent
+                    , Cortex Analyst and Cortext Search Service, with :green[LandingAI] Computer Vision's 
+                    image recognition technology, enabling the agent to provide responses based on the user's query.""")
+
+        st.caption("Made by Euphemia")
         st.divider()
 
         ## API KEY
@@ -581,6 +583,9 @@ if __name__ == "__main__":
         if st.button("🗑️ Clear Chat History", use_container_width=True):
             reset_session_state()
         st.divider()
+
+        ## Contact
+        st.write(":blue[]")
 
     ### CHAT DISPLAY
     for idx, message in enumerate(st.session_state.messages):

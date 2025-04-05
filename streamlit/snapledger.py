@@ -228,8 +228,8 @@ def parsed_response_message(content, cortex_type):
         wanted_response = json.loads(cleaned_response[0])
         delta_content = wanted_response["delta"]["content"]
 
-        text = []
-        sql = []
+        text = None
+        sql = None
         suggestions = []
         request_id = "No Request Id provided"
 
@@ -249,10 +249,10 @@ def parsed_response_message(content, cortex_type):
                 suggestions.append(each["suggestions"])
 
             if "sql" in each:
-                sql.append(each["sql"])
+                sql=each["sql"]
 
             if "text" in each:
-                text.append(each["text"])
+                text=each["text"]
 
         #cleaned_response = str(wanted_response["delta"]["content"][1][]["content"][0]["json"])
         #session.sql(f"INSERT INTO RESUME_AI_DB.IMG_RECG.LOG(MESSAGE) VALUES ('{cleaned_response}');").collect()

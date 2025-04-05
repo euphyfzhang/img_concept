@@ -384,7 +384,7 @@ def display_message(content, message_index, request_id=""):
                         display_sql_query(item["sql"], message_index, item["confidence"], request_id)
                     else:
                         display_sql_query(
-                            item["sql"], message_index)
+                            item["sql"], message_index, "", request_id)
 
 
 
@@ -425,7 +425,8 @@ def display_sql_query(sql, message_index, confidence, request_id):
     # Display the SQL query
     with st.expander("SQL Query", expanded=False):
         st.code(sql, language="sql")
-        display_sql_confidence(confidence)
+        if confidence:
+            display_sql_confidence(confidence)
 
     # Display the results of the SQL query
     with st.expander("Results", expanded=True):

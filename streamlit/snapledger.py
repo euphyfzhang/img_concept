@@ -575,7 +575,7 @@ if __name__ == "__main__":
         st.divider()
 
         ## API KEY
-        api_key = st.text_input("🔑 API Key", type = "password")
+        api_key = st.text_input("🔑 LandingAI API Key", type = "password")
         st.badge("for Image Recognition", icon="🔖", color="orange")
         st.divider()
 
@@ -603,7 +603,7 @@ if __name__ == "__main__":
         st.warning(err_message, icon = "💥")
 
     # Handle chat input
-    user_input = st.chat_input("What are you looking up?"
+    user_input = st.chat_input("What are you looking up? 👀"
                             , accept_file=True
                             , file_type=["jpg", "jpeg", "png"]
                             )

@@ -582,11 +582,10 @@ if __name__ == "__main__":
         ## Reset
         if st.button("🗑️ Clear Chat History", use_container_width=True):
             reset_session_state()
-        st.divider()
-
+            
         st.button("Report Bugs 🐞")
         st.divider()
-        
+
         st.caption("by **Euphemia Zhang**")
 
     ### CHAT DISPLAY

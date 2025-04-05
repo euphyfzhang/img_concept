@@ -288,7 +288,7 @@ def parsed_response_message(content, cortex_type, request_id=""):
         suggestions_delta = []
         messages = []
         error_code = None
-        request_id_v1 = None
+        request_id = None
         sql = None
         confidence = None
         other = None
@@ -310,7 +310,7 @@ def parsed_response_message(content, cortex_type, request_id=""):
             elif "error_code" in each:
                 error_code = each["error_code"]
             elif "request_id" in each:
-                request_id_v1 = each["request_id"]
+                request_id = each["request_id"]
             elif "type" in each and "sql" in each["type"]:
                 sql = each["statement_delta"]
                 confidence = each["confidence"]
@@ -326,11 +326,11 @@ def parsed_response_message(content, cortex_type, request_id=""):
                             , {"type" : "suggestion", "suggestions" : suggestions_delta}
                             , {"type" : "status", "messages" : messages, "error_code" : error_code}
                             , {"type" : "sql", "sql": sql, "confidence" : confidence}
-                            , {"type" : "request_id", "request_id": request_id_v1}
+                            , {"type" : "request_id", "request_id": request_id}
                             ]
 
     session.sql(f"""insert into IMG_RECG.CHAT_MESSAGE(REQUEST_ID, ROLE, MESSAGE, SUGGESTION, SQL, CONFIDENCE) 
-                select '{request_id_v1}','assistant', '{text}',{str(suggestions_delta)}, '{sql}', '{confidence}';""").collect()
+                select '{request_id}','assistant', '{text}',{str(suggestions_delta)}, '{sql}', '{confidence}';""").collect()
 
     return rebuilt_response, request_id, error_message
 

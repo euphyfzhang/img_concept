@@ -215,7 +215,6 @@ def display_warnings():
 
 def parsed_response_message(content, cortex_type):
 
-
     response_string = content.decode("utf-8")
     removed_charactor = re.sub(r"event: [\s\w\n.:]*", "", response_string)
     cleaned_response = removed_charactor.split("\n")
@@ -223,10 +222,10 @@ def parsed_response_message(content, cortex_type):
     #if cortex_type == "agent":
         #cleaned_response = re.sub(r"[']+", cleaned_response)
 
-    for each in cleaned_response :
-        st.subheader("here: ", each)
+    wanted_response = cleaned_response["delta"]["content"][1]["content"]
+    st.header(wanted_response)
 
-    session.sql(f"INSERT INTO RESUME_AI_DB.IMG_RECG.LOG(MESSAGE) VALUES ('{removed_charactor}');").collect()
+    session.sql(f"INSERT INTO RESUME_AI_DB.IMG_RECG.LOG(MESSAGE) VALUES ('{str(cleaned_response)}');").collect()
 
     #debug purpose
     parsed_list = []

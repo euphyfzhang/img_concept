@@ -13,7 +13,7 @@ with open("streamlit/config.yaml", "r") as file:
     config = yaml.safe_load(file)
 
 ### Release info
-release_version = config["releaset"]["version"]
+release_version = config["release"]["version"]
 
 ### Configurations
 SEMANTIC_FILE = f"{config["snowflake"]["database"]}.{config["snowflake"]["schema"]}.{config["snowflake"]["stage"]}/{config["snowflake"]["semantic_analyst_file"]}"

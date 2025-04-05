@@ -9,7 +9,7 @@ from snowflake.snowpark import Session
 from landingai.predict import Predictor
 
 ### Release info
-release_version = "Release-1.0.16 [2025-04-04]"
+release_version = "Release-1.1.0 [2025-04-04]"
 
 ### Open config.yaml file.
 with open("streamlit/config.yaml", "r") as file:
@@ -237,9 +237,8 @@ def parsed_response_message(content, cortex_type):
                 except Exception as e:
                     pass
 
-        #session.sql(f"INSERT INTO RESUME_AI_DB.IMG_RECG.LOG(MESSAGE) VALUES ('{str(wanted_response)}');").collect()
-
-        st.header(str(wanted_response))
+        #for debug
+        #session.sql(f"INSERT INTO RESUME_AI_DB.IMG_RECG.LOG(MESSAGE) VALUES ('{some_variable)}');").collect()
         
         for each_response in wanted_response:
             delta_content = each_response["delta"]["content"]

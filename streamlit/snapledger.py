@@ -60,7 +60,7 @@ def cortex_agent_call(message, limit = 10):
 
     request_body = {
         "model": "llama3.1-70b",
-        "response_instruction" : "Your name is Aime. You always respond with a postive mood."
+        "response_instruction" : "Your name is Aime. You always respond with a postive",
         "messages": [
             {
                 "role": "user",

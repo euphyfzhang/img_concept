@@ -232,17 +232,19 @@ def parsed_response_message(content, cortex_type):
         
         for each_response in cleaned_response:
             wanted_response = json.loads(each_response)
-            delta_content = wanted_response["delta"]["content"]
 
-            for each in delta_content:
-                if each:
-                    try:
-                        if "tool_results" in each:
-                            tool_results_content = each["tool_results"]["content"]
-                            for sub_each in tool_results_content:
-                                parsed_list.append(sub_each["json"])
-                    except Exception as e:
-                        error_message = str(e)
+            if "delta" in wanted_response:
+                delta_content = wanted_response["delta"]["content"]
+
+                for each in delta_content:
+                    if each:
+                        try:
+                            if "tool_results" in each:
+                                tool_results_content = each["tool_results"]["content"]
+                                for sub_each in tool_results_content:
+                                    parsed_list.append(sub_each["json"])
+                        except Exception as e:
+                            error_message = str(e)
 
             for each in parsed_list:
                 

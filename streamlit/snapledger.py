@@ -603,18 +603,19 @@ if __name__ == "__main__":
         st.caption("by **Euphemia Zhang**")
 
     ### CHAT DISPLAY
-    for idx, message in enumerate(st.session_state.messages):
-        role = message["role"]
-        content = message["content"]
-        with st.chat_message(role):
-            if role == "assistant":
-                display_message(content, idx, message["request_id"])
-            else:
-                display_message(content, idx)
+    with st.container(height=300, border=True):
+        for idx, message in enumerate(st.session_state.messages):
+            role = message["role"]
+            content = message["content"]
+            with st.chat_message(role):
+                if role == "assistant":
+                    display_message(content, idx, message["request_id"])
+                else:
+                    display_message(content, idx)
 
-    ### CHAT AREA
-    if err_message:
-        st.warning(err_message, icon = "💥")
+        ### CHAT AREA
+        if err_message:
+            st.warning(err_message, icon = "💥")
 
     # Handle chat input
     user_input = st.chat_input("What are you looking up? 👀"

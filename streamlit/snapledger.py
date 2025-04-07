@@ -617,19 +617,19 @@ if __name__ == "__main__":
         if err_message:
             st.warning(err_message, icon = "💥")
 
-    # Handle chat input
-    user_input = st.chat_input("What are you looking up? 👀"
-                            , accept_file=True
-                            , file_type=["jpg", "jpeg", "png"]
-                            )
+        # Handle chat input
+        user_input = st.chat_input("What are you looking up? 👀"
+                                , accept_file=True
+                                , file_type=["jpg", "jpeg", "png"]
+                                )
 
-    if user_input:
-        process_user_input(user_input, api_key)
+        if user_input:
+            process_user_input(user_input, api_key)
 
-    # Handle suggested question click
-    elif st.session_state.active_suggestion is not None:
-        suggestion = st.session_state.active_suggestion
-        st.session_state.active_suggestion = None
-        process_user_input(suggestion)
+        # Handle suggested question click
+        elif st.session_state.active_suggestion is not None:
+            suggestion = st.session_state.active_suggestion
+            st.session_state.active_suggestion = None
+            process_user_input(suggestion)
 
-    handle_error_notifications()
+        handle_error_notifications()

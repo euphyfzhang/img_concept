@@ -152,7 +152,7 @@ def computer_vision_prediction(image_file, api_key=""):
     return results
 
 
-def process_user_input(prompt, api_key = ""):
+def process_user_input(container_name, prompt, api_key = ""):
     # Clear previous warnings at the start of a new request
     st.session_state.warnings = []
 
@@ -185,12 +185,12 @@ def process_user_input(prompt, api_key = ""):
 
     st.session_state.messages.append(new_user_message)
 
-    with st.chat_message("user"):
+    with container_name.chat_message("user"):
         user_msg_index = len(st.session_state.messages) - 1
         display_message(new_user_message["content"], user_msg_index)
 
     # Show progress indicator inside analyst chat message while waiting for response
-    with st.chat_message("assistant"):
+    with container_name.chat_message("assistant"):
         with st.spinner(" Aime the bot assistant is typing...	💬"):
 
             text_messages = copy.deepcopy(st.session_state.messages)
@@ -199,7 +199,7 @@ def process_user_input(prompt, api_key = ""):
                 each["content"] = list(filter(lambda x: x["type"] == "text", each["content"]))
 
             response, request_id, error_msg = cortex_agent_call(text_messages) #get_analyst_response(text_messages)
-            #st.write(response)
+            #container_name.write(response)
 
             analyst_message = {
                     "role": "assistant",
@@ -603,11 +603,12 @@ if __name__ == "__main__":
         st.caption("by **Euphemia Zhang**")
 
     ### CHAT DISPLAY
-    with st.container(height=300, border=False):
+    dialogue_box = st.container(height=300, border=False)
+    with dialogue_box:
         for idx, message in enumerate(st.session_state.messages):
             role = message["role"]
             content = message["content"]
-            with st.chat_message(role):
+            with dialogue_box.chat_message(role):
                 if role == "assistant":
                     display_message(content, idx, message["request_id"])
                 else:
@@ -615,21 +616,20 @@ if __name__ == "__main__":
 
         ### CHAT AREA
         if err_message:
-            st.warning(err_message, icon = "💥")
+            dialogue_box.warning(err_message, icon = "💥")
 
     # Handle chat input
-    user_input = st.chat_input("What are you looking up? 👀"
+
+    if user_input:= st.chat_input("What are you looking up? 👀"
                             , accept_file=True
                             , file_type=["jpg", "jpeg", "png"]
-                            )
-
-    if user_input:
-        process_user_input(user_input, api_key)
+                            ):
+        process_user_input(dialogue_box, user_input, api_key)
 
     # Handle suggested question click
     elif st.session_state.active_suggestion is not None:
         suggestion = st.session_state.active_suggestion
         st.session_state.active_suggestion = None
-        process_user_input(suggestion)
+        process_user_input(dialogue_box, suggestion)
 
     handle_error_notifications()
